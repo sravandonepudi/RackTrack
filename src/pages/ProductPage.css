@@ -1,0 +1,7 @@
+.stage-card span {
+  display: inline-flex;
+  margin-bottom: 18px;
+  color: var(--accent-green);
+  font-family: var(--mono);
+  font-weight: 700;
+}

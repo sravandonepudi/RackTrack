@@ -1,0 +1,10 @@
+.resource-card span {
+  display: inline-flex;
+  margin-top: 18px;
+  color: var(--accent-green);
+  font-weight: 700;
+}
+
+.resources-page li + li {
+  margin-top: 10px;
+}
