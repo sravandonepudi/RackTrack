@@ -3,7 +3,7 @@ import './ContactPage.css';
 const CONTACT_CONTENT = {
   hero: {
     eyebrow: 'Book Assessment',
-    title: 'Twenty minutes. One rack. Verified.',
+    title: 'Twenty minutes. One rack. Verified. Jahnavi',
     highlightedTitle: 'One rack.',
     body: 'Book a baseline assessment. We show you exactly what RackTrack sees - before any commitment.',
   },
