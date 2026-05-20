@@ -33,7 +33,7 @@ function PageHeroScene() {
         zIndex: 0,
         pointerEvents: 'none',
         overflow: 'hidden',
-        background: `radial-gradient(circle at 75% 35%, ${theme.glow}, transparent 30%), radial-gradient(circle at 20% 80%, rgba(255,255,255,0.05), transparent 28%)`,
+        background: 'transparent',
       }}
     >
       <div
@@ -47,7 +47,7 @@ function PageHeroScene() {
           border: '1px solid rgba(174,183,194,0.16)',
           borderRadius: '8px',
           transform: 'perspective(900px) rotateY(-16deg) rotateX(6deg)',
-          boxShadow: `0 0 70px ${theme.glow}, inset 0 1px 0 rgba(255,255,255,0.08)`,
+          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08)',
           background: 'linear-gradient(160deg, rgba(18,26,36,0.88), rgba(2,6,23,0.5))',
           padding: '18px',
           display: 'grid',
@@ -90,9 +90,7 @@ function PageHeroScene() {
         style={{
           position: 'absolute',
           inset: '12% -10%',
-          background: `linear-gradient(105deg, transparent 36%, ${theme.glow} 48%, transparent 62%)`,
-          filter: 'blur(18px)',
-          opacity: 0.85,
+          display: 'none',
         }}
       />
     </div>
