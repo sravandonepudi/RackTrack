@@ -52,37 +52,15 @@ const ROLES = [
   },
 ];
 
-function HeroScene() {
-  return (
-    <div className="home-scene" aria-hidden="true">
-      <div className="home-scene-rack">
-        {Array.from({ length: 10 }).map((_, rackIndex) => (
-          <div className="home-scene-bay" key={rackIndex}>
-            {Array.from({ length: 4 }).map((_, rowIndex) => (
-              <span
-                className={rowIndex === rackIndex % 4 ? 'is-active' : undefined}
-                key={rowIndex}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-      <div className="home-scene-beam" />
-    </div>
-  );
-}
-
 export default function HomePage() {
   return (
     <div className="home-page">
       <section className="home-hero-local">
-        <HeroScene />
         <div className="home-hero-copy-local">
-          <p className="home-eyebrow">Physical intelligence for data centers</p>
-          <h1>Know what is really in every rack.</h1>
+          <h1>Point your phone at the rack. Get a network you can trust.</h1>
           <p className="home-lede">
-            RackTrack turns rack imagery into verified inventory, port context, and audit-ready evidence so
-            infrastructure teams can stop reconciling stale records by hand.
+            RackTrack is the Physical Intelligence Layer for the modern data center. Verified inventory,
+            port-level topology, firmware posture, and compliance evidence from a smartphone video sweep.
           </p>
           <div className="home-actions">
             <Link className="home-button primary" to="/contact">
