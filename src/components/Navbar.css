@@ -1,68 +1,59 @@
 .navbar {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 32px;
   gap: 16px;
-  background: rgba(0, 0, 0, 0.34);
-  backdrop-filter: blur(18px);
-  color: #ffffff;
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+  padding: 18px 28px;
+  background: linear-gradient(180deg, rgba(6, 10, 15, 0.6), rgba(3, 6, 10, 0.5));
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  backdrop-filter: blur(10px);
 }
 
 .navbar-brand {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  gap: 10px;
+  font-weight: 800;
+  color: #e6f7ff;
+  letter-spacing: 0.06em;
 }
 
 .brand-logo {
+  width: 36px;
+  height: 36px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-green) 100%);
-  color: #020617;
-}
-
-.brand-logo svg {
-  width: 18px;
-  height: 18px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #05e5f0 0%, #22f14c 100%);
+  color: #071126;
 }
 
 .navbar-links {
   display: flex;
-  flex-wrap: wrap;
-  gap: 18px;
+  gap: 14px;
   align-items: center;
   justify-content: center;
   flex: 1;
-  min-width: 0;
 }
 
 .nav-link {
   color: #cbd5e1;
   text-decoration: none;
-  padding: 10px 12px;
+  padding: 8px 12px;
   border-radius: 999px;
   font-size: 0.95rem;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
-.nav-link:hover,
-.nav-link.active {
-  color: #ffffff;
-  background-color: rgba(148, 163, 184, 0.16);
+.nav-link:hover {
+  transform: translateY(-2px);
+}
+
+.nav-link.active,
+.nav-link:hover {
+  color: #fff;
+  background: rgba(148, 163, 184, 0.12);
 }
 
 @media (max-width: 900px) {
@@ -76,7 +67,7 @@
     justify-content: flex-start;
     gap: 10px;
     padding-top: 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255,255,255,0.04);
     margin-top: 12px;
   }
 }

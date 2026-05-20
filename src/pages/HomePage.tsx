@@ -1,181 +1,206 @@
-import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import './HomePage.css'
-import Reveal from '../components/Reveal'
-import heroScan from '../assets/racktrack-hero-scan.png'
-import twinImage from '../assets/racktrack-3d-twin.png'
+import { Link } from 'react-router-dom';
+import './HomePage.css';
 
-const homeMetadata = {
-  title: 'RackTrack - Physical Intelligence Layer',
-  description:
-    'Point your phone at the rack. Get a network you can trust. Verified inventory, port-level topology, and compliance evidence from a smartphone sweep.',
-}
+const PROBLEMS = [
+  {
+    title: 'CMDB drift',
+    body: 'Records describe intent, but racks change through incidents, refreshes, and undocumented hands-on work.',
+  },
+  {
+    title: 'Manual audits',
+    body: 'Walkdowns are expensive, slow, and already stale by the time the spreadsheet is reviewed.',
+  },
+  {
+    title: 'Missing context',
+    body: 'Network tools know logical state, but they cannot see labels, port occupancy, cabling, or rack position.',
+  },
+];
 
-const problems = [
-  ['Inventory drift', 'CMDB records, switch telemetry, and the real rack slowly separate until every audit starts with uncertainty.'],
-  ['Slow incident work', 'Responders lose time proving which device and port are involved before they can fix the actual issue.'],
-  ['Manual evidence', 'Compliance teams still assemble physical inventory evidence from spreadsheets, photos, and one-off checks.'],
-]
+const CAPABILITIES = [
+  'Inventory verification',
+  'Port-level physical context',
+  'CMDB and DCIM drift detection',
+  'Audit evidence bundles',
+  'Incident response context',
+  'Baseline assessment reports',
+];
 
-const whatRackTrackDoes = [
-  ['Scan', 'Capture the rack with a phone or upload existing footage.'],
-  ['Reconcile', 'Match physical state against network and inventory sources.'],
-  ['Publish', 'Send verified records into CMDB, DCIM, ITSM, and audit workflows.'],
-]
+const METRICS = [
+  { value: '20 min', label: 'baseline assessment window' },
+  { value: '1 rack', label: 'enough to reveal record quality' },
+  { value: '3 views', label: 'CMDB, network, and observed state' },
+];
 
-const capabilities = [
-  'Device position, vendor, model, and serial recognition',
-  'Port and cable confirmation for incident response',
-  'Firmware and vulnerability context per device',
-  'Capacity planning tied to measured rack state',
-]
+const ROLES = [
+  {
+    id: 'infrastructure',
+    title: 'Infrastructure operations',
+    outcome: 'RackTrack turns physical state into a verified inventory and highlights drift before it spreads.',
+    cta: 'Map infrastructure drift',
+  },
+  {
+    id: 'network',
+    title: 'Network engineering',
+    outcome: 'Port-level observations give network teams the missing physical context behind topology changes.',
+    cta: 'Verify port mapping',
+  },
+  {
+    id: 'security',
+    title: 'Security teams',
+    outcome: 'Evidence-backed physical inventory makes exceptions visible and defensible.',
+    cta: 'Find unknown assets',
+  },
+];
 
-const proofPoints = [
-  ['20 min', 'for a focused baseline scan'],
-  ['1 rack', 'enough to expose record drift'],
-  ['3 views', 'CMDB, network, and physical state'],
-]
-
-const roles = [
-  ['Infrastructure', 'Know what is installed before a change window starts.'],
-  ['Security', 'Start vulnerability work from complete physical coverage.'],
-  ['Compliance', 'Produce defensible inventory evidence without the scramble.'],
-]
-
-function HomePage() {
-  useEffect(() => {
-    document.title = homeMetadata.title
-
-    let description = document.querySelector<HTMLMetaElement>(
-      'meta[name="description"]',
-    )
-
-    if (!description) {
-      description = document.createElement('meta')
-      description.name = 'description'
-      document.head.append(description)
-    }
-
-    description.content = homeMetadata.description
-  }, [])
-
+function HeroScene() {
   return (
-    <section className="page home-page">
-      <Reveal className="page-hero home-hero">
-        <div className="page-hero-copy">
-          <div className="page-kicker">RackTrack</div>
-          <h1>Physical infrastructure, verified from a simple scan.</h1>
-          <p className="page-lede">
-            RackTrack turns rack footage into structured inventory, reconciles it
-            against your live network, and keeps operations, security, and audit
-            teams working from the same truth.
-          </p>
-          <div className="hero-actions">
-            <Link to="/book-assessment" className="button-link primary">
-              Book a Baseline Assessment
-            </Link>
-            <Link to="/product" className="button-link">
-              See Product
-            </Link>
-          </div>
-        </div>
-        <div className="hero-visual">
-          <img src={heroScan} alt="RackTrack scan view of data center racks" />
-        </div>
-      </Reveal>
-
-      <Reveal className="section-band">
-        <div className="section-heading">
-          <div className="eyebrow">Problem</div>
-          <h2>Your systems describe the rack. RackTrack verifies it.</h2>
-        </div>
-        <div className="card-grid three">
-          {problems.map(([title, body]) => (
-            <div className="glass-card" key={title}>
-              <h3>{title}</h3>
-              <p>{body}</p>
-            </div>
-          ))}
-        </div>
-      </Reveal>
-
-      <Reveal className="section-band split-panel">
-        <div className="image-panel">
-          <img src={twinImage} alt="3D digital twin of connected rack equipment" />
-        </div>
-        <div className="glass-card home-list-card">
-          <div className="eyebrow">What It Does</div>
-          <h2>From footage to verified operating data.</h2>
-          <div className="home-steps">
-            {whatRackTrackDoes.map(([title, body], index) => (
-              <div className="home-step" key={title}>
-                <span>0{index + 1}</span>
-                <div>
-                  <h3>{title}</h3>
-                  <p>{body}</p>
-                </div>
-              </div>
+    <div className="home-scene" aria-hidden="true">
+      <div className="home-scene-rack">
+        {Array.from({ length: 10 }).map((_, rackIndex) => (
+          <div className="home-scene-bay" key={rackIndex}>
+            {Array.from({ length: 4 }).map((_, rowIndex) => (
+              <span
+                className={rowIndex === rackIndex % 4 ? 'is-active' : undefined}
+                key={rowIndex}
+              />
             ))}
           </div>
-        </div>
-      </Reveal>
-
-      <Reveal className="section-band">
-        <div className="section-heading">
-          <div className="eyebrow">Capabilities</div>
-          <h2>Built for the teams who live with rack reality.</h2>
-        </div>
-        <div className="card-grid two">
-          {capabilities.map((capability) => (
-            <div className="glass-card capability-item" key={capability}>
-              <span className="check">✓</span>
-              <p>{capability}</p>
-            </div>
-          ))}
-        </div>
-      </Reveal>
-
-      <Reveal className="section-band">
-        <div className="metric-grid">
-          {proofPoints.map(([value, label]) => (
-            <div className="metric" key={value}>
-              <strong>{value}</strong>
-              <span>{label}</span>
-            </div>
-          ))}
-        </div>
-      </Reveal>
-
-      <Reveal className="section-band">
-        <div className="section-heading">
-          <div className="eyebrow">Roles</div>
-          <h2>One verified view, multiple teams unblocked.</h2>
-        </div>
-        <div className="card-grid three">
-          {roles.map(([title, body]) => (
-            <div className="glass-card" key={title}>
-              <h3>{title}</h3>
-              <p>{body}</p>
-            </div>
-          ))}
-        </div>
-      </Reveal>
-
-      <Reveal className="section-band home-cta">
-        <div className="section-heading">
-          <h2>See your rack the way RackTrack sees it.</h2>
-          <p>
-            Twenty minutes. One rack or one row. The output is a side-by-side of
-            what your CMDB says, what your network reports, and what RackTrack
-            actually finds for your environment.
-          </p>
-        </div>
-        <Link to="/book-assessment" className="button-link primary">
-          Book a Baseline Assessment
-        </Link>
-      </Reveal>
-    </section>
-  )
+        ))}
+      </div>
+      <div className="home-scene-beam" />
+    </div>
+  );
 }
 
-export default HomePage
+export default function HomePage() {
+  return (
+    <div className="home-page">
+      <section className="home-hero-local">
+        <HeroScene />
+        <div className="home-hero-copy-local">
+          <p className="home-eyebrow">Physical intelligence for data centers</p>
+          <h1>Know what is really in every rack.</h1>
+          <p className="home-lede">
+            RackTrack turns rack imagery into verified inventory, port context, and audit-ready evidence so
+            infrastructure teams can stop reconciling stale records by hand.
+          </p>
+          <div className="home-actions">
+            <Link className="home-button primary" to="/contact">
+              Book a Baseline Assessment
+            </Link>
+            <Link className="home-button" to="/product">
+              See the Product
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <div className="home-divider" />
+
+      <section className="home-section">
+        <div className="home-section-heading">
+          <p className="home-eyebrow">The problem</p>
+          <h2>Physical infrastructure is the least trusted record in the stack.</h2>
+          <p>
+            Teams make high-risk decisions from partial systems, manual exports, and observations trapped in
+            someone else's notebook.
+          </p>
+        </div>
+        <div className="home-card-grid">
+          {PROBLEMS.map((problem) => (
+            <article className="home-card" key={problem.title}>
+              <h3>{problem.title}</h3>
+              <p>{problem.body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <div className="home-divider" />
+
+      <section className="home-section home-split">
+        <div className="home-section-heading">
+          <p className="home-eyebrow">What RackTrack does</p>
+          <h2>It converts rack observations into usable operational truth.</h2>
+          <p>
+            RackTrack captures evidence, identifies devices, maps physical details, and compares the result
+            with your existing systems.
+          </p>
+        </div>
+        <div className="home-card">
+          <h3>From image to workflow</h3>
+          <ul>
+            <li>Device identity and rack position</li>
+            <li>Port, label, cable, and LED observations</li>
+            <li>Drift reports against CMDB and DCIM records</li>
+            <li>Exports for audits, ITSM, and remediation queues</li>
+          </ul>
+        </div>
+      </section>
+
+      <div className="home-divider" />
+
+      <section className="home-section">
+        <div className="home-section-heading">
+          <p className="home-eyebrow">Capabilities</p>
+          <h2>Designed for the teams that inherit physical uncertainty.</h2>
+        </div>
+        <div className="home-capability-list">
+          {CAPABILITIES.map((capability) => (
+            <span key={capability}>{capability}</span>
+          ))}
+        </div>
+      </section>
+
+      <div className="home-divider" />
+
+      <section className="home-section">
+        <div className="home-section-heading">
+          <p className="home-eyebrow">Proof</p>
+          <h2>Start small, expose the drift, and decide with evidence.</h2>
+        </div>
+        <div className="home-metric-grid">
+          {METRICS.map((metric) => (
+            <div className="home-metric" key={metric.value}>
+              <strong>{metric.value}</strong>
+              <span>{metric.label}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="home-section">
+        <div className="home-section-heading">
+          <p className="home-eyebrow">Use cases</p>
+          <h2>One verified layer, useful to every team around the rack.</h2>
+        </div>
+        <div className="home-card-grid">
+          {ROLES.map((role) => (
+            <article className="home-card" key={role.id}>
+              <h3>{role.title}</h3>
+              <p>{role.outcome}</p>
+              <Link className="home-text-link" to={`/use-cases#${role.id}`}>
+                {role.cta}
+              </Link>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <div className="home-divider" />
+
+      <section className="home-section home-final-cta">
+        <div>
+          <h2>See your rack the way RackTrack sees it.</h2>
+          <p>
+            Twenty minutes. One rack or one row. The output is a side-by-side of what your CMDB says, what
+            your network reports, and what RackTrack actually finds for your environment, not a benchmark.
+          </p>
+          <Link to="/contact" className="home-button primary">
+            Book a Baseline Assessment
+          </Link>
+        </div>
+      </section>
+    </div>
+  );
+}

@@ -1,15 +1,16 @@
-.why-racktrack-page {
+.trust-page {
   text-align: left;
 }
 
 @media (max-width: 1024px) {
-  .why-racktrack-page .max-lg\:grid-cols-1 {
+  .trust-page .max-lg\:grid-cols-1,
+  .trust-page .max-lg\:grid-cols-2 {
     grid-template-columns: 1fr !important;
   }
 }
 
 @media (max-width: 768px) {
-  .why-racktrack-page .max-md\:grid-cols-1 {
+  .trust-page .max-md\:grid-cols-1 {
     grid-template-columns: 1fr !important;
   }
 }

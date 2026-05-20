@@ -1,18 +1,19 @@
+import React from 'react'
 import { NavLink } from 'react-router-dom'
-import './Navbar.css'
+import './NavBar.css'
 
 const navItems = [
   { path: '/', label: 'Home' },
   { path: '/product', label: 'Product' },
   { path: '/use-cases', label: 'Use Cases' },
   { path: '/why-racktrack', label: 'Why RackTrack' },
-  { path: '/trust-security', label: 'Trust & Security' },
+  { path: '/trust', label: 'Trust & Security' },
   { path: '/company', label: 'Company' },
   { path: '/resources', label: 'Resources' },
-  { path: '/book-assessment', label: 'Book Assessment' },
+  { path: '/contact', label: 'Book Assessment' },
 ]
 
-function Navbar() {
+export default function NavBar(): JSX.Element {
   return (
     <header className="navbar">
       <div className="navbar-brand">
@@ -30,9 +31,7 @@ function Navbar() {
             key={item.path}
             to={item.path}
             end={item.path === '/'}
-            className={({ isActive }) =>
-              isActive ? 'nav-link active' : 'nav-link'
-            }
+            className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
           >
             {item.label}
           </NavLink>
@@ -41,5 +40,3 @@ function Navbar() {
     </header>
   )
 }
-
-export default Navbar

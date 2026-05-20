@@ -1,34 +1,9 @@
-.page-hero.compact {
-  min-height: 380px;
-  grid-template-columns: 1fr;
+.use-cases-page {
+  text-align: left;
 }
 
-.use-case-list {
-  display: grid;
-  gap: 18px;
-}
-
-.use-case-row {
-  display: grid;
-  grid-template-columns: 0.72fr 1fr 1fr;
-  gap: 16px;
-  align-items: stretch;
-}
-
-.use-case-row h2 {
-  margin: 0;
-  font-size: clamp(1.4rem, 2vw, 2rem);
-}
-
-.use-case-row span {
-  display: inline-flex;
-  margin-top: 18px;
-  color: var(--accent-green);
-  font-weight: 700;
-}
-
-@media (max-width: 900px) {
-  .use-case-row {
-    grid-template-columns: 1fr;
+@media (max-width: 1024px) {
+  .use-cases-page .max-lg\:grid-cols-1 {
+    grid-template-columns: 1fr !important;
   }
 }

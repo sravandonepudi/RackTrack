@@ -1,6 +1,7 @@
+import React from 'react'
 import './Footer.css'
 
-function Footer() {
+export default function Footer(): JSX.Element {
   return (
     <footer className="footer">
       <div className="footer-brand">
@@ -16,5 +17,3 @@ function Footer() {
     </footer>
   )
 }
-
-export default Footer

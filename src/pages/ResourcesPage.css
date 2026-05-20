@@ -1,10 +1,15 @@
-.resource-card span {
-  display: inline-flex;
-  margin-top: 18px;
-  color: var(--accent-green);
-  font-weight: 700;
+.resources-page {
+  text-align: left;
 }
 
-.resources-page li + li {
-  margin-top: 10px;
+@media (max-width: 1280px) {
+  .resources-page .max-xl\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .resources-page .max-md\:grid-cols-1 {
+    grid-template-columns: 1fr !important;
+  }
 }

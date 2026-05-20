@@ -1,86 +1,88 @@
-import './ProductPage.css'
-import Reveal from '../components/Reveal'
-import twinImage from '../assets/racktrack-3d-twin.png'
+import { Link } from 'react-router-dom';
+import './ProductPage.css';
 
-const stages = [
-  ['Capture', 'Walk the rack with your phone. Upload existing footage, or capture live. Link the scan to an incident, change, or audit - or run it standalone.'],
-  ['Verify', 'RackTrack reconciles what it sees with what your network reports. Every device, port, and cable is cross-checked before it becomes inventory.'],
-  ['Enrich', 'Verified inventory is enriched with manufacturer specifications, firmware status, and security posture so you get a complete picture, not just a list.'],
-]
+const OUTPUTS = [
+  {
+    title: 'Observed inventory',
+    body: 'Device identity, rack unit position, labels, and visual evidence captured in a repeatable scan.',
+  },
+  {
+    title: 'Physical topology',
+    body: 'Port and cable observations that add physical context to logical network discovery.',
+  },
+  {
+    title: 'Drift reports',
+    body: 'Side-by-side comparisons of observed state against CMDB, DCIM, and audit records.',
+  },
+];
 
-const capabilities = [
-  ['Physical Inventory', 'Every device in every rack, identified by position, vendor, model, and serial. Verified against the live network for accuracy you can defend in an audit.'],
-  ['Security Posture', 'Firmware version and known vulnerability status, surfaced per device, in real time. Your security team starts from complete inventory instead of partial coverage.'],
-  ['Incident Response', 'Link a scan to an incident and RackTrack pinpoints the target device and port before the responder reaches the rack. Cable-confirmation time collapses to seconds.'],
-  ['Capacity Planning', 'Plan new work against measured rack reality. Power, space, and device posture stay tied to what is actually installed.'],
-  ['3D Twin', 'Your physical footprint becomes a navigable three-dimensional model. Teams get spatial context without walking the data hall for every question.'],
-  ['Compliance Evidence', 'Audit-ready artifacts are generated from verified records. Evidence prep becomes a live workflow instead of a manual scramble.'],
-]
+function PageHeroScene() {
+  const theme = { accent: '#22F14C', secondary: '#05E5F0', glow: 'rgba(34,241,76,0.22)' };
 
-function ProductPage() {
   return (
-    <section className="page product-page">
-      <Reveal className="page-hero">
-        <div className="page-hero-copy">
-          <div className="page-kicker">Product</div>
-          <h1>One scan. Every device. Verified.</h1>
-          <p className="page-lede">
-            RackTrack turns a smartphone video into a structured, verified model of your
-            physical infrastructure - ready to power inventory, security, capacity, and
-            compliance from a single source of truth.
-          </p>
-        </div>
-        <div className="hero-visual">
-          <img src={twinImage} alt="3D twin of connected data center racks" />
-        </div>
-      </Reveal>
-
-      <Reveal className="section-band">
-        <div className="section-heading">
-          <div className="eyebrow">How It Works</div>
-          <h2>Three loops, described by outcomes.</h2>
-        </div>
-        <div className="card-grid three">
-          {stages.map(([title, body], index) => (
-            <Reveal className="glass-card stage-card" delay={index * 70} key={title}>
-              <span>0{index + 1}</span>
-              <h3>{title}</h3>
-              <p>{body}</p>
-            </Reveal>
-          ))}
-        </div>
-      </Reveal>
-
-      <Reveal className="section-band">
-        <div className="section-heading">
-          <div className="eyebrow">Capabilities</div>
-          <h2>Detailed enough for buyers. Protected enough for the moat.</h2>
-        </div>
-        <div className="card-grid three">
-          {capabilities.map(([title, body]) => (
-            <div className="glass-card" key={title}>
-              <h3>{title}</h3>
-              <p>{body}</p>
-            </div>
-          ))}
-        </div>
-      </Reveal>
-
-      <Reveal className="section-band split-panel">
-        <div className="glass-card">
-          <div className="eyebrow">Integrations</div>
-          <h2>Works with what you already run.</h2>
-        </div>
-        <div className="glass-card">
-          <p>
-            RackTrack pushes verified physical state into your CMDB, DCIM, ITSM, and
-            compliance systems. Integrations are available for major platforms, with
-            custom integrations supported for your environment.
-          </p>
-        </div>
-      </Reveal>
-    </section>
-  )
+    <div aria-hidden="true" style={{ position:'absolute', inset:0, zIndex:0, pointerEvents:'none', overflow:'hidden', background:`radial-gradient(circle at 75% 35%, ${theme.glow}, transparent 30%), radial-gradient(circle at 20% 80%, rgba(255,255,255,0.05), transparent 28%)` }}>
+      <div style={{ position:'absolute', right:'6%', top:'18%', width:'min(38vw, 520px)', minWidth:'280px', aspectRatio:'0.82', border:'1px solid rgba(174,183,194,0.16)', borderRadius:'8px', transform:'perspective(900px) rotateY(-16deg) rotateX(6deg)', boxShadow:`0 0 70px ${theme.glow}, inset 0 1px 0 rgba(255,255,255,0.08)`, background:'linear-gradient(160deg, rgba(18,26,36,0.88), rgba(2,6,23,0.5))', padding:'18px', display:'grid', gridTemplateColumns:'repeat(2, 1fr)', gap:'12px', opacity:0.92 }}>
+        {Array.from({ length: 10 }).map((_, rackIndex) => (
+          <div key={rackIndex} style={{ border:'1px solid rgba(174,183,194,0.12)', borderRadius:'6px', background:'rgba(0,0,0,0.35)', padding:'8px', display:'flex', flexDirection:'column', gap:'6px' }}>
+            {Array.from({ length: 4 }).map((_, rowIndex) => (
+              <span key={rowIndex} style={{ height: rowIndex === 1 ? '18px' : '10px', borderRadius:'3px', background: rowIndex === rackIndex % 4 ? `linear-gradient(90deg, ${theme.accent}, ${theme.secondary})` : 'rgba(140,160,184,0.2)', boxShadow: rowIndex === rackIndex % 4 ? `0 0 12px ${theme.glow}` : 'none' }} />
+            ))}
+          </div>
+        ))}
+      </div>
+      <div style={{ position:'absolute', inset:'12% -10%', background:`linear-gradient(105deg, transparent 36%, ${theme.glow} 48%, transparent 62%)`, filter:'blur(18px)', opacity:0.85 }} />
+    </div>
+  );
 }
 
-export default ProductPage
+function ProductHeroSection() {
+  return (
+    <section className="product-section">
+      <div className="product-section-heading">
+        <p className="product-eyebrow">Product outputs</p>
+        <h2>Evidence your existing tools can use.</h2>
+        <p>
+          RackTrack does not ask teams to abandon their systems of record. It gives those systems a verified
+          physical layer to reconcile against.
+        </p>
+      </div>
+      <div className="product-card-grid">
+        {OUTPUTS.map((output) => (
+          <article className="product-card" key={output.title}>
+            <h3>{output.title}</h3>
+            <p>{output.body}</p>
+          </article>
+        ))}
+      </div>
+      <div className="product-actions">
+        <Link className="product-button primary" to="/contact">
+          Book a Baseline Assessment
+        </Link>
+        <Link className="product-button" to="/why-racktrack">
+          Compare Approaches
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+export default function ProductPage() {
+  return (
+    <div className="product-page">
+      <section style={{ position:'relative', minHeight:'70vh', display:'flex', alignItems:'center', overflow:'hidden', paddingTop:'7rem', paddingBottom:'2rem', paddingLeft:'4rem', paddingRight:'4rem' }}>
+        <PageHeroScene />
+        <div style={{ position:'absolute', bottom:0, left:0, right:0, height:'160px', background:'linear-gradient(to top, #0B0F14, transparent)', pointerEvents:'none', zIndex:10 }} />
+        <div style={{ position:'relative', zIndex:20, maxWidth:'680px' }}>
+          <div style={{ display:'inline-flex', alignItems:'center', gap:'0.5rem', background:'rgba(34,241,76,0.08)', border:'1px solid rgba(34,241,76,0.24)', borderRadius:'999px', padding:'0.375rem 1rem', marginBottom:'2rem' }}>
+            <span style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#22F14C', boxShadow:'0 0 12px rgba(34,241,76,0.75)' }} />
+            <span style={{ fontSize:'0.6875rem', fontWeight:500, letterSpacing:'0.12em', textTransform:'uppercase', color:'#22F14C' }}>Product</span>
+          </div>
+          <h1 style={{ fontFamily:'Syne,sans-serif', fontSize:'clamp(2rem,5vw,3.25rem)', fontWeight:700, lineHeight:1.08, letterSpacing:'-0.03em', color:'#EAF2FF', marginBottom:'1.5rem' }}>What RackTrack actually sees.</h1>
+          <p style={{ fontSize:'1.0625rem', color:'#8CA0B8', lineHeight:1.78, fontWeight:300, maxWidth:'560px' }}>Inventory, port-level topology, and evidence for compliance — generated from computer vision applied to your rack.</p>
+        </div>
+      </section>
+
+      <ProductHeroSection />
+    </div>
+  );
+}
