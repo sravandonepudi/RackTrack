@@ -50,8 +50,8 @@ function PageHeroScene() {
   const theme = { accent: '#3B82F6', secondary: '#22F14C', glow: 'rgba(59,130,246,0.2)' };
 
   return (
-    <div aria-hidden="true" style={{ position:'absolute', inset:0, zIndex:0, pointerEvents:'none', overflow:'hidden', background:`radial-gradient(circle at 75% 35%, ${theme.glow}, transparent 30%), radial-gradient(circle at 20% 80%, rgba(255,255,255,0.05), transparent 28%)` }}>
-      <div style={{ position:'absolute', right:'6%', top:'18%', width:'min(38vw, 520px)', minWidth:'280px', aspectRatio:'0.82', border:'1px solid rgba(174,183,194,0.16)', borderRadius:'8px', transform:'perspective(900px) rotateY(-16deg) rotateX(6deg)', boxShadow:`0 0 70px ${theme.glow}, inset 0 1px 0 rgba(255,255,255,0.08)`, background:'linear-gradient(160deg, rgba(18,26,36,0.88), rgba(2,6,23,0.5))', padding:'18px', display:'grid', gridTemplateColumns:'repeat(2, 1fr)', gap:'12px', opacity:0.92 }}>
+    <div aria-hidden="true" style={{ position:'absolute', inset:0, zIndex:0, pointerEvents:'none', overflow:'hidden', background:'transparent' }}>
+      <div style={{ position:'absolute', right:'6%', top:'18%', width:'min(38vw, 520px)', minWidth:'280px', aspectRatio:'0.82', border:'1px solid rgba(174,183,194,0.16)', borderRadius:'8px', transform:'perspective(900px) rotateY(-16deg) rotateX(6deg)', boxShadow:'inset 0 1px 0 rgba(255,255,255,0.08)', background:'linear-gradient(160deg, rgba(18,26,36,0.88), rgba(2,6,23,0.5))', padding:'18px', display:'grid', gridTemplateColumns:'repeat(2, 1fr)', gap:'12px', opacity:0.92 }}>
         {Array.from({ length: 10 }).map((_, rackIndex) => (
           <div key={rackIndex} style={{ border:'1px solid rgba(174,183,194,0.12)', borderRadius:'6px', background:'rgba(0,0,0,0.35)', padding:'8px', display:'flex', flexDirection:'column', gap:'6px' }}>
             {Array.from({ length: 4 }).map((_, rowIndex) => (
@@ -60,7 +60,7 @@ function PageHeroScene() {
           </div>
         ))}
       </div>
-      <div style={{ position:'absolute', inset:'12% -10%', background:`linear-gradient(105deg, transparent 36%, ${theme.glow} 48%, transparent 62%)`, filter:'blur(18px)', opacity:0.85 }} />
+      <div style={{ display:'none' }} />
     </div>
   );
 }
@@ -100,7 +100,7 @@ export default function UseCasesPage() {
 
       {/* ROLE SECTIONS */}
       {ROLES.map((role, i) => (
-        <section key={role.id} id={role.id} style={{ padding:'6rem 4rem', position:'relative', background: i%2===1 ? 'rgba(18,26,36,0.25)':'transparent' }}>
+        <section key={role.id} id={role.id} style={{ padding:'6rem 4rem', position:'relative', background:'transparent' }}>
           <div style={{ maxWidth:'80rem', margin:'0 auto', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'5rem', alignItems:'center' }} className="max-lg:grid-cols-1">
             {/* Text side */}
             <div style={{ order: i%2===1 ? 2:1 }}>
