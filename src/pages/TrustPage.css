@@ -1,9 +1,10 @@
 .trust-page {
-  --trust-cyan: var(--accent-cyan);
-  --trust-aqua: var(--accent-aqua);
-  --trust-purple: var(--accent-purple);
-  --trust-panel: rgba(11, 16, 38, 0.74);
-  --trust-border: rgba(0, 209, 255, 0.22);
+  --trust-cyan: #00f0ff;
+  --trust-aqua: #67f3ff;
+  --trust-purple: #8b5cf6;
+  --trust-blue: #2f91ff;
+  --trust-panel: rgba(8, 13, 34, 0.78);
+  --trust-border: rgba(0, 209, 255, 0.28);
   --trust-muted: var(--text-secondary);
   position: relative;
   color: #ffffff;
@@ -13,18 +14,19 @@
 .trust-hero {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(320px, 0.54fr) minmax(560px, 1fr);
+  grid-template-columns: minmax(390px, 0.4fr) minmax(500px, 0.45fr);
+  justify-content: space-between;
   align-items: center;
-  gap: 36px;
-  min-height: 76vh;
-  padding: 7.2rem 2rem 3.4rem;
+  gap: clamp(28px, 4vw, 64px);
+  min-height: min(760px, 76vh);
+  padding: clamp(6.5rem, 9vh, 7.8rem) 2rem clamp(3.4rem, 6vh, 4.8rem);
   overflow: hidden;
 }
 
 .trust-hero-copy {
   position: relative;
   z-index: 2;
-  max-width: 560px;
+  max-width: 520px;
 }
 
 .trust-kicker,
@@ -52,29 +54,46 @@
   box-shadow: 0 0 16px rgba(0, 209, 255, 0.34);
 }
 
-.trust-hero h1,
 .trust-section h2,
 .trust-bottom-cta h2 {
   margin: 0;
-  color: #ffffff !important;
   font-family: Inter, system-ui, sans-serif;
   font-weight: 800;
+  letter-spacing: 0;
+  background: linear-gradient(120deg, #ffffff 0 18%, var(--trust-aqua) 36%, var(--trust-cyan) 58%, var(--trust-blue) 78%, var(--trust-purple) 100%);
+  background-clip: text;
+  color: transparent !important;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.trust-page .trust-hero h1 {
+  max-width: 540px;
+  margin: 0;
+  background: none;
+  color: #ffffff !important;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: clamp(2.85rem, 4.55vw, 4.65rem);
+  font-weight: 850;
+  line-height: 0.98;
   letter-spacing: 0;
   -webkit-text-fill-color: currentColor;
 }
 
-.trust-hero h1 {
-  max-width: 560px;
-  font-size: clamp(2.7rem, 4.2vw, 4.15rem);
-  line-height: 1.06;
+.trust-page .trust-hero h1 span {
+  background: linear-gradient(110deg, var(--trust-aqua), var(--trust-cyan) 48%, var(--trust-blue));
+  background-clip: text;
+  color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .trust-hero-copy > p:not(.trust-kicker) {
-  max-width: 520px;
-  margin-top: 1.45rem;
+  max-width: 470px;
+  margin-top: 1.65rem;
   color: var(--trust-muted);
-  font-size: 1.04rem;
-  line-height: 1.7;
+  font-size: 1rem;
+  line-height: 1.66;
 }
 
 .trust-actions {
@@ -86,8 +105,9 @@
 
 .trust-hero .trust-actions {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  width: min(100%, 500px);
+  grid-template-columns: repeat(2, max-content);
+  width: max-content;
+  margin-top: 2.25rem;
 }
 
 .trust-button {
@@ -97,15 +117,21 @@
   min-height: 46px;
   padding: 12px 18px;
   gap: 10px;
-  border: 1px solid rgba(139, 92, 246, 0.44);
+  border: 1px solid rgba(0, 209, 255, 0.3);
   border-radius: 8px;
-  background: rgba(11, 16, 38, 0.66);
+  background: linear-gradient(145deg, rgba(12, 21, 47, 0.74), rgba(3, 9, 24, 0.56));
   color: #ffffff;
   font-size: 0.88rem;
   font-weight: 700;
   text-decoration: none;
-  box-shadow: 0 0 24px rgba(139, 92, 246, 0.1);
-  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 0 24px rgba(0, 209, 255, 0.1);
+  backdrop-filter: blur(14px);
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+
+.trust-hero .trust-button {
+  padding-inline: 24px;
+  white-space: nowrap;
 }
 
 .trust-button::after {
@@ -115,182 +141,35 @@
 .trust-button:hover {
   transform: translateY(-1px);
   border-color: rgba(0, 240, 255, 0.54);
-  box-shadow: 0 0 28px rgba(0, 209, 255, 0.18);
+  background: linear-gradient(145deg, rgba(15, 34, 68, 0.82), rgba(3, 9, 24, 0.64));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 0 32px rgba(0, 209, 255, 0.2);
 }
 
 .trust-button--primary {
   border-color: transparent;
-  background: var(--gradient-primary);
+  background: linear-gradient(135deg, var(--trust-cyan), var(--trust-purple));
   color: #ffffff;
-  box-shadow: 0 0 30px rgba(0, 209, 255, 0.28), 0 0 44px rgba(139, 92, 246, 0.16);
+  box-shadow: 0 0 30px rgba(0, 209, 255, 0.32), 0 0 44px rgba(139, 92, 246, 0.18);
 }
 
-.trust-hero-scene {
+.trust-button--primary:hover {
+  background: linear-gradient(135deg, var(--trust-aqua), var(--trust-blue) 52%, var(--trust-purple));
+}
+
+.trust-hero-image {
   position: relative;
   z-index: 1;
-  min-height: 520px;
-  width: 100%;
-  max-width: 820px;
+  display: block;
+  width: min(100%, 580px);
+  height: auto;
   margin-left: auto;
-  overflow: hidden;
-}
-
-.hero-rack-cluster {
-  position: absolute;
-  left: 2%;
-  top: 7%;
-  width: 64%;
-  height: 62%;
-  display: flex;
-  gap: 10px;
-  transform: perspective(1100px) rotateY(-15deg) rotateX(3deg);
-}
-
-.hero-rack {
-  flex: 1;
-  min-width: 76px;
-  padding: 14px 10px;
-  border: 1px solid rgba(0, 209, 255, 0.34);
-  border-radius: 8px 8px 4px 4px;
-  background:
-    linear-gradient(90deg, rgba(0, 209, 255, 0.12), transparent 18% 82%, rgba(0, 209, 255, 0.1)),
-    linear-gradient(180deg, #12264b, #07162e);
-  box-shadow: inset 0 0 22px rgba(0, 209, 255, 0.14), 0 24px 44px rgba(0, 0, 0, 0.36);
-}
-
-.hero-rack-row {
-  display: grid;
-  grid-template-columns: 1fr 0.45fr 0.24fr;
-  gap: 6px;
-  height: 25px;
-  margin-bottom: 8px;
-  padding: 5px;
-  border: 1px solid rgba(0, 209, 255, 0.2);
-  border-radius: 3px;
-  background: rgba(0, 5, 15, 0.52);
-}
-
-.hero-rack-row i {
-  border-radius: 999px;
-  background: rgba(117, 174, 239, 0.28);
-}
-
-.hero-rack-row:nth-child(2n) i:first-child,
-.hero-rack-row:nth-child(5n) i:nth-child(2) {
-  background: var(--trust-cyan);
-  box-shadow: 0 0 14px rgba(0, 209, 255, 0.74);
-}
-
-.hero-scan-line {
-  position: absolute;
-  left: 1%;
-  right: 18%;
-  top: 42%;
-  height: 4px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, transparent, var(--trust-cyan) 16%, #ffffff 50%, transparent);
-  box-shadow: 0 0 28px rgba(0, 209, 255, 0.72);
-}
-
-.hero-shield {
-  position: absolute;
-  left: 44%;
-  top: 23%;
-  display: grid;
-  place-items: center;
-  width: 96px;
-  height: 118px;
-  color: var(--trust-aqua);
-  font-size: 3.1rem;
-  font-weight: 900;
-  border: 3px solid rgba(0, 209, 255, 0.72);
-  background: linear-gradient(160deg, rgba(0, 209, 255, 0.22), rgba(139, 92, 246, 0.08));
-  clip-path: polygon(50% 0, 91% 16%, 82% 75%, 50% 100%, 18% 75%, 9% 16%);
-  text-shadow: 0 0 18px rgba(0, 209, 255, 0.68);
-  box-shadow: 0 0 32px rgba(0, 209, 255, 0.2);
-}
-
-.hero-vault-beam {
-  position: absolute;
-  left: 52%;
-  bottom: 13%;
-  width: 170px;
-  height: 90px;
-  border: 1px solid rgba(0, 209, 255, 0.42);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(0, 209, 255, 0.18), transparent 68%);
-  box-shadow: 0 0 34px rgba(0, 209, 255, 0.2);
-}
-
-.hero-vault-beam::before {
-  content: '';
-  position: absolute;
-  left: 42px;
-  right: 42px;
-  bottom: 38px;
-  height: 132px;
-  background: linear-gradient(to top, rgba(0, 209, 255, 0.22), transparent);
-  clip-path: polygon(50% 0, 100% 100%, 0 100%);
-}
-
-.hero-callout {
-  position: absolute;
-  right: 0;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  column-gap: 12px;
-  row-gap: 2px;
-  width: 220px;
-  padding: 14px;
-  border: 1px solid rgba(0, 209, 255, 0.28);
-  border-radius: 8px;
-  background: rgba(11, 16, 38, 0.72);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 0 28px rgba(0, 209, 255, 0.08);
-}
-
-.hero-callout::before {
-  content: '';
-  position: absolute;
-  right: 100%;
-  top: 50%;
-  width: 78px;
-  border-top: 2px dotted rgba(0, 209, 255, 0.7);
-}
-
-.hero-callout--scan {
-  top: 18%;
-}
-
-.hero-callout--data {
-  top: 38%;
-}
-
-.hero-callout--tenant {
-  top: 58%;
-}
-
-.hero-callout .trust-icon {
-  grid-row: span 2;
-  width: 34px;
-  height: 34px;
-}
-
-.hero-callout strong {
-  color: #ffffff;
-  font-size: 0.82rem;
-  text-transform: uppercase;
-}
-
-.hero-callout > span:not(.trust-icon) {
-  color: var(--trust-muted);
-  font-size: 0.78rem;
-  line-height: 1.35;
+  object-fit: contain;
+  filter: drop-shadow(0 26px 64px rgba(0, 209, 255, 0.12));
 }
 
 .trust-section {
   position: relative;
-  padding: 72px 32px;
+  padding: 56px 32px 72px;
 }
 
 .trust-section--center {
@@ -298,7 +177,7 @@
 }
 
 .trust-section--center > p:not(.trust-section-label) {
-  margin: 0.45rem auto 2rem;
+  margin: 0.7rem auto 2rem;
   color: var(--trust-muted);
   line-height: 1.7;
 }
@@ -319,9 +198,7 @@
 .trust-video-flow {
   border: 1px solid var(--trust-border);
   border-radius: 8px;
-  background:
-    radial-gradient(circle at 50% 0, rgba(0, 209, 255, 0.16), transparent 46%),
-    linear-gradient(145deg, rgba(0, 209, 255, 0.08), rgba(11, 16, 38, 0.84) 48%, rgba(139, 92, 246, 0.1));
+  background: linear-gradient(145deg, rgba(0, 209, 255, 0.11), rgba(8, 13, 34, 0.84) 46%, rgba(139, 92, 246, 0.16));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 18px 40px rgba(0, 0, 0, 0.22);
 }
 
@@ -331,21 +208,37 @@
   text-align: center;
 }
 
-.security-card .trust-icon {
-  width: 92px;
-  height: 92px;
-  margin: 0 auto 20px;
+.security-logo-hud {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 114px;
+  height: 114px;
+  margin: -2px auto 12px;
+  border: 1px solid rgba(103, 243, 255, 0.44);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 50% 44%, rgba(151, 248, 255, 0.34), rgba(0, 240, 255, 0.12) 27%, transparent 52%),
+    radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.22), transparent 32%),
+    linear-gradient(145deg, rgba(13, 45, 92, 0.62), rgba(2, 12, 33, 0.9));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    inset 0 -18px 36px rgba(0, 8, 28, 0.72),
+    0 0 0 1px rgba(0, 209, 255, 0.08),
+    0 0 28px rgba(0, 209, 255, 0.28),
+    0 18px 42px rgba(0, 0, 0, 0.38);
+  isolation: isolate;
 }
 
 .security-card h3,
 .deployment-card h3,
 .video-step h3 {
   margin: 0;
-  color: #ffffff !important;
+  color: var(--trust-cyan) !important;
   font-family: Inter, system-ui, sans-serif;
   font-weight: 700;
   line-height: 1.15;
-  text-shadow: none;
+  text-shadow: 0 0 18px rgba(0, 209, 255, 0.18);
   -webkit-text-fill-color: currentColor;
 }
 
@@ -391,7 +284,7 @@
 }
 
 .video-copy h2 {
-  margin-top: 0.4rem;
+  margin-top: 0;
   font-size: clamp(2.2rem, 4.1vw, 3.6rem);
   line-height: 1.02;
 }
@@ -421,7 +314,7 @@
   border: 1px solid rgba(0, 209, 255, 0.48);
   border-top: 0;
   border-radius: 0 0 8px 8px;
-  background: #050816;
+  background: rgba(3, 7, 19, 0.96);
   color: var(--trust-cyan);
   font-size: 0.75rem;
   font-weight: 700;
@@ -458,10 +351,24 @@
   text-align: center;
 }
 
-.video-step .trust-icon {
-  width: 84px;
-  height: 84px;
-  margin: 0.8rem auto 0.9rem;
+.workflow-logo-hud {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 112px;
+  height: 96px;
+  margin: 0.35rem auto 0.9rem;
+  border: 1px solid rgba(0, 209, 255, 0.38);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(103, 243, 255, 0.22), transparent 44%),
+    linear-gradient(145deg, rgba(11, 39, 86, 0.62), rgba(2, 11, 30, 0.92));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -20px 32px rgba(0, 4, 20, 0.62),
+    0 0 24px rgba(0, 209, 255, 0.2),
+    0 18px 30px rgba(0, 0, 0, 0.28);
+  isolation: isolate;
 }
 
 .video-step h3 {
@@ -544,10 +451,14 @@
   text-align: center;
 }
 
-.deployment-card .trust-icon {
-  width: 118px;
-  height: 102px;
-  margin: 0 auto 20px;
+.deployment-logo-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 188px;
+  height: 136px;
+  margin: -4px auto 12px;
+  isolation: isolate;
 }
 
 .deployment-card h3 {
@@ -810,14 +721,452 @@
   clip-path: polygon(50% 0, 90% 16%, 80% 74%, 50% 100%, 20% 74%, 10% 16%);
 }
 
+.security-logo-hud::before,
+.security-logo-hud::after,
+.security-logo-orbit {
+  content: '';
+  position: absolute;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.security-logo-hud::before {
+  inset: -1px;
+  z-index: -1;
+  background:
+    conic-gradient(
+      from 12deg,
+      transparent 0 14%,
+      rgba(103, 243, 255, 0.88) 18%,
+      transparent 24% 44%,
+      rgba(47, 145, 255, 0.72) 49%,
+      transparent 55% 78%,
+      rgba(255, 255, 255, 0.62) 81%,
+      transparent 87%
+    );
+  box-shadow: 0 0 22px rgba(0, 240, 255, 0.22);
+  mask: radial-gradient(circle, transparent 61%, #000 63% 68%, transparent 70%);
+  animation: trust-hud-spin 8s linear infinite;
+}
+
+.security-logo-hud::after {
+  inset: 12px;
+  z-index: 0;
+  border: 1px solid rgba(103, 243, 255, 0.34);
+  background:
+    linear-gradient(rgba(103, 243, 255, 0.24), rgba(103, 243, 255, 0.24)) center top / 1px 11px no-repeat,
+    linear-gradient(90deg, rgba(103, 243, 255, 0.2), rgba(103, 243, 255, 0.2)) right center / 11px 1px no-repeat,
+    linear-gradient(rgba(103, 243, 255, 0.18), rgba(103, 243, 255, 0.18)) center bottom / 1px 11px no-repeat,
+    linear-gradient(90deg, rgba(103, 243, 255, 0.18), rgba(103, 243, 255, 0.18)) left center / 11px 1px no-repeat,
+    radial-gradient(circle, rgba(3, 24, 60, 0.18), rgba(3, 10, 29, 0.58));
+  box-shadow:
+    inset 0 0 18px rgba(0, 240, 255, 0.14),
+    0 0 14px rgba(0, 240, 255, 0.16);
+  animation: trust-hud-pulse 3.6s ease-in-out infinite;
+}
+
+.security-logo-orbit {
+  inset: 5px;
+  z-index: 1;
+  border: 1px solid rgba(47, 145, 255, 0.2);
+  box-shadow: inset 0 0 18px rgba(0, 240, 255, 0.08);
+  animation: trust-hud-spin 13s linear infinite reverse;
+}
+
+.security-logo-core {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 82px;
+  height: 82px;
+  animation: trust-logo-float 4.2s ease-in-out infinite;
+}
+
+.security-logo-core svg {
+  width: 78px;
+  height: 78px;
+  overflow: visible;
+  filter:
+    drop-shadow(0 0 3px rgba(255, 255, 255, 0.72))
+    drop-shadow(0 0 10px rgba(0, 240, 255, 0.82))
+    drop-shadow(0 12px 18px rgba(0, 72, 170, 0.38));
+}
+
+.security-logo-core path,
+.security-logo-core circle {
+  fill: rgba(13, 83, 190, 0.5);
+  stroke: #bffbff;
+  stroke-width: 2.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.security-logo-core path:nth-child(2),
+.security-logo-core path:nth-child(4) {
+  fill: rgba(219, 253, 255, 0.92);
+  stroke: rgba(103, 243, 255, 0.96);
+}
+
+.workflow-logo-hud::before,
+.workflow-logo-hud::after,
+.workflow-logo-orbit {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+
+.workflow-logo-hud::before {
+  inset: -10px 0;
+  z-index: -1;
+  border: 1px solid rgba(103, 243, 255, 0.26);
+  border-radius: 999px;
+  background:
+    conic-gradient(
+      from 30deg,
+      transparent 0 18%,
+      rgba(103, 243, 255, 0.9) 22%,
+      transparent 27% 48%,
+      rgba(47, 145, 255, 0.72) 52%,
+      transparent 58% 82%,
+      rgba(255, 255, 255, 0.48) 85%,
+      transparent 89%
+    );
+  box-shadow: 0 0 24px rgba(0, 240, 255, 0.2);
+  mask: radial-gradient(ellipse, transparent 61%, #000 63% 67%, transparent 69%);
+  animation: trust-hud-spin 9.5s linear infinite;
+}
+
+.workflow-logo-hud::after {
+  inset: 8px;
+  z-index: 0;
+  border: 1px solid rgba(103, 243, 255, 0.22);
+  border-radius: 18px;
+  background:
+    linear-gradient(90deg, transparent, rgba(103, 243, 255, 0.2), transparent) 50% 6px / 72% 1px no-repeat,
+    linear-gradient(90deg, transparent, rgba(47, 145, 255, 0.16), transparent) 50% calc(100% - 6px) / 58% 1px no-repeat,
+    radial-gradient(circle, rgba(0, 240, 255, 0.08), transparent 66%);
+  animation: workflow-hud-breathe 3.8s ease-in-out infinite;
+}
+
+.workflow-logo-orbit {
+  inset: 3px 11px;
+  z-index: 1;
+  border: 1px solid rgba(103, 243, 255, 0.18);
+  border-radius: 999px;
+  box-shadow: inset 0 0 18px rgba(0, 240, 255, 0.08);
+  animation: trust-hud-spin 14s linear infinite reverse;
+}
+
+.workflow-logo-core {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 100px;
+  height: 86px;
+  animation: workflow-logo-drift 4.4s ease-in-out infinite;
+}
+
+.workflow-logo-core svg {
+  width: 92px;
+  height: 80px;
+  overflow: visible;
+  filter:
+    drop-shadow(0 0 4px rgba(255, 255, 255, 0.46))
+    drop-shadow(0 0 12px rgba(0, 240, 255, 0.7))
+    drop-shadow(0 12px 20px rgba(0, 72, 170, 0.34));
+}
+
+.workflow-logo-core path,
+.workflow-logo-core circle,
+.workflow-logo-core rect {
+  fill: rgba(9, 66, 154, 0.38);
+  stroke: rgba(166, 247, 255, 0.96);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.workflow-logo-hud--rack .workflow-logo-core svg {
+  width: 106px;
+  height: 82px;
+}
+
+.workflow-logo-hud--rack .workflow-logo-core svg > rect {
+  fill: url(#rack-panel);
+  stroke: rgba(103, 243, 255, 0.36);
+}
+
+.workflow-logo-hud--rack .workflow-logo-core path {
+  fill: url(#rack-panel);
+  stroke: rgba(188, 249, 255, 0.44);
+}
+
+.workflow-logo-hud--rack .workflow-logo-core g rect {
+  fill: url(#rack-light);
+  stroke: rgba(103, 243, 255, 0.28);
+  stroke-width: 0.8;
+}
+
+.workflow-logo-hud--brain .workflow-logo-core path:first-child {
+  stroke: rgba(255, 255, 255, 0.72);
+}
+
+.workflow-logo-hud--records .workflow-logo-core rect:first-child,
+.workflow-logo-hud--control .workflow-logo-core path:first-child {
+  fill: rgba(11, 57, 135, 0.68);
+}
+
+.workflow-logo-hud--records .workflow-logo-core rect:not(:first-child) {
+  fill: rgba(209, 252, 255, 0.88);
+  stroke: rgba(103, 243, 255, 0.92);
+}
+
+.workflow-logo-hud--control .workflow-logo-core circle {
+  fill: rgba(205, 252, 255, 0.32);
+}
+
+.deployment-logo-stage::before,
+.deployment-logo-stage::after,
+.deployment-logo-platform {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+
+.deployment-logo-stage::before {
+  inset: auto 6px 10px;
+  height: 50px;
+  z-index: -1;
+  border: 1px solid rgba(103, 243, 255, 0.38);
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse, rgba(103, 243, 255, 0.26), rgba(0, 240, 255, 0.08) 35%, transparent 68%),
+    repeating-radial-gradient(ellipse, rgba(103, 243, 255, 0.2) 0 1px, transparent 2px 13px);
+  box-shadow:
+    inset 0 0 28px rgba(0, 240, 255, 0.12),
+    0 0 30px rgba(0, 240, 255, 0.24);
+  animation: deployment-platform-pulse 3.8s ease-in-out infinite;
+}
+
+.deployment-logo-stage::after {
+  left: 50%;
+  bottom: 12px;
+  width: 6px;
+  height: 82px;
+  z-index: 0;
+  border-radius: 999px;
+  background: linear-gradient(to top, rgba(0, 240, 255, 0.96), rgba(103, 243, 255, 0.24), transparent);
+  box-shadow: 0 0 24px rgba(0, 240, 255, 0.48);
+  transform: translateX(-50%);
+  opacity: 0.72;
+  animation: deployment-beam 3.2s ease-in-out infinite;
+}
+
+.deployment-logo-platform {
+  inset: auto 18px 18px;
+  height: 38px;
+  z-index: 1;
+  border: 1px solid rgba(47, 145, 255, 0.38);
+  border-radius: 50%;
+  background:
+    conic-gradient(
+      from 20deg,
+      transparent 0 14%,
+      rgba(103, 243, 255, 0.9) 18%,
+      transparent 24% 47%,
+      rgba(47, 145, 255, 0.78) 52%,
+      transparent 58% 80%,
+      rgba(255, 255, 255, 0.44) 84%,
+      transparent 89%
+    );
+  box-shadow: 0 0 22px rgba(0, 209, 255, 0.18);
+  mask: radial-gradient(ellipse, transparent 54%, #000 57% 67%, transparent 70%);
+  animation: deployment-ring-spin 10s linear infinite;
+}
+
+.deployment-logo-core {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 144px;
+  height: 114px;
+  animation: deployment-logo-float 4.6s ease-in-out infinite;
+}
+
+.deployment-logo-core svg {
+  width: 144px;
+  height: 114px;
+  overflow: visible;
+  filter:
+    drop-shadow(0 0 5px rgba(255, 255, 255, 0.44))
+    drop-shadow(0 0 15px rgba(0, 240, 255, 0.74))
+    drop-shadow(0 20px 28px rgba(0, 72, 170, 0.36));
+}
+
+.deployment-logo-core path,
+.deployment-logo-core rect {
+  fill: rgba(8, 58, 148, 0.46);
+  stroke: rgba(182, 249, 255, 0.94);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.deployment-logo-stage--cloud .deployment-logo-core path:first-child,
+.deployment-logo-stage--private .deployment-logo-core path:first-child {
+  fill: rgba(13, 75, 178, 0.58);
+}
+
+.deployment-logo-stage--cloud .deployment-logo-core path:nth-child(2) {
+  fill: rgba(221, 253, 255, 0.9);
+  stroke: rgba(103, 243, 255, 0.96);
+}
+
+.deployment-logo-stage--private .deployment-logo-core path:nth-child(2) {
+  fill: rgba(16, 95, 205, 0.66);
+}
+
+.deployment-logo-stage--private .deployment-logo-core path:nth-child(3) {
+  fill: none;
+  stroke: rgba(229, 254, 255, 0.98);
+  stroke-width: 3.2;
+}
+
+.deployment-logo-stage--onprem .deployment-logo-core path:first-child,
+.deployment-logo-stage--airgap .deployment-logo-core path:first-child {
+  fill: rgba(17, 56, 126, 0.7);
+}
+
+.deployment-logo-stage--onprem .deployment-logo-core rect {
+  fill: rgba(103, 243, 255, 0.86);
+  stroke: rgba(47, 145, 255, 0.56);
+  stroke-width: 0.8;
+}
+
+.deployment-logo-stage--airgap .deployment-logo-core path:nth-child(5) {
+  fill: rgba(219, 253, 255, 0.36);
+}
+
+.deployment-logo-stage--airgap .deployment-logo-core path:nth-child(6) {
+  fill: none;
+}
+
+@keyframes trust-hud-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes trust-hud-pulse {
+  0%,
+  100% {
+    opacity: 0.78;
+    transform: scale(0.98);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes trust-logo-float {
+  0%,
+  100% {
+    transform: translateY(1px) scale(0.985);
+  }
+
+  50% {
+    transform: translateY(-3px) scale(1.015);
+  }
+}
+
+@keyframes workflow-hud-breathe {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: scale(0.985);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes workflow-logo-drift {
+  0%,
+  100% {
+    transform: translateY(2px);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes deployment-ring-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes deployment-platform-pulse {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: scale(0.98);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes deployment-beam {
+  0%,
+  100% {
+    opacity: 0.42;
+    transform: translateX(-50%) scaleY(0.88);
+  }
+
+  50% {
+    opacity: 0.88;
+    transform: translateX(-50%) scaleY(1.04);
+  }
+}
+
+@keyframes deployment-logo-float {
+  0%,
+  100% {
+    transform: translateY(3px);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
 @media (max-width: 1180px) {
   .trust-hero,
   .trust-video-section {
     grid-template-columns: 1fr;
   }
 
-  .trust-hero-scene {
-    max-width: 760px;
+  .trust-hero {
+    min-height: auto;
+  }
+
+  .trust-hero-copy {
+    max-width: 660px;
+  }
+
+  .trust-hero-image {
+    max-width: 640px;
     margin: 0 auto;
   }
 
@@ -871,6 +1220,7 @@
 @media (max-width: 640px) {
   .trust-hero h1 {
     font-size: clamp(2.2rem, 11vw, 3.2rem);
+    line-height: 1;
   }
 
   .trust-hero .trust-actions {
@@ -882,26 +1232,8 @@
     font-size: 0.76rem;
   }
 
-  .trust-hero-scene {
-    min-height: 390px;
-  }
-
-  .hero-rack-cluster {
-    left: 0;
-    width: 72%;
-  }
-
-  .hero-rack {
-    min-width: 54px;
-    padding: 10px 7px;
-  }
-
-  .hero-callout {
-    width: 176px;
-  }
-
-  .hero-callout::before {
-    width: 36px;
+  .trust-hero-image {
+    width: 100%;
   }
 
   .tenant-label {
@@ -912,5 +1244,22 @@
 
   .trust-bottom-cta {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .security-logo-hud::before,
+  .security-logo-hud::after,
+  .security-logo-orbit,
+  .security-logo-core,
+  .workflow-logo-hud::before,
+  .workflow-logo-hud::after,
+  .workflow-logo-orbit,
+  .workflow-logo-core,
+  .deployment-logo-stage::before,
+  .deployment-logo-stage::after,
+  .deployment-logo-platform,
+  .deployment-logo-core {
+    animation: none;
   }
 }
