@@ -1,61 +1,15 @@
 .trust-page {
   position: relative;
-  left: 50%;
-  right: 50%;
-  width: 100vw;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  box-sizing: border-box;
   text-align: left;
   min-height: 100vh;
-  background: #081B36;
-  color: #EDF6FF;
+  background: transparent;
+  color: #FFFFFF;
   overflow-x: hidden;
 }
 
-.page-content {
+.trust-page .page-content {
   position: relative;
   z-index: 1;
-}
-
-.sparkle-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.sparkle {
-  position: absolute;
-  border-radius: 999px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.18));
-  opacity: 0.7;
-  box-shadow: 0 0 16px rgba(255,255,255,0.35);
-  animation: sparkle-flow linear infinite;
-  transform-origin: center center;
-  mix-blend-mode: screen;
-  will-change: transform, opacity;
-}
-
-@keyframes sparkle-flow {
-  0% {
-    transform: translate(-10px, -40px) skewY(-12deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.72;
-  }
-  50% {
-    transform: translate(12px, 55vh) skewY(-12deg);
-  }
-  90% {
-    opacity: 0.4;
-  }
-  100% {
-    transform: translate(25px, 120vh) skewY(-12deg);
-    opacity: 0;
-  }
 }
 
 @media (max-width: 1024px) {
