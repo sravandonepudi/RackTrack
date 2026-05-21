@@ -1,5 +1,15 @@
 .trust-page {
+  position: relative;
   text-align: left;
+  min-height: 100vh;
+  background: transparent;
+  color: #FFFFFF;
+  overflow-x: hidden;
+}
+
+.trust-page .page-content {
+  position: relative;
+  z-index: 1;
 }
 
 @media (max-width: 1024px) {

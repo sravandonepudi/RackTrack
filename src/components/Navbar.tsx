@@ -1,29 +1,25 @@
-import React from 'react'
+import type { ReactElement } from 'react'
 import { NavLink } from 'react-router-dom'
-import './NavBar.css'
+import RackTrackLogo from './RackTrackLogo'
+import './Navbar.css'
 
 const navItems = [
   { path: '/', label: 'Home' },
-  { path: '/product', label: 'Product' },
-  { path: '/use-cases', label: 'Use Cases' },
-  { path: '/why-racktrack', label: 'Why RackTrack' },
-  { path: '/trust', label: 'Trust & Security' },
-  { path: '/company', label: 'Company' },
+  { path: '/product', label: 'Products' },
+  { path: '/use-cases', label: 'Solutions' },
+  { path: '/why-racktrack', label: 'Why Us' },
+  { path: '/trust', label: 'Security' },
+  { path: '/company', label: 'About' },
   { path: '/resources', label: 'Resources' },
-  { path: '/contact', label: 'Book Assessment' },
 ]
 
-export default function NavBar(): JSX.Element {
+export default function NavBar(): ReactElement {
   return (
     <header className="navbar">
-      <div className="navbar-brand">
-        <span className="brand-logo" aria-hidden="true">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M3 12L9 6L15 12L9 18L3 12Z" fill="currentColor" />
-          </svg>
-        </span>
-        RackTrack
-      </div>
+      <NavLink to="/" className="navbar-brand" aria-label="RackTrack home">
+        <RackTrackLogo />
+        <span>RackTrack</span>
+      </NavLink>
 
       <nav className="navbar-links">
         {navItems.map((item) => (
@@ -37,6 +33,10 @@ export default function NavBar(): JSX.Element {
           </NavLink>
         ))}
       </nav>
+
+      <NavLink to="/contact" className="nav-cta">
+        Get Started
+      </NavLink>
     </header>
   )
 }

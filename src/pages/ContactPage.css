@@ -21,39 +21,48 @@
   padding: 32px;
   display: grid;
   gap: 18px;
-  border: 1px solid rgba(148, 163, 184, 0.16);
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background: rgba(2, 6, 23, 0.72);
+  background: var(--gradient-panel);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 18px 38px rgba(0, 0, 0, 0.18);
 }
 
 .contact-form h2 {
   margin: 0 0 12px;
   color: #fff;
-  font-size: clamp(2rem, 3vw, 3.4rem);
+  font-size: 2.8rem;
   line-height: 1.05;
 }
 
 .contact-form p {
-  color: #c8d8dc;
+  color: var(--text-secondary);
   line-height: 1.7;
 }
 
 .contact-form label {
   display: grid;
   gap: 8px;
-  color: #e2e8f0;
+  color: #ffffff;
   font-weight: 700;
 }
 
 .contact-form input,
 .contact-form textarea {
   width: 100%;
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  border: 1px solid rgba(0, 209, 255, 0.24);
   border-radius: 6px;
-  background: rgba(0, 0, 0, 0.42);
+  background: rgba(5, 8, 22, 0.78);
   color: #fff;
   font: inherit;
   padding: 12px 14px;
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: rgba(139, 92, 246, 0.74);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.14), 0 0 24px rgba(0, 209, 255, 0.12);
 }
 
 .contact-form textarea {
@@ -67,7 +76,7 @@
   min-height: 46px;
   padding: 12px 18px;
   border: 0;
-  border-radius: 999px;
+  border-radius: 8px;
   color: #fff;
   cursor: pointer;
   font: inherit;
@@ -75,13 +84,18 @@
 }
 
 .contact-button.primary {
-  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green));
-  color: #020617;
+  background: var(--gradient-primary);
+  color: #ffffff;
+  box-shadow: 0 0 28px rgba(0, 209, 255, 0.24), 0 0 38px rgba(139, 92, 246, 0.16);
 }
 
 @media (max-width: 900px) {
   .contact-section {
     padding-left: 0;
     padding-right: 0;
+  }
+
+  .contact-form h2 {
+    font-size: 2.1rem;
   }
 }
