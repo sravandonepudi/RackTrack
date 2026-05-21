@@ -5,7 +5,6 @@ const WHY = {
   body: 'Existing tools sense the rack. Or they read from the network. Or they track vendor and security data. ',
   bodyHighlight: 'RackTrack does all three, in the same pass, and reconciles them',
   bodyTail: ' — which is why the output is trustworthy enough to defend in an audit, fast enough to use in an incident, and complete enough to drive capacity and procurement decisions.',
-  
   pillars: [
     {
       num: '01',
