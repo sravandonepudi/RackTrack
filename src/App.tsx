@@ -10,7 +10,7 @@ import ResourcesPage from './pages/ResourcesPage'
 import ContactPage from './pages/ContactPage'
 import TrustPage from './pages/TrustPage'
 
-import NavBar from './components/NavBar'
+import NavBar from './components/Navbar'
 import Footer from './components/Footer'
 
 const INTERACTIVE_SELECTOR = 'a, button, [role="button"], input, textarea, select, label, summary'
@@ -18,6 +18,50 @@ const TEXT_SELECTOR = 'input, textarea, select, [contenteditable="true"]'
 
 function moveElement(element: HTMLDivElement, x: number, y: number) {
   element.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`
+}
+
+function SpaceBackground() {
+  const backgroundRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const background = backgroundRef.current
+
+    if (!background || motionQuery.matches) {
+      return
+    }
+
+    let frameId = 0
+
+    const updateBackground = () => {
+      const scroll = window.scrollY
+      frameId = 0
+      background.style.setProperty('--stars-x', `${Math.sin(scroll * 0.006) * 72}px`)
+      background.style.setProperty('--stars-y', `${scroll * -0.34}px`)
+      background.style.setProperty('--stars-rotate', `${scroll * 0.045}deg`)
+      background.style.setProperty('--stars-far-y', `${scroll * -0.16}px`)
+      background.style.setProperty('--stars-far-rotate', `${scroll * -0.026}deg`)
+    }
+
+    const handleScroll = () => {
+      if (!frameId) {
+        frameId = window.requestAnimationFrame(updateBackground)
+      }
+    }
+
+    updateBackground()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => {
+      if (frameId) {
+        window.cancelAnimationFrame(frameId)
+      }
+
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
+  return <div ref={backgroundRef} className="milkyway-bg" aria-hidden="true" />
 }
 
 function MouseCursor() {
@@ -103,7 +147,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="app-shell">
-        <div className="milkyway-bg" aria-hidden="true" />
+        <SpaceBackground />
         <MouseCursor />
         <NavBar />
         <main className="page-content">
