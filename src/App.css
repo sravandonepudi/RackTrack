@@ -2,8 +2,8 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #000;
-  color: #ffffff;
+  background: var(--bg-primary);
+  color: var(--text-primary);
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   overflow-x: hidden;
   position: relative;
@@ -11,48 +11,99 @@
 
 .milkyway-bg {
   position: fixed;
-  inset: -20vh -10vw;
+  inset: -35vh -18vw;
   z-index: 0;
   pointer-events: none;
-  background:
-    radial-gradient(ellipse at 30% 15%, rgba(5, 229, 240, 0.24), transparent 30%),
-    radial-gradient(ellipse at 72% 36%, rgba(34, 241, 76, 0.16), transparent 28%),
-    radial-gradient(ellipse at 48% 58%, rgba(148, 163, 184, 0.16), transparent 24%),
-    radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.65) 0 1px, transparent 1.6px),
-    radial-gradient(circle at 70% 42%, rgba(255, 255, 255, 0.5) 0 1px, transparent 1.4px),
-    radial-gradient(circle at 40% 76%, rgba(255, 255, 255, 0.42) 0 1px, transparent 1.2px),
-    linear-gradient(135deg, #000 0%, #02040b 45%, #000 100%);
-  background-size: auto, auto, auto, 120px 120px, 170px 170px, 220px 220px, auto;
-  animation: drift-stars 28s linear infinite;
+  --stars-x: 0px;
+  --stars-y: 0px;
+  --stars-rotate: 0deg;
+  --stars-far-y: 0px;
+  --stars-far-rotate: 0deg;
+  background: #000000;
 }
 
+.milkyway-bg::before,
 .milkyway-bg::after {
   content: '';
   position: absolute;
-  inset: 0;
-  background: linear-gradient(115deg, transparent 12%, rgba(9, 151, 164, 0.12) 36%, rgba(255, 255, 255, 0.08) 47%, rgba(22, 241, 94, 0.1) 58%, transparent 82%);
-  filter: blur(36px);
-  transform: rotate(-8deg);
-  animation: galaxy-sweep 18s ease-in-out infinite alternate;
+  inset: -10%;
+  pointer-events: none;
+  transform-origin: center;
+  will-change: transform, background-position;
 }
 
-@keyframes drift-stars {
+.milkyway-bg::before {
+  opacity: 0.9;
+  background:
+    radial-gradient(circle at 6% 13%, rgba(255, 255, 255, 0.56) 0 1px, transparent 2px),
+    radial-gradient(circle at 11% 42%, rgba(255, 255, 255, 0.36) 0 0.8px, transparent 1.8px),
+    radial-gradient(circle at 18% 78%, rgba(255, 255, 255, 0.48) 0 1px, transparent 2px),
+    radial-gradient(circle at 27% 34%, rgba(255, 255, 255, 0.7) 0 1.2px, transparent 2.4px),
+    radial-gradient(circle at 31% 88%, rgba(255, 255, 255, 0.38) 0 0.9px, transparent 1.9px),
+    radial-gradient(circle at 38% 9%, rgba(255, 255, 255, 0.74) 0 1px, transparent 2px),
+    radial-gradient(circle at 48% 60%, rgba(255, 255, 255, 0.5) 0 1px, transparent 2px),
+    radial-gradient(circle at 53% 36%, rgba(255, 255, 255, 0.34) 0 0.8px, transparent 1.8px),
+    radial-gradient(circle at 58% 22%, rgba(255, 255, 255, 0.64) 0 1px, transparent 2.2px),
+    radial-gradient(circle at 66% 82%, rgba(255, 255, 255, 0.54) 0 1px, transparent 2px),
+    radial-gradient(circle at 71% 11%, rgba(255, 255, 255, 0.4) 0 0.9px, transparent 1.9px),
+    radial-gradient(circle at 77% 43%, rgba(255, 255, 255, 0.44) 0 1px, transparent 2px),
+    radial-gradient(circle at 88% 16%, rgba(255, 255, 255, 0.62) 0 1.2px, transparent 2.4px),
+    radial-gradient(circle at 83% 91%, rgba(255, 255, 255, 0.38) 0 0.8px, transparent 1.8px),
+    radial-gradient(circle at 94% 68%, rgba(255, 255, 255, 0.52) 0 1px, transparent 2px);
+  background-size:
+    260px 260px,
+    420px 420px,
+    310px 310px,
+    520px 520px,
+    610px 610px,
+    340px 340px,
+    760px 760px,
+    470px 470px,
+    290px 290px,
+    680px 680px,
+    570px 570px,
+    360px 360px,
+    830px 830px,
+    640px 640px,
+    330px 330px,
+    500px 500px;
+  transform: translate3d(var(--stars-x), var(--stars-y), 0) rotate(var(--stars-rotate)) scale(1.08);
+  animation: twinkle-stars 5.5s ease-in-out infinite alternate;
+}
+
+.milkyway-bg::after {
+  opacity: 0.62;
+  background:
+    radial-gradient(circle at 14% 24%, rgba(255, 255, 255, 0.88) 0 1.5px, transparent 3px),
+    radial-gradient(circle at 21% 52%, rgba(255, 255, 255, 0.5) 0 0.9px, transparent 2px),
+    radial-gradient(circle at 36% 7%, rgba(255, 255, 255, 0.78) 0 1.4px, transparent 3px),
+    radial-gradient(circle at 45% 86%, rgba(255, 255, 255, 0.48) 0 0.9px, transparent 2px),
+    radial-gradient(circle at 61% 34%, rgba(255, 255, 255, 0.86) 0 1.4px, transparent 3px),
+    radial-gradient(circle at 74% 78%, rgba(255, 255, 255, 0.76) 0 1.3px, transparent 3px),
+    radial-gradient(circle at 80% 48%, rgba(255, 255, 255, 0.46) 0 0.9px, transparent 2px),
+    radial-gradient(circle at 92% 12%, rgba(255, 255, 255, 0.74) 0 1.4px, transparent 3px),
+    linear-gradient(90deg, transparent 0 49.8%, rgba(255, 255, 255, 0.02) 50%, transparent 50.2%),
+    linear-gradient(0deg, transparent 0 49.8%, rgba(255, 255, 255, 0.018) 50%, transparent 50.2%);
+  background-size: 880px 880px, 460px 460px, 740px 740px, 530px 530px, 980px 980px, 820px 820px, 500px 500px, 1120px 1120px, 4px 4px, 4px 4px;
+  transform: translate3d(calc(var(--stars-x) * -0.7), var(--stars-far-y), 0) rotate(var(--stars-far-rotate)) scale(1.12);
+  animation: twinkle-bright-stars 6.8s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle-stars {
   from {
-    transform: translate3d(0, 0, 0) scale(1.02);
+    opacity: 0.68;
   }
   to {
-    transform: translate3d(-3vw, -8vh, 0) scale(1.06);
+    opacity: 1;
   }
 }
 
-@keyframes galaxy-sweep {
+@keyframes twinkle-bright-stars {
   from {
-    opacity: 0.45;
-    translate: -2vw 2vh;
+    opacity: 0.46;
   }
   to {
-    opacity: 0.8;
-    translate: 2vw -3vh;
+    opacity: 0.76;
   }
 }
 
@@ -69,97 +120,6 @@
   max-width: 1280px;
   width: min(100%, 1280px);
   margin: 0 auto;
-}
-
-.navbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 32px;
-  gap: 16px;
-  background: rgba(0, 0, 0, 0.34);
-  backdrop-filter: blur(18px);
-  color: #ffffff;
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
-}
-
-.navbar-brand,
-.footer-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  font-weight: 700;
-  color: #ffffff;
-}
-
-.navbar-brand {
-  font-size: 1.1rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.brand-logo {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-green) 100%);
-  color: #020617;
-}
-
-.brand-logo svg {
-  width: 18px;
-  height: 18px;
-}
-
-.navbar-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 18px;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  min-width: 0;
-}
-
-.nav-link {
-  color: #cbd5e1;
-  text-decoration: none;
-  padding: 10px 12px;
-  border-radius: 999px;
-  font-size: 0.95rem;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.nav-link:hover,
-.nav-link.active {
-  color: #ffffff;
-  background-color: rgba(148, 163, 184, 0.16);
-}
-
-.footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 20px 24px;
-  margin-top: auto;
-  background: rgba(0, 0, 0, 0.62);
-  color: #cbd5e1;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(18px);
-}
-
-.footer-copy {
-  font-size: 0.92rem;
-  color: #94a3b8;
 }
 
 .mouse-cursor {
@@ -210,10 +170,10 @@
   .cursor-ring {
     width: 38px;
     height: 38px;
-    border: 1px solid rgba(5, 229, 240, 0.72);
+    border: 1px solid rgba(0, 209, 255, 0.72);
     border-radius: 999px;
-    background: rgba(5, 229, 240, 0.045);
-    box-shadow: 0 0 24px rgba(5, 229, 240, 0.3), inset 0 0 18px rgba(34, 241, 76, 0.1);
+    background: rgba(0, 209, 255, 0.045);
+    box-shadow: 0 0 24px rgba(0, 209, 255, 0.3), inset 0 0 18px rgba(139, 92, 246, 0.14);
     transition: width 0.18s ease, height 0.18s ease, border-color 0.18s ease, background 0.18s ease;
   }
 
@@ -221,16 +181,16 @@
     width: 7px;
     height: 7px;
     border-radius: 999px;
-    background: #22f14c;
-    box-shadow: 0 0 18px rgba(34, 241, 76, 0.78);
+    background: #8b5cf6;
+    box-shadow: 0 0 18px rgba(139, 92, 246, 0.78);
     transition: opacity 0.18s ease, background 0.18s ease;
   }
 
   .mouse-cursor.is-active .cursor-ring {
     width: 58px;
     height: 58px;
-    border-color: rgba(34, 241, 76, 0.78);
-    background: rgba(34, 241, 76, 0.08);
+    border-color: rgba(139, 92, 246, 0.78);
+    background: rgba(139, 92, 246, 0.1);
   }
 
   .mouse-cursor.is-text .cursor-ring {
@@ -248,13 +208,19 @@
   .mouse-cursor.is-down .cursor-ring {
     width: 30px;
     height: 30px;
-    background: rgba(5, 229, 240, 0.16);
+    background: rgba(0, 209, 255, 0.16);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .mouse-cursor {
     display: none !important;
+  }
+
+  .milkyway-bg::before,
+  .milkyway-bg::after {
+    animation: none;
+    transform: none;
   }
 }
 
@@ -263,24 +229,4 @@
     padding: 0 18px;
   }
 
-  .navbar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .navbar-links {
-    width: 100%;
-    justify-content: flex-start;
-    gap: 10px;
-    padding-top: 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    margin-top: 12px;
-  }
-}
-
-@media (max-width: 720px) {
-  .footer {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 }

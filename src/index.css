@@ -1,12 +1,28 @@
 :root {
-  --bg-primary: #000000;
-  --bg-secondary: #000000;
-  --bg-tertiary: #010409;
+  --bg-primary: #050816;
+  --bg-secondary: #0B1026;
+  --bg-tertiary: #10172E;
+  --surface: rgba(11, 16, 38, 0.74);
+  --surface-strong: rgba(9, 13, 31, 0.9);
+  --surface-soft: rgba(0, 209, 255, 0.06);
   --text-primary: #FFFFFF;
-  --text-secondary: #B9C8C9;
-  --text-h: #f8fafc;
-  --accent-cyan: #05E5F0;
-  --accent-green: #22F14C;
+  --text-secondary: #B6C2D9;
+  --text-muted: #7F8AA8;
+  --text-h: #FFFFFF;
+  --accent-cyan: #00D1FF;
+  --accent-blue: #00D1FF;
+  --accent-aqua: #00F0FF;
+  --accent-purple: #8B5CF6;
+  --accent-magenta: #A855F7;
+  --accent-green: var(--accent-purple);
+  --border: rgba(0, 209, 255, 0.22);
+  --border-soft: rgba(182, 194, 217, 0.12);
+  --glow-cyan: rgba(0, 209, 255, 0.34);
+  --glow-purple: rgba(139, 92, 246, 0.34);
+  --gradient-primary: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+  --gradient-secondary: linear-gradient(135deg, var(--accent-aqua), var(--accent-magenta));
+  --gradient-heading: linear-gradient(120deg, #ffffff 8%, var(--accent-aqua) 46%, var(--accent-purple) 92%);
+  --gradient-panel: linear-gradient(145deg, rgba(0, 209, 255, 0.12), rgba(11, 16, 38, 0.82) 48%, rgba(139, 92, 246, 0.14));
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -32,15 +48,14 @@ body {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
+    --text: var(--text-secondary);
+    --text-h: #ffffff;
+    --bg: var(--bg-primary);
+    --code-bg: rgba(11, 16, 38, 0.86);
+    --accent: var(--accent-cyan);
+    --accent-bg: rgba(0, 209, 255, 0.13);
+    --accent-border: rgba(139, 92, 246, 0.5);
+    --social-bg: rgba(11, 16, 38, 0.7);
     --shadow:
       rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
   }
@@ -74,6 +89,21 @@ h2 {
   font-family: var(--heading);
   font-weight: 500;
   color: var(--text-h);
+}
+
+.page-content h1,
+.page-content h2 {
+  background: var(--gradient-heading);
+  background-clip: text;
+  color: transparent !important;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.page-content h3,
+.page-content h4 {
+  color: var(--accent-aqua) !important;
+  text-shadow: 0 0 18px rgba(0, 209, 255, 0.18);
 }
 
 h1 {

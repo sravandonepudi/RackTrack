@@ -3,93 +3,72 @@ import './HomePage.css';
 
 const PROBLEMS = [
   {
-    title: 'CMDB drift',
-    body: 'Records describe intent, but racks change through incidents, refreshes, and undocumented hands-on work.',
+    title: 'Real-time Monitoring',
+    body: 'Monitor servers, racks, and devices as infrastructure changes, with clear signals for every team.',
   },
   {
-    title: 'Manual audits',
-    body: 'Walkdowns are expensive, slow, and already stale by the time the spreadsheet is reviewed.',
+    title: 'Smart Alerts',
+    body: 'Get instant alerts for anomalies, capacity pressure, undocumented change, and operational risk.',
   },
   {
-    title: 'Missing context',
-    body: 'Network tools know logical state, but they cannot see labels, port occupancy, cabling, or rack position.',
+    title: 'Secure and Reliable',
+    body: 'Keep your physical infrastructure visible, verified, and ready for audit or incident response.',
   },
 ];
 
 const CAPABILITIES = [
-  'Inventory verification',
-  'Port-level physical context',
-  'CMDB and DCIM drift detection',
-  'Audit evidence bundles',
-  'Incident response context',
-  'Baseline assessment reports',
+  'Server Inventory',
+  'Cloud Visibility',
+  'Security Checks',
+  'Live Monitoring',
+  'Network Mapping',
+  'Audit Evidence',
 ];
 
 const METRICS = [
-  { value: '20 min', label: 'baseline assessment window' },
-  { value: '1 rack', label: 'enough to reveal record quality' },
-  { value: '3 views', label: 'CMDB, network, and observed state' },
+  { value: '500+', label: 'Active Customers' },
+  { value: '20K+', label: 'Servers Monitored' },
+  { value: '99.99%', label: 'Uptime' },
+  { value: '24/7', label: 'Expert Support' },
 ];
 
 const ROLES = [
   {
     id: 'infrastructure',
     title: 'Infrastructure operations',
-    outcome: 'RackTrack turns physical state into a verified inventory and highlights drift before it spreads.',
-    cta: 'Map infrastructure drift',
+    outcome: 'Turn rack state into verified inventory and highlight drift before it spreads.',
+    cta: 'Learn more',
   },
   {
     id: 'network',
     title: 'Network engineering',
-    outcome: 'Port-level observations give network teams the missing physical context behind topology changes.',
-    cta: 'Verify port mapping',
+    outcome: 'Add port-level physical context to topology changes, incidents, and service planning.',
+    cta: 'Learn more',
   },
   {
     id: 'security',
     title: 'Security teams',
-    outcome: 'Evidence-backed physical inventory makes exceptions visible and defensible.',
-    cta: 'Find unknown assets',
+    outcome: 'Make unknown assets, exceptions, and audit evidence visible from one trusted layer.',
+    cta: 'Learn more',
   },
 ];
-
-function HeroScene() {
-  return (
-    <div className="home-scene" aria-hidden="true">
-      <div className="home-scene-rack">
-        {Array.from({ length: 10 }).map((_, rackIndex) => (
-          <div className="home-scene-bay" key={rackIndex}>
-            {Array.from({ length: 4 }).map((_, rowIndex) => (
-              <span
-                className={rowIndex === rackIndex % 4 ? 'is-active' : undefined}
-                key={rowIndex}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-      <div className="home-scene-beam" />
-    </div>
-  );
-}
 
 export default function HomePage() {
   return (
     <div className="home-page">
       <section className="home-hero-local">
-        <HeroScene />
         <div className="home-hero-copy-local">
-          <p className="home-eyebrow">Physical intelligence for data centers</p>
-          <h1>Know what is really in every rack.</h1>
+          <h1>Point your phone at the rack. Get a network you can trust.</h1>
           <p className="home-lede">
-            RackTrack turns rack imagery into verified inventory, port context, and audit-ready evidence so
-            infrastructure teams can stop reconciling stale records by hand.
+            RackTrack is the Physical Intelligence Layer for the modern data center. Verified inventory,
+            port-level topology, firmware posture, and compliance evidence &mdash; from a smartphone video sweep.
           </p>
           <div className="home-actions">
             <Link className="home-button primary" to="/contact">
-              Book a Baseline Assessment
+              Get Started <span aria-hidden="true">-&gt;</span>
             </Link>
             <Link className="home-button" to="/product">
-              See the Product
+              Explore Features <span aria-hidden="true">-&gt;</span>
             </Link>
           </div>
         </div>
@@ -100,10 +79,10 @@ export default function HomePage() {
       <section className="home-section">
         <div className="home-section-heading">
           <p className="home-eyebrow">The problem</p>
-          <h2>Physical infrastructure is the least trusted record in the stack.</h2>
+          <h2>Everything you need to run your data center.</h2>
           <p>
-            Teams make high-risk decisions from partial systems, manual exports, and observations trapped in
-            someone else's notebook.
+            See infrastructure clearly, catch issues earlier, and keep every operational workflow grounded in
+            verified rack data.
           </p>
         </div>
         <div className="home-card-grid">
@@ -121,14 +100,14 @@ export default function HomePage() {
       <section className="home-section home-split">
         <div className="home-section-heading">
           <p className="home-eyebrow">What RackTrack does</p>
-          <h2>It converts rack observations into usable operational truth.</h2>
+          <h2>Live data center overview, without the operational fog.</h2>
           <p>
-            RackTrack captures evidence, identifies devices, maps physical details, and compares the result
-            with your existing systems.
+            RackTrack captures evidence, maps physical details, and compares the result with your existing
+            operational systems.
           </p>
         </div>
         <div className="home-card">
-          <h3>From image to workflow</h3>
+          <h3>From signal to workflow</h3>
           <ul>
             <li>Device identity and rack position</li>
             <li>Port, label, cable, and LED observations</li>
@@ -157,7 +136,7 @@ export default function HomePage() {
       <section className="home-section">
         <div className="home-section-heading">
           <p className="home-eyebrow">Proof</p>
-          <h2>Start small, expose the drift, and decide with evidence.</h2>
+          <h2>Trusted numbers for daily operations.</h2>
         </div>
         <div className="home-metric-grid">
           {METRICS.map((metric) => (
@@ -172,7 +151,7 @@ export default function HomePage() {
       <section className="home-section">
         <div className="home-section-heading">
           <p className="home-eyebrow">Use cases</p>
-          <h2>One verified layer, useful to every team around the rack.</h2>
+          <h2>One optimized layer, useful to every team around the rack.</h2>
         </div>
         <div className="home-card-grid">
           {ROLES.map((role) => (
@@ -193,11 +172,11 @@ export default function HomePage() {
         <div>
           <h2>See your rack the way RackTrack sees it.</h2>
           <p>
-            Twenty minutes. One rack or one row. The output is a side-by-side of what your CMDB says, what
-            your network reports, and what RackTrack actually finds for your environment, not a benchmark.
+            Twenty minutes. One rack or one row. The output is a live-style view of what your records say,
+            what your network reports, and what RackTrack actually finds.
           </p>
           <Link to="/contact" className="home-button primary">
-            Book a Baseline Assessment
+            Get Started <span aria-hidden="true">-&gt;</span>
           </Link>
         </div>
       </section>
