@@ -5,11 +5,11 @@ import './Navbar.css'
 
 const navItems = [
   { path: '/', label: 'Home' },
-  { path: '/product', label: 'Product' },
-  { path: '/use-cases', label: 'Use Cases' },
-  { path: '/why-racktrack', label: 'Why RackTrack' },
-  { path: '/trust', label: 'Trust & Security' },
-  { path: '/company', label: 'Company' },
+  { path: '/product', label: 'Products' },
+  { path: '/use-cases', label: 'Solutions' },
+  { path: '/why-racktrack', label: 'Why Us' },
+  { path: '/trust', label: 'Security' },
+  { path: '/company', label: 'About' },
   { path: '/resources', label: 'Resources' },
 ]
 
@@ -35,7 +35,7 @@ export default function NavBar(): ReactElement {
       </nav>
 
       <NavLink to="/contact" className="nav-cta">
-        Book Assessment
+        Get Started
       </NavLink>
     </header>
   )
