@@ -2,8 +2,8 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #000;
-  color: #ffffff;
+  background: var(--bg-primary);
+  color: var(--text-primary);
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   overflow-x: hidden;
   position: relative;
@@ -170,10 +170,10 @@
   .cursor-ring {
     width: 38px;
     height: 38px;
-    border: 1px solid rgba(5, 229, 240, 0.72);
+    border: 1px solid rgba(0, 209, 255, 0.72);
     border-radius: 999px;
-    background: rgba(5, 229, 240, 0.045);
-    box-shadow: 0 0 24px rgba(5, 229, 240, 0.3), inset 0 0 18px rgba(34, 241, 76, 0.1);
+    background: rgba(0, 209, 255, 0.045);
+    box-shadow: 0 0 24px rgba(0, 209, 255, 0.3), inset 0 0 18px rgba(139, 92, 246, 0.14);
     transition: width 0.18s ease, height 0.18s ease, border-color 0.18s ease, background 0.18s ease;
   }
 
@@ -181,16 +181,16 @@
     width: 7px;
     height: 7px;
     border-radius: 999px;
-    background: #22f14c;
-    box-shadow: 0 0 18px rgba(34, 241, 76, 0.78);
+    background: #8b5cf6;
+    box-shadow: 0 0 18px rgba(139, 92, 246, 0.78);
     transition: opacity 0.18s ease, background 0.18s ease;
   }
 
   .mouse-cursor.is-active .cursor-ring {
     width: 58px;
     height: 58px;
-    border-color: rgba(34, 241, 76, 0.78);
-    background: rgba(34, 241, 76, 0.08);
+    border-color: rgba(139, 92, 246, 0.78);
+    background: rgba(139, 92, 246, 0.1);
   }
 
   .mouse-cursor.is-text .cursor-ring {
@@ -208,7 +208,7 @@
   .mouse-cursor.is-down .cursor-ring {
     width: 30px;
     height: 30px;
-    background: rgba(5, 229, 240, 0.16);
+    background: rgba(0, 209, 255, 0.16);
   }
 }
 
