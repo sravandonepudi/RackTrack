@@ -43,6 +43,9 @@ const RACK_BOTTOM_PADDING = 76;
 const RACK_SLOT_INSET = 54;
 const RACK_WIDTH = 420;
 const RACK_DEPTH = 46;
+const WHAT_SECTION_SCROLL_VIEWPORTS = 0.85;
+const WHAT_RACK_LEFT_COMPLETE_PROGRESS = 0.68;
+const WHAT_TEXT_REVEAL_PROGRESS = 0.32;
 
 const DEVICE_BASE: NetworkDeviceBase[] = [
   {
@@ -51,7 +54,7 @@ const DEVICE_BASE: NetworkDeviceBase[] = [
     color: '#796cff',
     ports: 16,
     unitSpan: 1,
-    startX: 0.34,
+    startX: 0.56,
     startY: -0.34,
     startZ: 150,
     startScale: 1,
@@ -71,7 +74,7 @@ const DEVICE_BASE: NetworkDeviceBase[] = [
     color: '#ff384f',
     ports: 10,
     unitSpan: 2,
-    startX: -0.34,
+    startX: -0.56,
     startY: -0.18,
     startZ: 220,
     startScale: 1.04,
@@ -92,7 +95,7 @@ const DEVICE_BASE: NetworkDeviceBase[] = [
     color: '#7467ff',
     ports: 14,
     unitSpan: 1,
-    startX: 0.34,
+    startX: 0.56,
     startY: 0.32,
     startZ: 110,
     startScale: 0.94,
@@ -112,7 +115,7 @@ const DEVICE_BASE: NetworkDeviceBase[] = [
     color: '#19ff8a',
     ports: 12,
     unitSpan: 1,
-    startX: -0.34,
+    startX: -0.56,
     startY: 0.45,
     startZ: 180,
     startScale: 0.98,
@@ -133,7 +136,7 @@ const DEVICE_BASE: NetworkDeviceBase[] = [
     color: '#ff4056',
     ports: 8,
     unitSpan: 2,
-    startX: -0.34,
+    startX: -0.56,
     startY: 0.25,
     startZ: 95,
     startScale: 0.9,
@@ -154,7 +157,7 @@ const DEVICE_BASE: NetworkDeviceBase[] = [
     color: '#00d8ff',
     ports: 16,
     unitSpan: 1,
-    startX: 0.34,
+    startX: 0.56,
     startY: 0.48,
     startZ: 135,
     startScale: 0.92,
@@ -174,7 +177,7 @@ const DEVICE_BASE: NetworkDeviceBase[] = [
     color: '#21ff91',
     ports: 6,
     unitSpan: 1,
-    startX: 0.34,
+    startX: 0.56,
     startY: -0.02,
     startZ: 70,
     startScale: 0.82,
@@ -195,7 +198,7 @@ const DEVICE_BASE: NetworkDeviceBase[] = [
     color: '#8677ff',
     ports: 12,
     unitSpan: 1,
-    startX: 0,
+    startX: -0.56,
     startY: 0.58,
     startZ: 60,
     startScale: 0.86,
@@ -215,7 +218,7 @@ const DEVICE_BASE: NetworkDeviceBase[] = [
     color: '#18f58d',
     ports: 8,
     unitSpan: 2,
-    startX: -0.34,
+    startX: -0.56,
     startY: -0.42,
     startZ: 55,
     startScale: 0.76,
@@ -264,14 +267,14 @@ const STATS = [
 ];
 
 const CAPABILITIES = [
-  { title: 'Physical Inventory',     body: 'Every device in every rack, identified and verified. Continuous, not annual.' },
-  { title: 'Port & Cable Intelligence', body: 'Every port, every cable, every connection — mapped and searchable.' },
-  { title: 'Topology & 3D Twin',     body: 'Your data center, rendered in three dimensions and kept current.' },
-  { title: 'Security Posture',       body: 'Firmware and vulnerability state surfaced per device, in real time.' },
-  { title: 'Incident Response',      body: 'Find the device, find the port, before you open the door.' },
-  { title: 'Capacity Planning',      body: 'Plan against measured reality, not last year\'s spreadsheet.' },
-  { title: 'Procurement Guidance',   body: 'Compatible parts and modules, recommended automatically.' },
-  { title: 'Compliance Evidence',    body: 'Audit-ready artifacts, generated continuously.' },
+  { icon: '⬡', title: 'Physical Inventory',      body: 'Every device in every rack, identified and verified. Continuous, not annual.' },
+  { icon: '⇄', title: 'Port & Cable Intelligence', body: 'Every port, every cable, every connection — mapped and searchable.' },
+  { icon: '◈', title: 'Topology & 3D Twin',        body: 'Your data center, rendered in three dimensions and kept current.' },
+  { icon: '⚿', title: 'Security Posture',          body: 'Firmware and vulnerability state surfaced per device, in real time.' },
+  { icon: '⚡', title: 'Incident Response',         body: 'Find the device, find the port, before you open the door.' },
+  { icon: '▦', title: 'Capacity Planning',          body: 'Plan against measured reality, not last year\'s spreadsheet.' },
+  { icon: '⊕', title: 'Procurement Guidance',       body: 'Compatible parts and modules, recommended automatically.' },
+  { icon: '✓', title: 'Compliance Evidence',        body: 'Audit-ready artifacts, generated continuously.' },
 ];
 
 const PROOF_ROWS = [
@@ -315,6 +318,7 @@ function useRackScrollAnimation(
   capRef: RefObject<HTMLElement | null>,
   capStackRef: RefObject<HTMLDivElement | null>,
   capCardRefs: RefObject<(HTMLElement | null)[]>,
+  proofRef: RefObject<HTMLElement | null>,
 ) {
   useEffect(() => {
     const showcase = showcaseRef.current;
@@ -346,19 +350,39 @@ function useRackScrollAnimation(
       const what = whatRef.current;
       const cap = capRef.current;
       const capStack = capStackRef.current;
+      const proof = proofRef.current;
       const whatRect = what?.getBoundingClientRect();
       const capRect = cap?.getBoundingClientRect();
       const capStackRect = capStack?.getBoundingClientRect();
+      const proofRect = proof?.getBoundingClientRect();
       const whatRawProgress = whatRect
-        ? clamp((window.innerHeight * 0.88 - whatRect.top) / (window.innerHeight * 0.56))
+        ? clamp((window.innerHeight * 0.88 - whatRect.top) / (window.innerHeight * WHAT_SECTION_SCROLL_VIEWPORTS))
         : 0;
       const capApproachProgress = capRect
         ? easeInOutCubic(clamp((window.innerHeight * 0.86 - capRect.top) / (window.innerHeight * 0.42)))
         : 0;
       const postProblemProgress = rawProgress > 0.985 ? whatRawProgress : 0;
-      const whatRackTravelProgress = easeInOutCubic(clamp(postProblemProgress / 0.62));
+      const whatRackTravelProgress = easeInOutCubic(clamp(postProblemProgress / WHAT_RACK_LEFT_COMPLETE_PROGRESS));
       const rackReturnProgress = rawProgress > 0.985 ? capApproachProgress : 0;
-      const whatTextProgress = easeOutCubic(clamp((postProblemProgress - 0.46) / 0.34));
+      const whatTextProgress = easeOutCubic(
+        clamp((postProblemProgress - WHAT_RACK_LEFT_COMPLETE_PROGRESS) / WHAT_TEXT_REVEAL_PROGRESS)
+      );
+      // How far the "What" section has scrolled *above* the viewport (0 = section top at viewport bottom, 1 = section fully gone)
+      const whatScrolledAwayProgress = whatRect
+        ? easeInOutCubic(clamp((-whatRect.bottom) / (window.innerHeight * 0.4)))
+        : 0;
+      // Rack swings left→right only after the "What" section has scrolled away
+      const postSectionSwingProgress = rawProgress > 0.985 ? whatScrolledAwayProgress : 0;
+      // Proof section: rack travels from right → left as proof enters viewport
+      const proofApproachProgress = proofRect
+        ? easeInOutCubic(clamp((window.innerHeight * 0.82 - proofRect.top) / (window.innerHeight * 0.55)))
+        : 0;
+      const proofRackTravelProgress = proofApproachProgress;
+      // Cap section: rack travels right → left smoothly as user scrolls through the 900svh cap section
+      const capScrollProgress = cap
+        ? easeInOutCubic(clamp((-cap.getBoundingClientRect().top) / (cap.offsetHeight - window.innerHeight)))
+        : 0;
+      const capRackTravelProgress = postSectionSwingProgress >= 1 ? capScrollProgress : 0;
       const capRevealProgress = easeOutCubic(clamp((rackReturnProgress - 0.78) / 0.22));
       const rackScale = Math.min(stageWidth < 1100 ? 0.86 : 1.1, (stageHeight - 78) / RACK_BODY_HEIGHT);
       const cornerScale = Math.min(0.66, rackScale * 0.72);
@@ -366,13 +390,56 @@ function useRackScrollAnimation(
       const cornerX = stageWidth / 2 - RACK_WIDTH * cornerScale * 0.62 - 56;
       const cornerY = stageHeight / 2 - RACK_BODY_HEIGHT * cornerScale * 0.56 - 54;
       const dockedGroupX = lerp(0, cornerX, cornerProgress);
-      const leftRackTargetX = -stageWidth / 2 + Math.min(380, Math.max(280, stageWidth * 0.2));
-      const leftPhaseGroupX = lerp(dockedGroupX, leftRackTargetX, whatRackTravelProgress);
+      const rackSwingOffset = Math.min(380, Math.max(280, stageWidth * 0.2));
+      const leftRackTargetX = -stageWidth / 2 + rackSwingOffset;
+      const rightRackTargetX = stageWidth / 2 - rackSwingOffset;
+
+      // Phase 1: rack eases to left as "What" section enters  (whatRackTravelProgress 0→1)
+      // Phase 2: rack holds at left while text is visible      (postProblemProgress 0.68→1)
+      // Phase 3: after section scrolls away, rack swings left→right (postSectionSwingProgress 0→1)
+      // Phase 4: during cap section scroll, rack travels right→left (capRackTravelProgress 0→1)
+      // Phase 5: as proof section enters, rack is already left, stays left
+      const rackAtLeft = postProblemProgress > 0;
+      const swingToRight = easeInOutCubic(clamp(postSectionSwingProgress));
+
+      // Phase 1 & 2: lerp from dockedGroupX → leftRackTargetX
+      const leftTravelX = lerp(dockedGroupX, leftRackTargetX, whatRackTravelProgress);
+      // Phase 3: swing left → right
+      const swungX = lerp(leftRackTargetX, rightRackTargetX, swingToRight);
+      // Phase 4: cap scroll — right → left
+      const capTravelX = lerp(rightRackTargetX, leftRackTargetX, capRackTravelProgress);
+      // Phase 5: proof — already at left, stays
+      const proofX = leftRackTargetX;
+
+      const leftPhaseGroupX = rackAtLeft
+        ? proofRackTravelProgress > 0 ? proofX
+          : capRackTravelProgress > 0 ? capTravelX
+          : postSectionSwingProgress > 0 ? swungX
+          : leftTravelX
+        : dockedGroupX;
       const groupX = lerp(leftPhaseGroupX, dockedGroupX, rackReturnProgress);
+
+      // Rotation: rack faces right (negative ry = faces right in 3D) during cap travel
+      const baseRackRy = lerp(-7, 9, whatRackTravelProgress);
+      const swungRackRy = lerp(9, -9, swingToRight);
+      // During cap travel: starts facing right (-9), stays facing right as it moves left
+      const capRackRy = lerp(-9, -9, capRackTravelProgress); // holds right-facing
+      const proofRackRy = -9; // stays right-facing at proof
+      const rackRotateY = proofRackTravelProgress > 0 ? proofRackRy
+        : capRackTravelProgress > 0 ? capRackRy
+        : postSectionSwingProgress > 0 ? swungRackRy
+        : baseRackRy;
+
+      const baseAssemblyRy = lerp(lerp(0, -18, cornerProgress), 18, whatRackTravelProgress);
+      const swungAssemblyRy = lerp(18, -18, swingToRight);
+      const capAssemblyRy = lerp(-18, -18, capRackTravelProgress); // holds right-facing tilt
+      const proofAssemblyRy = -18;
+      const assemblyRotateY = proofRackTravelProgress > 0 ? proofAssemblyRy
+        : capRackTravelProgress > 0 ? capAssemblyRy
+        : postSectionSwingProgress > 0 ? swungAssemblyRy
+        : baseAssemblyRy;
       const groupY = lerp(0, cornerY, cornerProgress);
       const assemblyRotateX = lerp(0, -2, cornerProgress);
-      const assemblyRotateY = lerp(lerp(0, -18, cornerProgress), 18, whatRackTravelProgress);
-      const rackRotateY = lerp(-7, 9, whatRackTravelProgress);
       const rackCenterY = 0;
       const idleStrength = motionQuery.matches ? 0 : 1;
 
@@ -410,25 +477,23 @@ function useRackScrollAnimation(
       }
 
       if (capStackRect) {
-        const stepDistance = Math.max(420, window.innerHeight * 0.72);
-        const stackScroll = window.innerHeight * 0.82 - capStackRect.top;
+        // capStackRect is the grid container; animate cards as it enters the viewport
+        const gridEnterProgress = easeOutCubic(
+          clamp((window.innerHeight * 0.9 - capStackRect.top) / (window.innerHeight * 0.5))
+        );
 
         capCardRefs.current.forEach((card, index) => {
-          if (!card) {
-            return;
-          }
+          if (!card) return;
 
-          const cardProgress = easeOutCubic(clamp((stackScroll - index * stepDistance) / (stepDistance * 0.7)));
-          const settledOffset = Math.min(index, 7);
-          const x = lerp(0, settledOffset * 18, cardProgress);
-          const y = lerp(window.innerHeight * 0.86, 0, cardProgress);
-          const scale = lerp(0.96, 1, cardProgress);
+          // Stagger: each card starts 0.06 later than the previous
+          const stagger = index * 0.06;
+          const cardProgress = easeOutCubic(clamp((gridEnterProgress - stagger) / (1 - stagger)));
+          const y = lerp(52, 0, cardProgress);
+          const scale = lerp(0.92, 1, cardProgress);
 
-          card.style.setProperty('--card-x', `${x.toFixed(2)}px`);
           card.style.setProperty('--card-y', `${y.toFixed(2)}px`);
           card.style.setProperty('--card-scale', scale.toFixed(4));
           card.style.setProperty('--card-opacity', cardProgress.toFixed(4));
-          card.style.zIndex = String(20 + index);
         });
       }
 
@@ -475,7 +540,7 @@ function useRackScrollAnimation(
     return () => {
       window.cancelAnimationFrame(frameId);
     };
-  }, [capCardRefs, capRef, capStackRef, deviceRefs, showcaseRef, stageRef, whatRef]);
+  }, [capCardRefs, capRef, capStackRef, deviceRefs, proofRef, showcaseRef, stageRef, whatRef]);
 }
 
 function RackFrame() {
@@ -595,8 +660,9 @@ export default function HomePage() {
   const capStackRef = useRef<HTMLDivElement>(null);
   const capCardRefs = useRef<(HTMLElement | null)[]>([]);
   const deviceRefs = useRef<DeviceRefMap>({});
+  const proofRef = useRef<HTMLElement>(null);
 
-  useRackScrollAnimation(showcaseRef, stageRef, deviceRefs, whatRef, capRef, capStackRef, capCardRefs);
+  useRackScrollAnimation(showcaseRef, stageRef, deviceRefs, whatRef, capRef, capStackRef, capCardRefs, proofRef);
 
   // Scroll-reveal: add .is-visible when sections enter the viewport
   useEffect(() => {
@@ -686,8 +752,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="home-divider" />
-
       {/* ── Section 1.3 · What RackTrack Is ── */}
       <section className="home-section home-section--what" ref={whatRef}>
         <div className="home-section-heading">
@@ -704,25 +768,17 @@ export default function HomePage() {
         </p>
       </section>
 
-      <div className="home-divider" />
-
-      {/* ── Section 1.4 · Capabilities — stacked sticky cards ── */}
-      <section className="home-section cap-section" ref={capRef}>
-        <div className="home-section-heading">
-          <p className="home-eyebrow">Capabilities</p>
-          <h2>Designed for the teams that inherit physical uncertainty.</h2>
-        </div>
-        <div
-          className="cap-stack"
-          ref={capStackRef}
-          style={
-            {
-              '--cap-stack-height': `${120 + CAPABILITIES.length * 78}svh`,
-              '--cap-total': CAPABILITIES.length,
-            } as CSSProperties
-          }
-        >
-          <div className="cap-stack-pin">
+      {/* ── Section 1.4 · Capabilities — 4×2 grid, rows stack in on scroll ── */}
+      <section className="cap-section" ref={capRef}>
+        <div className="cap-sticky-wrap">
+          <div className="home-section-heading">
+            <p className="home-eyebrow">Capabilities</p>
+            <h2>Designed for the teams that inherit physical uncertainty.</h2>
+          </div>
+          <div
+            className="cap-grid-stack"
+            ref={capStackRef}
+          >
             {CAPABILITIES.map((cap, i) => (
               <article
                 className="cap-card"
@@ -735,9 +791,9 @@ export default function HomePage() {
                   capCardRefs.current[i] = node;
                 }}
               >
+                <div className="cap-card-icon" aria-hidden="true">{cap.icon}</div>
                 <div className="cap-card-body">
-                  <h3>{`CARD ${i + 1} · ${cap.title.toUpperCase()}`}</h3>
-                  <hr className="cap-rule" />
+                  <h3>{`${String(i + 1).padStart(2, '0')} · ${cap.title.toUpperCase()}`}</h3>
                   <p>{cap.body}</p>
                 </div>
               </article>
@@ -746,10 +802,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="home-divider" />
-
       {/* ── Section 1.5 · Proof ── */}
-      <section className="home-section home-reveal">
+      <section className="home-section home-section--proof home-reveal" ref={proofRef}>
         <div className="home-section-heading">
           <p className="home-eyebrow">Proof</p>
           <h2>Before and after — in your environment.</h2>
@@ -774,8 +828,6 @@ export default function HomePage() {
         </p>
       </section>
 
-      <div className="home-divider" />
-
       {/* ── Section 1.6 · Who It's For ── */}
       <section className="home-section home-reveal">
         <div className="home-section-heading">
@@ -790,8 +842,6 @@ export default function HomePage() {
           ))}
         </div>
       </section>
-
-      <div className="home-divider" />
 
       {/* ── Section 1.7 · Final CTA ── */}
       <section className="home-section home-final-cta home-reveal">
