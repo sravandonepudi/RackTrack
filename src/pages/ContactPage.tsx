@@ -1,33 +1,6 @@
 import { useState } from 'react';
 import './ContactPage.css';
 
-const CONTACT_CARDS = [
-  {
-    icon: '📍',
-    label: 'Office Address',
-    value: '85 Felt Rd, Suite #604',
-    sub: 'South Windsor, CT 06074',
-  },
-  {
-    icon: '✉',
-    label: 'Email',
-    value: 'info@racktrack.ai',
-    sub: 'Share audit goals, rollout questions, or support requests.',
-    highlight: true,
-  },
-  {
-    icon: '📞',
-    label: 'Phone',
-    value: '+1 (860) 566 9894',
-    sub: 'Call our contact team for demos, support, and meeting schedules.',
-  },
-  {
-    icon: '🕐',
-    label: 'Response Time',
-    value: 'Within 1 business day',
-    sub: 'We respond quickly to demos, planning, and support conversations.',
-  },
-];
 
 const CONTACT_PATHS = [
   {
@@ -63,78 +36,62 @@ const CONTACT_PATHS = [
 const FAQS = [
   {
     q: 'Can RackTrack scan existing racks without downtime?',
-    a: 'Yes. RackTrack uses a smartphone video sweep — no agents, no downtime, no physical access beyond a walk-through.',
+    a: 'Yes. RackTrack uses a smartphone video sweep to capture rack state without agents, downtime, or disruption to production infrastructure.',
   },
   {
-    q: 'What network protocols does RackTrack use?',
-    a: 'RackTrack correlates physical scan data against live network state using CDP, LLDP, SNMP, SSH, NETCONF, and gRPC.',
+    q: 'What kind of infrastructure can RackTrack identify?',
+    a: 'RackTrack supports a broad and continuously expanding range of enterprise networking and data center infrastructure devices.',
   },
   {
-    q: 'Which vendors does RackTrack identify?',
-    a: 'RackTrack enriches against a broad vendor library including Cisco, Dell, Aruba, Juniper, TP-Link, MikroTik, and others. Coverage expands continuously.',
-  },
-  {
-    q: 'How does confidence scoring work?',
-    a: 'Each identified device receives a confidence score based on visual, network, and metadata signals. Low-confidence items are flagged for human validation before being committed to the record.',
-  },
-  {
-    q: 'Is RackTrack useful for compliance audits?',
-    a: 'Yes. RackTrack generates continuously updated audit-ready artifacts — port maps, firmware states, and inventory records — reducing evidence prep from weeks to always-ready.',
-  },
-  {
-    q: 'Can we request a demo before committing?',
-    a: 'Yes. Submit the form and our team will schedule a walkthrough against your environment — not a benchmark.',
+    q: 'How does RackTrack verify inventory accuracy?',
+    a: 'RackTrack reconciles physical scan data against live infrastructure signals to maintain continuously verified inventory and topology records.',
   },
   {
     q: 'Does RackTrack replace our CMDB or DCIM?',
-    a: 'No. RackTrack is the physical truth layer underneath both. It reconciles what those systems say against what is actually in the rack.',
+    a: 'No. RackTrack acts as the physical intelligence layer underneath existing CMDB, DCIM, and ITSM platforms — helping reconcile what systems report against what is physically present in the rack.',
   },
   {
-    q: 'What CVE and threat intelligence sources are used?',
-    a: 'RackTrack surfaces firmware vulnerability state per device in real time. Specific source integrations are disclosed under NDA during the security review process.',
+    q: 'Is RackTrack useful for compliance and audit preparation?',
+    a: 'Yes. RackTrack helps generate continuously updated inventory, topology, and infrastructure evidence that supports audit readiness and operational reviews.',
+  },
+  {
+    q: 'Can RackTrack help during incidents and outages?',
+    a: 'Yes. RackTrack helps teams quickly identify devices, ports, and cable relationships so responders spend less time validating rack state during critical incidents.',
+  },
+  {
+    q: 'Does RackTrack support security and vulnerability workflows?',
+    a: 'Yes. RackTrack provides device-level firmware and infrastructure posture visibility to help security teams identify operational and compliance risks faster.',
+  },
+  {
+    q: 'How long does a baseline assessment take?',
+    a: 'Typically about twenty minutes for a single rack or row. The assessment compares your existing records against observed physical and network state.',
+  },
+  {
+    q: 'Can we request a demo before committing?',
+    a: 'Yes. You can schedule a guided walkthrough against your own environment to see how RackTrack performs on real infrastructure.',
+  },
+  {
+    q: 'Does RackTrack work with existing enterprise tools?',
+    a: 'Yes. RackTrack is designed to integrate with existing infrastructure, inventory, compliance, and operational workflows.',
+  },
+  {
+    q: 'Where can RackTrack be deployed?',
+    a: 'RackTrack supports cloud-hosted, private cloud, on-premise, and air-gapped deployment models for regulated or restricted environments.',
+  },
+  {
+    q: 'Who uses RackTrack?',
+    a: 'RackTrack is built for infrastructure leaders, network engineering teams, security operations, compliance owners, incident responders, and data center operators.',
   },
 ];
 
 function HeroImage() {
   return (
     <div className="contact-hero-visual" aria-hidden="true">
-      {/* Rack scan visualization — themed to match the site */}
-      <div className="chv-rack">
-        <div className="chv-rack-rail chv-rack-rail--left" />
-        <div className="chv-rack-rail chv-rack-rail--right" />
-        <div className="chv-rack-slots">
-          {[
-            { color: '#796cff', w: '88%' },
-            { color: '#ff384f', w: '72%', tall: true },
-            { color: '#7467ff', w: '80%' },
-            { color: '#19ff8a', w: '65%' },
-            { color: '#ff4056', w: '78%', tall: true },
-            { color: '#00d8ff', w: '90%' },
-            { color: '#21ff91', w: '60%' },
-            { color: '#8677ff', w: '74%' },
-            { color: '#18f58d', w: '82%', tall: true },
-          ].map((device, i) => (
-            <div
-              key={i}
-              className="chv-device"
-              style={{
-                '--dev-color': device.color,
-                height: device.tall ? '52px' : '38px',
-              } as React.CSSProperties}
-            >
-              <span className="chv-device-led" />
-              <span className="chv-device-bar" style={{ width: device.w }} />
-              <span className="chv-device-ports" />
-            </div>
-          ))}
-        </div>
-        {/* Scan line */}
-        <div className="chv-scan-line" />
-      </div>
-      {/* Floating data badges */}
-      <div className="chv-badge chv-badge--1">CDP · LLDP · SNMP</div>
-      <div className="chv-badge chv-badge--2">9 devices identified</div>
-      <div className="chv-badge chv-badge--3">Confidence 94%</div>
+      <img
+        src="/contact-infographic.png"
+        alt="20-minute assessment infographic"
+        className="chv-infographic-img"
+      />
     </div>
   );
 }
@@ -168,9 +125,10 @@ export default function ContactPage() {
             <span>Book Assessment</span>
           </div>
           <h1>
-            Twenty minutes.<br />
-            One rack.{' '}
-            <span className="contact-gradient-text">Verified.</span>
+            <span style={{ whiteSpace: 'nowrap' }}>Twenty minutes</span><br />
+            <span style={{ whiteSpace: 'nowrap' }}>One rack.{' '}
+              <span className="contact-gradient-text">Verified.</span>
+            </span>
           </h1>
           <p>
             Book a baseline assessment. We show you exactly what RackTrack sees —
