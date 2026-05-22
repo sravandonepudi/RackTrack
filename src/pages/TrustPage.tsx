@@ -1,174 +1,345 @@
 import { Link } from 'react-router-dom';
 import './TrustPage.css';
 
-const theme = {
-  pale: '#FFFFFF',
-  mint: '#00F0FF',
-  blue: '#00D1FF',
-  indigo: '#8B5CF6',
-  teal: '#00F0FF',
-  glow: 'rgba(139, 92, 246, 0.24)',
-  panel: 'rgba(5, 8, 22, 0.92)',
-  panelSoft: 'rgba(11, 16, 38, 0.78)',
-  content: 'rgba(11, 16, 38, 0.74)',
-  border: 'rgba(0, 209, 255, 0.22)',
-  text: '#FFFFFF',
-  textSub: '#B6C2D9',
-  buttonSecondary: 'rgba(11, 16, 38, 0.70)',
-};
-
-const TRUST = {
-  sub:
-    'RackTrack aligns with the controls security and compliance teams evaluate during software review: constrained data capture, enforced access policies, comprehensive audit logs, and deployment options that respect data boundaries.',
-  badges: [
-    {
-      icon: 'shield',
-      title: 'Scoped capture',
-      desc: 'Collect only physical-layer evidence needed for inventory, topology, and audit support.',
-    },
-    {
-      icon: 'lock',
-      title: 'Tenant isolation',
-      desc: 'Customer data is separated by tenant with role-based access and logged administrative actions.',
-    },
-    {
-      icon: 'key',
-      title: 'Key control',
-      desc: 'Enterprise deployments can use customer-managed encryption keys and stricter residency controls.',
-    },
-    {
-      icon: 'users',
-      title: 'Approval workflows',
-      desc: 'Support access can be approval-based and time-bound for sensitive environments.',
-    },
-    {
-      icon: 'video',
-      title: 'Evidence handling',
-      desc: 'Rack imagery and derived outputs follow defined retention and export policies.',
-    },
-    {
-      icon: 'server',
-      title: 'Flexible deployment',
-      desc: 'SaaS, private cloud, and on-premise deployment paths support different security postures.',
-    },
-  ],
-} as const;
-
-const ICONS: Record<string, string> = {
-  shield: 'SC',
-  lock: 'AC',
-  key: 'KY',
-  users: 'RBAC',
-  video: 'EV',
-  server: 'DC',
-};
-
-const DEPLOYMENT = [
-  { title:'SaaS (Default)',  badge:'Standard', desc:'Fully managed. Data in your region. Fastest to value.',       features:['Managed infrastructure','Auto updates','Regional data residency','99.9% SLA'] },
-  { title:'Private Cloud',   badge:'Enterprise',desc:'Dedicated infra in your cloud account. You control the keys.',features:['Dedicated compute','Customer-managed keys','VPC isolation','Custom SLA'] },
-  { title:'On-Premise',      badge:'Regulated', desc:'Fully air-gap capable. Nothing leaves your network.',         features:['Air-gap capable','No external connectivity','Local residency','HSM support'] },
+const SECURITY_POSTURE = [
+  {
+    icon: 'shield',
+    title: 'SOC 2 Type II',
+    body: 'SOC 2 Type II is in progress, with controls and evidence practices being prepared for formal review.',
+    meter: true,
+  },
+  {
+    icon: 'tenant',
+    title: 'Tenant Isolation',
+    body: 'Customer environments are isolated, with customer-controlled data residency for evidence and structured records.',
+  },
+  {
+    icon: 'lock',
+    title: 'Encryption',
+    body: 'Encryption in transit and at rest protects rack video, derived records, and operational metadata.',
+  },
+  {
+    icon: 'key',
+    title: 'Credential Vaulting',
+    body: 'RackTrack works with customer-controlled vaulting and never stores production access keys directly.',
+  },
+  {
+    icon: 'users',
+    title: 'Access Control & Audit Logs',
+    body: 'Role-based access control and audit logging support least-privilege operations and review.',
+  },
 ];
 
-const FAQ = [
-  { q:'What data does RackTrack collect?', a:'Physical device state: device identity, rack position, port mapping, cable connections, and LED status. We do not capture network traffic content, credentials, or application data.' },
-  { q:'Where is data stored?',             a:'In your designated region, or for on-premise deployments, entirely within your environment. No data crosses regions without explicit authorization.' },
-  { q:'Who can access my data?',           a:'Only authorized users within your tenant. RackTrack support access is logged, requires customer approval, and is fully auditable.' },
-  { q:'What happens if I leave?',          a:'You own your data. Export everything in standard formats at any time. We delete all copies within 30 days of contract termination on request.' },
+const VIDEO_STEPS = [
+  { icon: 'rack', title: '1. Rack Video', body: 'You capture. You own.' },
+  { icon: 'brain', title: '2. AI Processing', body: 'Video is processed inside your tenant.' },
+  { icon: 'records', title: '3. Structured Output', body: 'Devices, connections, and topology records.' },
+  { icon: 'control', title: '4. Your Control', body: 'Retain, delete, or reprocess.' },
 ];
+
+const DEPLOYMENTS = [
+  { icon: 'cloud', title: 'Cloud-Hosted', body: 'Secure, scalable, and fastest time to value.' },
+  { icon: 'private', title: 'Private Cloud / Customer VPC', body: 'Deployed in your private environment with full control.' },
+  { icon: 'onprem', title: 'On-Premise Deployment', body: 'Runs in your data center for regulated environments.' },
+  { icon: 'airgap', title: 'Air-Gapped Deployment', body: 'For classified or restricted facilities with no external access.' },
+];
+
+function IconGlyph({ name }: { name: string }) {
+  return (
+    <span className={`trust-icon trust-icon--${name}`} aria-hidden="true">
+      <span />
+    </span>
+  );
+}
+
+function SecurityPostureLogo({ name }: { name: string }) {
+  return (
+    <span className="security-logo-hud" aria-hidden="true">
+      <span className="security-logo-orbit" />
+      <span className="security-logo-core">
+        {name === 'shield' && (
+          <svg viewBox="0 0 96 96">
+            <path d="M48 10 77 21v23c0 18-11 32-29 42C30 76 19 62 19 44V21l29-11Z" />
+            <path d="M36 34h18c8 0 13 5 13 12 0 5-3 9-8 11l10 14H55l-8-12h-1v12H36V34Zm10 9v8h8c2 0 4-2 4-4s-2-4-4-4h-8Z" />
+          </svg>
+        )}
+        {name === 'tenant' && (
+          <svg viewBox="0 0 96 96">
+            <path d="m24 32 24-13 25 13-25 14-24-14Z" />
+            <path d="M24 32v28l24 15V46L24 32Z" />
+            <path d="M73 32v28L48 75V46l25-14Z" />
+            <path d="m43 28 9-5 10 5-10 6-9-6Z" />
+            <path d="M63 55h14c5 0 8 3 8 8v13c0 5-3 8-8 8H63c-5 0-8-3-8-8V63c0-5 3-8 8-8Z" />
+            <path d="M61 55v-5c0-6 4-10 9-10s9 4 9 10v5" />
+            <path d="M70 66v7" />
+          </svg>
+        )}
+        {name === 'lock' && (
+          <svg viewBox="0 0 96 96">
+            <path d="M30 43h36c6 0 10 4 10 10v23c0 6-4 10-10 10H30c-6 0-10-4-10-10V53c0-6 4-10 10-10Z" />
+            <path d="M31 43V31c0-11 7-19 17-19s17 8 17 19v12" />
+            <path d="M48 58v13" />
+          </svg>
+        )}
+        {name === 'key' && (
+          <svg viewBox="0 0 96 96">
+            <circle cx="31" cy="44" r="15" />
+            <path d="M45 44h35" />
+            <path d="M65 44v10h8v-7h7" />
+            <path d="M73 58h8c4 0 7 3 7 7v10c0 4-3 7-7 7h-8c-4 0-7-3-7-7V65c0-4 3-7 7-7Z" />
+            <path d="M71 58v-4c0-5 3-8 7-8s7 3 7 8v4" />
+          </svg>
+        )}
+        {name === 'users' && (
+          <svg viewBox="0 0 96 96">
+            <circle cx="39" cy="31" r="13" />
+            <circle cx="65" cy="36" r="10" />
+            <path d="M17 74c0-15 9-24 22-24s22 9 22 24v5H17v-5Z" />
+            <path d="M57 55c4-3 8-4 13-4 11 0 18 8 18 21v3H61" />
+          </svg>
+        )}
+      </span>
+    </span>
+  );
+}
+
+function WorkflowLogo({ name }: { name: string }) {
+  return (
+    <span className={`workflow-logo-hud workflow-logo-hud--${name}`} aria-hidden="true">
+      <span className="workflow-logo-orbit" />
+      <span className="workflow-logo-core">
+        {name === 'rack' && (
+          <svg viewBox="0 0 128 96">
+            <defs>
+              <linearGradient id="rack-panel" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stopColor="#86f6ff" stopOpacity="0.7" />
+                <stop offset="0.3" stopColor="#112d67" />
+                <stop offset="1" stopColor="#020916" />
+              </linearGradient>
+              <linearGradient id="rack-light" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stopColor="#061127" />
+                <stop offset="0.56" stopColor="#00f0ff" />
+                <stop offset="1" stopColor="#2f91ff" />
+              </linearGradient>
+            </defs>
+            <rect x="11" y="12" width="106" height="72" rx="8" />
+            <path d="M22 20h20v56H22zM48 17h28v61H48zM82 21h23v55H82z" />
+            {Array.from({ length: 5 }).map((_, index) => (
+              <g key={index}>
+                <rect x="26" y={27 + index * 9} width="12" height="4" rx="1" />
+                <rect x="54" y={25 + index * 10} width="16" height="5" rx="1" />
+                <rect x="87" y={28 + index * 9} width="13" height="4" rx="1" />
+              </g>
+            ))}
+          </svg>
+        )}
+        {name === 'brain' && (
+          <svg viewBox="0 0 96 96">
+            <path d="M48 18v60" />
+            <path d="M42 22c-13-8-27 4-24 17-8 4-7 18 2 21-3 13 11 22 22 15" />
+            <path d="M54 22c13-8 27 4 24 17 8 4 7 18-2 21 3 13-11 22-22 15" />
+            <path d="M34 31c-7 1-10 6-10 12M30 52c5-4 10-4 15 0M37 67c-5-1-8-4-9-8" />
+            <path d="M62 31c7 1 10 6 10 12M66 52c-5-4-10-4-15 0M59 67c5-1 8-4 9-8" />
+          </svg>
+        )}
+        {name === 'records' && (
+          <svg viewBox="0 0 96 96">
+            <rect x="18" y="18" width="60" height="60" rx="8" />
+            <rect x="27" y="28" width="15" height="9" rx="2" />
+            <path d="M48 32h20M48 39h14" />
+            <rect x="27" y="45" width="15" height="9" rx="2" />
+            <path d="M48 49h20M48 56h14" />
+            <rect x="27" y="62" width="15" height="9" rx="2" />
+            <path d="M48 66h20M48 73h14" />
+          </svg>
+        )}
+        {name === 'control' && (
+          <svg viewBox="0 0 96 96">
+            <path d="M48 11 77 22v23c0 19-11 33-29 42C30 78 19 64 19 45V22l29-11Z" />
+            <circle cx="48" cy="39" r="10" />
+            <path d="M32 67c0-11 6-18 16-18s16 7 16 18" />
+          </svg>
+        )}
+      </span>
+    </span>
+  );
+}
+
+function DeploymentLogo({ name }: { name: string }) {
+  return (
+    <span className={`deployment-logo-stage deployment-logo-stage--${name}`} aria-hidden="true">
+      <span className="deployment-logo-platform" />
+      <span className="deployment-logo-core">
+        {(name === 'cloud' || name === 'private') && (
+          <svg viewBox="0 0 128 104">
+            <path d="M38 72c-14 0-24-9-24-22 0-12 9-21 21-22C39 15 50 8 63 8c17 0 30 12 32 28 12 1 21 9 21 21 0 9-7 15-18 15H38Z" />
+            {name === 'cloud' && (
+              <path d="M55 36h18c8 0 13 5 13 12 0 5-3 9-8 11l9 12H74l-7-10h-3v10H55V36Zm9 8v8h8c3 0 4-2 4-4s-1-4-4-4h-8Z" />
+            )}
+            {name === 'private' && (
+              <>
+                <path d="M64 40 82 47v14c0 11-7 20-18 26-11-6-18-15-18-26V47l18-7Z" />
+                <path d="m57 62 5 5 10-12" />
+              </>
+            )}
+          </svg>
+        )}
+        {name === 'onprem' && (
+          <svg viewBox="0 0 128 104">
+            <path d="M28 22 69 10l31 15v58L59 94 28 77V22Z" />
+            <path d="M59 94V34l41-9" />
+            <path d="M39 28 59 34v60" />
+            {Array.from({ length: 5 }).map((_, index) => (
+              <g key={index}>
+                <rect x="37" y={38 + index * 8} width="15" height="4" rx="1" />
+                <rect x="68" y={34 + index * 9} width="21" height="5" rx="1" />
+              </g>
+            ))}
+            <path d="M94 37 112 32v42L94 79V37Z" />
+          </svg>
+        )}
+        {name === 'airgap' && (
+          <svg viewBox="0 0 128 104">
+            <path d="M25 28 65 10l39 18-40 19-39-19Z" />
+            <path d="M25 28v48l39 19V47L25 28Z" />
+            <path d="M104 28v48L64 95V47l40-19Z" />
+            <path d="m50 24 15-7 14 7-15 7-14-7Z" />
+            <path d="M38 49h18c5 0 8 3 8 8v18c0 5-3 8-8 8H38c-5 0-8-3-8-8V57c0-5 3-8 8-8Z" />
+            <path d="M35 49v-7c0-8 5-13 12-13s12 5 12 13v7" />
+            <path d="M95 42v28" />
+          </svg>
+        )}
+      </span>
+    </span>
+  );
+}
+
+function VideoFlow() {
+  return (
+    <div className="trust-video-flow" aria-label="Rack video handling workflow">
+      <div className="tenant-label">Your secure tenant environment</div>
+      <div className="video-step-row">
+        {VIDEO_STEPS.map((step, index) => (
+          <div className="video-step-wrap" key={step.title}>
+            <article className="video-step">
+              <WorkflowLogo name={step.icon} />
+              <h3>{step.title}</h3>
+              <p>{step.body}</p>
+            </article>
+            {index < VIDEO_STEPS.length - 1 && <span className="flow-arrow" aria-hidden="true" />}
+          </div>
+        ))}
+      </div>
+      <div className="video-actions">
+        <span>Retain as evidence</span>
+        <span>Delete anytime</span>
+        <span>Reprocess as platform improves</span>
+      </div>
+      <p className="video-control-note">Raw footage never leaves your control</p>
+    </div>
+  );
+}
 
 export default function TrustPage() {
   return (
     <div className="trust-page">
-      <div className="page-content">
-        {/* HERO */}
-        <section style={{ position:'relative', minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden', paddingTop:'7rem', paddingBottom:'2rem', paddingLeft:'4rem', paddingRight:'4rem' }}>
-          <div style={{ position:'absolute', bottom:0, left:0, right:0, height:'160px', background:`linear-gradient(to top, ${theme.panel}, transparent)`, pointerEvents:'none', zIndex:10 }} />
-          <div style={{ position:'relative', zIndex:20, maxWidth:'640px', textAlign:'center' }}>
-            <h1 style={{ fontFamily:'Syne,sans-serif', fontSize:'3.25rem', fontWeight:700, lineHeight:1.08, letterSpacing:0, color:theme.text, marginBottom:'1.5rem' }}>
-              Secure deployment, simplified.
-            </h1>
-            <p style={{ fontSize:'1.0625rem', color:theme.textSub, lineHeight:1.78, fontWeight:300, marginBottom:'2.5rem', maxWidth:'520px', margin:'0 auto' }}>
-              RackTrack supports flexible deployment models with strong isolation, clear auditability, and controls built for modern infrastructure operations.
-            </p>
-            <div style={{ display:'flex', justifyContent:'center', gap:'1rem', flexWrap:'wrap' }}>
-              <Link to="/contact" style={{ display:'inline-flex', background:theme.indigo, color:'#fff', padding:'0.875rem 2rem', borderRadius:'0.5rem', fontWeight:500, fontSize:'0.9375rem', textDecoration:'none', boxShadow:'0 0 28px rgba(139, 92, 246, 0.28)' }}>Discuss Your Requirements</Link>
-              <Link to="#security" style={{ display:'inline-flex', background:theme.buttonSecondary, backdropFilter:'blur(10px)', color:theme.textSub, padding:'0.875rem 1.75rem', borderRadius:'0.5rem', fontWeight:400, fontSize:'0.9375rem', border:`1px solid ${theme.border}`, textDecoration:'none' }}>Review Security Posture</Link>
-            </div>
-          </div>
-        </section>
-
-      {/* BADGES */}
-      <section id="security" style={{ padding:'7rem 4rem', position:'relative' }}>
-        <div style={{ maxWidth:'80rem', margin:'0 auto' }}>
-          <div style={{ fontSize:'0.6875rem', fontWeight:500, letterSpacing:'0.15em', textTransform:'uppercase', color:theme.indigo, marginBottom:'1rem', display:'flex', alignItems:'center', gap:'0.75rem' }}>
-            <span style={{ display:'block', width:'1.5rem', height:'1px', background:theme.blue }} />Security Posture
-          </div>
-          <h2 style={{ fontFamily:'Syne,sans-serif', fontSize:'2.5rem', fontWeight:700, color:theme.text, letterSpacing:0, marginBottom:'4rem' }}>Designed to survive the security review.</h2>
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'1.25rem' }} className="max-lg:grid-cols-2 max-md:grid-cols-1">
-            {TRUST.badges.map(b=>(
-              <div key={b.title} style={{ background:theme.content, backdropFilter:'blur(14px)', border:`1px solid ${theme.border}`, borderRadius:'0.5rem', padding:'2rem', display:'flex', alignItems:'flex-start', gap:'1rem' }}>
-                <span style={{ fontSize:'1.5rem', flexShrink:0 }}>{ICONS[b.icon] ?? 'SC'}</span>
-                <div>
-                  <h3 style={{ fontFamily:'Syne,sans-serif', fontSize:'1rem', fontWeight:600, color:theme.text, marginBottom:'0.5rem' }}>{b.title}</h3>
-                  <p style={{ fontSize:'0.8125rem', color:theme.textSub, fontWeight:300, lineHeight:1.7 }}>{b.desc}</p>
-                </div>
-              </div>
-            ))}
+      <section className="trust-hero">
+        <div className="trust-hero-copy">
+          <p className="trust-kicker">Trust &amp; Security</p>
+          <h1>
+            Enterprise-grade <span>security</span> for <span>infrastructure</span> <span>intelligence.</span>
+          </h1>
+          <p>
+            RackTrack helps enterprises process rack intelligence securely while maintaining complete control
+            over data, deployment, and operational access.
+          </p>
+          <div className="trust-actions">
+            <Link className="trust-button trust-button--primary" to="/contact">
+              Request Security Overview
+            </Link>
+            <Link className="trust-button" to="/contact">
+              Talk to Solutions Team
+            </Link>
           </div>
         </div>
+        <img
+          className="trust-hero-image"
+          src="/trust-hero-security.png"
+          alt="RackTrack security visualization with server racks, AI scanning, structured data, and secure tenant callouts"
+        />
       </section>
 
-      {/* FAQ */}
-      <section style={{ padding:'0 4rem 7rem', position:'relative' }}>
-        <div style={{ maxWidth:'56rem', margin:'0 auto' }}>
-          <div style={{ fontSize:'0.6875rem', fontWeight:500, letterSpacing:'0.15em', textTransform:'uppercase', color:theme.indigo, marginBottom:'1rem', display:'flex', alignItems:'center', gap:'0.75rem' }}>
-            <span style={{ display:'block', width:'1.5rem', height:'1px', background:theme.indigo }} />Data Handling
-          </div>
-          <h2 style={{ fontFamily:'Syne,sans-serif', fontSize:'2.5rem', fontWeight:700, color:theme.text, letterSpacing:0, marginBottom:'3rem' }}>Clear answers to what your security team will ask.</h2>
-          <div style={{ display:'flex', flexDirection:'column', gap:'1rem' }}>
-            {FAQ.map(f=>(
-              <div key={f.q} style={{ background:theme.content, backdropFilter:'blur(14px)', border:`1px solid ${theme.border}`, borderRadius:'0.5rem', padding:'2rem' }}>
-                <h4 style={{ fontFamily:'Syne,sans-serif', fontSize:'1rem', fontWeight:600, color:theme.text, marginBottom:'0.75rem' }}>{f.q}</h4>
-                <p style={{ fontSize:'0.9375rem', color:theme.textSub, fontWeight:300, lineHeight:1.7 }}>{f.a}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* DEPLOYMENT */}
-      <section style={{ padding:'0 4rem 7rem', position:'relative' }}>
-        <div style={{ maxWidth:'80rem', margin:'0 auto' }}>
-          <div style={{ fontSize:'0.6875rem', fontWeight:500, letterSpacing:'0.15em', textTransform:'uppercase', color:theme.indigo, marginBottom:'1rem', display:'flex', alignItems:'center', gap:'0.75rem' }}>
-            <span style={{ display:'block', width:'1.5rem', height:'1px', background:theme.indigo }} />Deployment Options
-          </div>
-          <h2 style={{ fontFamily:'Syne,sans-serif', fontSize:'2.5rem', fontWeight:700, color:theme.text, letterSpacing:0, marginBottom:'3rem' }}>Deploy it your way.</h2>
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'1.25rem', marginBottom:'3rem' }} className="max-lg:grid-cols-1">
-            {DEPLOYMENT.map(d=>(
-              <div key={d.title} style={{ background:theme.content, backdropFilter:'blur(14px)', border:`1px solid ${theme.border}`, borderRadius:'0.5rem', padding:'2.5rem 2rem', position:'relative', overflow:'hidden' }}>
-                <div style={{ position:'absolute', top:0, left:0, right:0, height:'1px', background:`linear-gradient(90deg,transparent,${theme.indigo},transparent)` }} />
-                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'1rem' }}>
-                  <h3 style={{ fontFamily:'Syne,sans-serif', fontSize:'1.125rem', fontWeight:600, color:theme.text }}>{d.title}</h3>
-                  <span style={{ fontSize:'0.625rem', fontWeight:600, letterSpacing:'0.1em', textTransform:'uppercase', background:'rgba(0, 209, 255, 0.14)', color:theme.indigo, border:`1px solid rgba(0, 209, 255, 0.24)`, padding:'0.25rem 0.625rem', borderRadius:'999px' }}>{d.badge}</span>
-                </div>
-                <p style={{ fontSize:'0.875rem', color:theme.textSub, fontWeight:300, lineHeight:1.7, marginBottom:'1.5rem' }}>{d.desc}</p>
-                <ul style={{ listStyle:'none', display:'flex', flexDirection:'column', gap:'0.625rem' }}>
-                  {d.features.map(f=>(
-                    <li key={f} style={{ display:'flex', alignItems:'center', gap:'0.625rem', fontSize:'0.875rem', color:theme.textSub }}>
-                      <span style={{ width:'14px', height:'14px', borderRadius:'50%', background:'rgba(0, 209, 255, 0.14)', border:'1px solid rgba(0, 209, 255, 0.24)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'10px', color:theme.indigo, flexShrink:0 }}>+</span>
-                      {f}
-                    </li>
+      <section className="trust-section trust-section--center" id="security-posture">
+        <h2>Security Posture</h2>
+        <p>Built to meet the enterprise security signals procurement teams expect.</p>
+        <div className="security-card-grid">
+          {SECURITY_POSTURE.map((item) => (
+            <article className="security-card" key={item.title}>
+              <SecurityPostureLogo name={item.icon} />
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+              {item.meter && (
+                <div className="soc-meter" aria-hidden="true">
+                  {Array.from({ length: 8 }).map((_, index) => (
+                    <span key={index} />
                   ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-          <div style={{ textAlign:'center' }}>
-            <Link to="/contact" style={{ display:'inline-flex', background:theme.indigo, color:'#fff', padding:'1rem 2.5rem', borderRadius:'0.5rem', fontWeight:500, fontSize:'1rem', textDecoration:'none', boxShadow:'0 0 32px rgba(139, 92, 246, 0.28)' }}>Discuss Your Deployment -&gt;</Link>
-          </div>
+                </div>
+              )}
+            </article>
+          ))}
         </div>
       </section>
-      </div>
+
+      <section className="trust-section trust-video-section" id="data-handling">
+        <div className="video-copy">
+          <h2>
+            Your video,
+            <span> your control.</span>
+          </h2>
+          <p>
+            Rack video is processed in your tenant, structured into device and topology records, and retained
+            per your data residency policy.
+          </p>
+          <p>The structured output is what powers downstream workflows.</p>
+          <p>
+            The raw footage is yours: delete it, retain it as evidence, or keep it for re-processing as the
+            platform improves. It never leaves your control.
+          </p>
+        </div>
+        <VideoFlow />
+      </section>
+
+      <section className="trust-section trust-section--center" id="deployment-options">
+        <h2>Deployment Options</h2>
+        <p>Flexible deployment models to meet your environment and compliance needs.</p>
+        <div className="deployment-card-grid">
+          {DEPLOYMENTS.map((item) => (
+            <article className="deployment-card" key={item.title}>
+              <DeploymentLogo name={item.icon} />
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="trust-bottom-cta">
+        <div className="cta-emblem">
+          <IconGlyph name="shield" />
+        </div>
+        <div>
+          <h2>Built for secure infrastructure operations at enterprise scale.</h2>
+          <p>Security. Control. Transparency. That's the RackTrack promise.</p>
+        </div>
+        <div className="trust-actions">
+          <Link className="trust-button trust-button--primary" to="/contact">
+            Request Security Documentation
+          </Link>
+          <Link className="trust-button" to="/contact">
+            Contact Sales
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }
