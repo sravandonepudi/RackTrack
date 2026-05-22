@@ -838,7 +838,7 @@
   max-width: 62vw;
   margin-left: auto;
   margin-right: clamp(24px, 5vw, 80px);
-  padding: 48px 32px 56px;
+  padding: 28px 32px 56px;
 }
 
 .home-section--proof .home-section-heading {
@@ -918,6 +918,18 @@
 }
 
 /* ── Roles grid ──────────────────────────────────────────────────────────── */
+.home-section--roles {
+  width: min(72vw, 960px);
+  max-width: 72vw;
+  margin-left: clamp(24px, 5vw, 80px);
+  margin-right: auto;
+  padding: 72px 32px;
+}
+
+.home-section--roles .home-section-heading {
+  max-width: 100%;
+}
+
 .home-roles-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -925,25 +937,47 @@
 }
 
 .home-role-card {
-  padding: 20px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--gradient-panel);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  padding: 22px 20px;
+  border: 1px solid rgba(0, 209, 255, 0.18);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(0, 209, 255, 0.07), transparent 55%),
+    linear-gradient(155deg, rgba(13, 21, 45, 0.97), rgba(6, 9, 24, 0.97) 60%, rgba(20, 15, 45, 0.97));
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.44), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
+  /* start hidden, slide up */
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 0.5s ease calc(var(--role-delay, 0s)),
+    transform 0.5s ease calc(var(--role-delay, 0s)),
+    border-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.home-role-card.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.home-role-card:hover {
+  border-color: rgba(0, 209, 255, 0.36);
+  box-shadow: 0 0 28px rgba(0, 209, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.09);
 }
 
 .home-role-card h3 {
-  margin: 0 0 8px;
+  margin: 0;
   color: #fff;
   font-size: 0.92rem;
   font-weight: 700;
+  line-height: 1.4;
 }
 
 .home-role-card p {
   color: var(--text-secondary);
   font-size: 0.84rem;
   line-height: 1.6;
-  margin: 0;
+  margin: 6px 0 0;
 }
 
 /* ── Capabilities — sticky heading + 4×2 animated grid ──────────────────── */
@@ -952,8 +986,7 @@
   opacity: var(--cap-opacity, 0);
   transform: translate3d(0, var(--cap-y, 34px), 0);
   will-change: opacity, transform;
-  /* tall enough for all 8 cards to animate in with scroll room */
-  min-height: 280svh;
+  min-height: 125svh;
   padding: 0;
   width: 100%;
   max-width: 100%;
@@ -1066,6 +1099,12 @@
 @media (max-width: 900px) {
   .home-stat-grid,
   .home-roles-grid { grid-template-columns: 1fr; }
+
+  .home-section--roles {
+    width: 100%;
+    max-width: none;
+    margin: 0 auto;
+  }
 
   .cap-grid-stack {
     grid-template-columns: repeat(2, minmax(0, 1fr));
