@@ -319,6 +319,7 @@ function useRackScrollAnimation(
   capStackRef: RefObject<HTMLDivElement | null>,
   capCardRefs: RefObject<(HTMLElement | null)[]>,
   proofRef: RefObject<HTMLElement | null>,
+  rolesRef: RefObject<HTMLElement | null>,
 ) {
   useEffect(() => {
     const showcase = showcaseRef.current;
@@ -351,10 +352,12 @@ function useRackScrollAnimation(
       const cap = capRef.current;
       const capStack = capStackRef.current;
       const proof = proofRef.current;
+      const roles = rolesRef.current;
       const whatRect = what?.getBoundingClientRect();
       const capRect = cap?.getBoundingClientRect();
       const capStackRect = capStack?.getBoundingClientRect();
       const proofRect = proof?.getBoundingClientRect();
+      const rolesRect = roles?.getBoundingClientRect();
       const whatRawProgress = whatRect
         ? clamp((window.innerHeight * 0.88 - whatRect.top) / (window.innerHeight * WHAT_SECTION_SCROLL_VIEWPORTS))
         : 0;
@@ -375,14 +378,16 @@ function useRackScrollAnimation(
       const postSectionSwingProgress = rawProgress > 0.985 ? whatScrolledAwayProgress : 0;
       // Proof section: rack travels from right → left as proof enters viewport
       const proofApproachProgress = proofRect
-        ? easeInOutCubic(clamp((window.innerHeight * 0.82 - proofRect.top) / (window.innerHeight * 0.55)))
+        ? easeInOutCubic(clamp((window.innerHeight * 0.9 - proofRect.top) / (window.innerHeight * 0.85)))
         : 0;
-      const proofRackTravelProgress = proofApproachProgress;
+      const capExitProgress = capRect
+        ? easeInOutCubic(clamp((window.innerHeight * 1.05 - capRect.bottom) / (window.innerHeight * 0.72)))
+        : 0;
+      const proofRackTravelProgress = Math.max(capExitProgress, proofApproachProgress);
+      const postProofReturnProgress = rolesRect
+        ? easeInOutCubic(clamp((window.innerHeight * 0.92 - rolesRect.top) / (window.innerHeight * 0.72)))
+        : 0;
       // Cap section: rack travels right → left smoothly as user scrolls through the 900svh cap section
-      const capScrollProgress = cap
-        ? easeInOutCubic(clamp((-cap.getBoundingClientRect().top) / (cap.offsetHeight - window.innerHeight)))
-        : 0;
-      const capRackTravelProgress = postSectionSwingProgress >= 1 ? capScrollProgress : 0;
       const capRevealProgress = easeOutCubic(clamp((rackReturnProgress - 0.78) / 0.22));
       const rackScale = Math.min(stageWidth < 1100 ? 0.86 : 1.1, (stageHeight - 78) / RACK_BODY_HEIGHT);
       const cornerScale = Math.min(0.66, rackScale * 0.72);
@@ -407,35 +412,36 @@ function useRackScrollAnimation(
       // Phase 3: swing left → right
       const swungX = lerp(leftRackTargetX, rightRackTargetX, swingToRight);
       // Phase 4: cap scroll — right → left
-      const capTravelX = lerp(rightRackTargetX, leftRackTargetX, capRackTravelProgress);
+      const proofTravelX = lerp(dockedGroupX, leftRackTargetX, proofRackTravelProgress);
+      const postProofTravelX = lerp(leftRackTargetX, rightRackTargetX, postProofReturnProgress);
       // Phase 5: proof — already at left, stays
-      const proofX = leftRackTargetX;
 
       const leftPhaseGroupX = rackAtLeft
-        ? proofRackTravelProgress > 0 ? proofX
-          : capRackTravelProgress > 0 ? capTravelX
+        ? postProofReturnProgress > 0 ? postProofTravelX
+          : proofRackTravelProgress > 0 ? proofTravelX
           : postSectionSwingProgress > 0 ? swungX
           : leftTravelX
         : dockedGroupX;
-      const groupX = lerp(leftPhaseGroupX, dockedGroupX, rackReturnProgress);
+      const returnToDockProgress = proofRackTravelProgress > 0 ? 0 : rackReturnProgress;
+      const groupX = lerp(leftPhaseGroupX, dockedGroupX, returnToDockProgress);
 
       // Rotation: rack faces right (negative ry = faces right in 3D) during cap travel
       const baseRackRy = lerp(-7, 9, whatRackTravelProgress);
       const swungRackRy = lerp(9, -9, swingToRight);
       // During cap travel: starts facing right (-9), stays facing right as it moves left
-      const capRackRy = lerp(-9, -9, capRackTravelProgress); // holds right-facing
-      const proofRackRy = -9; // stays right-facing at proof
-      const rackRotateY = proofRackTravelProgress > 0 ? proofRackRy
-        : capRackTravelProgress > 0 ? capRackRy
+      const proofRackRy = 9; // faces right on the left side.
+      const postProofRackRy = lerp(proofRackRy, -9, postProofReturnProgress);
+      const rackRotateY = postProofReturnProgress > 0 ? postProofRackRy
+        : proofRackTravelProgress > 0 ? proofRackRy
         : postSectionSwingProgress > 0 ? swungRackRy
         : baseRackRy;
 
       const baseAssemblyRy = lerp(lerp(0, -18, cornerProgress), 18, whatRackTravelProgress);
       const swungAssemblyRy = lerp(18, -18, swingToRight);
-      const capAssemblyRy = lerp(-18, -18, capRackTravelProgress); // holds right-facing tilt
-      const proofAssemblyRy = -18;
-      const assemblyRotateY = proofRackTravelProgress > 0 ? proofAssemblyRy
-        : capRackTravelProgress > 0 ? capAssemblyRy
+      const proofAssemblyRy = 18;
+      const postProofAssemblyRy = lerp(proofAssemblyRy, -18, postProofReturnProgress);
+      const assemblyRotateY = postProofReturnProgress > 0 ? postProofAssemblyRy
+        : proofRackTravelProgress > 0 ? proofAssemblyRy
         : postSectionSwingProgress > 0 ? swungAssemblyRy
         : baseAssemblyRy;
       const groupY = lerp(0, cornerY, cornerProgress);
@@ -540,7 +546,7 @@ function useRackScrollAnimation(
     return () => {
       window.cancelAnimationFrame(frameId);
     };
-  }, [capCardRefs, capRef, capStackRef, deviceRefs, proofRef, showcaseRef, stageRef, whatRef]);
+  }, [capCardRefs, capRef, capStackRef, deviceRefs, proofRef, rolesRef, showcaseRef, stageRef, whatRef]);
 }
 
 function RackFrame() {
@@ -661,8 +667,9 @@ export default function HomePage() {
   const capCardRefs = useRef<(HTMLElement | null)[]>([]);
   const deviceRefs = useRef<DeviceRefMap>({});
   const proofRef = useRef<HTMLElement>(null);
+  const rolesRef = useRef<HTMLElement>(null);
 
-  useRackScrollAnimation(showcaseRef, stageRef, deviceRefs, whatRef, capRef, capStackRef, capCardRefs, proofRef);
+  useRackScrollAnimation(showcaseRef, stageRef, deviceRefs, whatRef, capRef, capStackRef, capCardRefs, proofRef, rolesRef);
 
   // Scroll-reveal: add .is-visible when sections enter the viewport
   useEffect(() => {
@@ -680,6 +687,25 @@ export default function HomePage() {
     );
     els.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
+  }, []);
+
+  // Role cards: reveal one-by-one as section enters viewport
+  useEffect(() => {
+    const cards = document.querySelectorAll<HTMLElement>('.home-role-card');
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            cards.forEach((card) => card.classList.add('is-visible'));
+            sectionObserver.disconnect();
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    const section = rolesRef.current;
+    if (section) sectionObserver.observe(section);
+    return () => sectionObserver.disconnect();
   }, []);
 
   return (
@@ -829,14 +855,18 @@ export default function HomePage() {
       </section>
 
       {/* ── Section 1.6 · Who It's For ── */}
-      <section className="home-section home-reveal">
+      <section className="home-section home-section--roles" ref={rolesRef}>
         <div className="home-section-heading">
           <p className="home-eyebrow">Who it's for</p>
           <h2>One optimized layer, useful to every team around the rack.</h2>
         </div>
         <div className="home-roles-grid">
-          {ROLES.map((role) => (
-            <article className="home-role-card" key={role.id}>
+          {ROLES.map((role, i) => (
+            <article
+              className="home-role-card"
+              key={role.id}
+              style={{ '--role-delay': `${i * 0.1}s` } as CSSProperties}
+            >
               <h3>{role.title}</h3>
             </article>
           ))}
