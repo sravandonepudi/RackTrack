@@ -42,7 +42,7 @@ const RACK_TOP_PADDING = 54;
 const RACK_BOTTOM_PADDING = 76;
 const RACK_SLOT_INSET = 54;
 const RACK_WIDTH = 420;
-const RACK_DEPTH = 46;
+const RACK_DEPTH = 62;
 const WHAT_SECTION_SCROLL_VIEWPORTS = 0.85;
 const WHAT_RACK_LEFT_COMPLETE_PROGRESS = 0.68;
 const WHAT_TEXT_REVEAL_PROGRESS = 0.32;
@@ -54,8 +54,8 @@ const DEVICE_BASE: NetworkDeviceBase[] = [
     color: '#796cff',
     ports: 16,
     unitSpan: 1,
-    startX: 0.56,
-    startY: -0.34,
+    startX: 0.62,
+    startY: -0.36,
     startZ: 150,
     startScale: 1,
     startRx: -13,
@@ -74,8 +74,8 @@ const DEVICE_BASE: NetworkDeviceBase[] = [
     color: '#ff384f',
     ports: 10,
     unitSpan: 2,
-    startX: -0.56,
-    startY: -0.18,
+    startX: -0.62,
+    startY: -0.16,
     startZ: 220,
     startScale: 1.04,
     startRx: -11,
@@ -95,8 +95,8 @@ const DEVICE_BASE: NetworkDeviceBase[] = [
     color: '#7467ff',
     ports: 14,
     unitSpan: 1,
-    startX: 0.56,
-    startY: 0.32,
+    startX: 0.62,
+    startY: 0.36,
     startZ: 110,
     startScale: 0.94,
     startRx: -10,
@@ -115,16 +115,16 @@ const DEVICE_BASE: NetworkDeviceBase[] = [
     color: '#19ff8a',
     ports: 12,
     unitSpan: 1,
-    startX: -0.56,
-    startY: 0.45,
+    startX: -0.40,
+    startY: 0.16,
     startZ: 180,
     startScale: 0.98,
     startRx: -12,
     startRy: 23,
     startRz: -1,
     dockRy: -7,
-    floatX: 24,
-    floatY: 22,
+    floatX: 18,
+    floatY: 16,
     floatZ: 36,
     phase: 3.1,
     delay: 0.18,
@@ -136,15 +136,15 @@ const DEVICE_BASE: NetworkDeviceBase[] = [
     color: '#ff4056',
     ports: 8,
     unitSpan: 2,
-    startX: -0.56,
-    startY: 0.25,
+    startX: -0.54,
+    startY: 0.36,
     startZ: 95,
     startScale: 0.9,
     startRx: -14,
     startRy: 28,
     startRz: 1,
     dockRy: -7,
-    floatX: 28,
+    floatX: 18,
     floatY: 14,
     floatZ: 28,
     phase: 4,
@@ -157,8 +157,8 @@ const DEVICE_BASE: NetworkDeviceBase[] = [
     color: '#00d8ff',
     ports: 16,
     unitSpan: 1,
-    startX: 0.56,
-    startY: 0.48,
+    startX: 0.62,
+    startY: 0.50,
     startZ: 135,
     startScale: 0.92,
     startRx: -12,
@@ -177,7 +177,7 @@ const DEVICE_BASE: NetworkDeviceBase[] = [
     color: '#21ff91',
     ports: 6,
     unitSpan: 1,
-    startX: 0.56,
+    startX: 0.62,
     startY: -0.02,
     startZ: 70,
     startScale: 0.82,
@@ -198,7 +198,7 @@ const DEVICE_BASE: NetworkDeviceBase[] = [
     color: '#8677ff',
     ports: 12,
     unitSpan: 1,
-    startX: -0.56,
+    startX: -0.60,
     startY: 0.58,
     startZ: 60,
     startScale: 0.86,
@@ -218,16 +218,16 @@ const DEVICE_BASE: NetworkDeviceBase[] = [
     color: '#18f58d',
     ports: 8,
     unitSpan: 2,
-    startX: -0.56,
-    startY: -0.42,
+    startX: -0.58,
+    startY: -0.40,
     startZ: 55,
     startScale: 0.76,
     startRx: -12,
     startRy: 26,
     startRz: -2,
     dockRy: -7,
-    floatX: 16,
-    floatY: 18,
+    floatX: 10,
+    floatY: 10,
     floatZ: 24,
     phase: 7.2,
     delay: 0.38,
@@ -426,20 +426,22 @@ function useRackScrollAnimation(
       const groupX = lerp(leftPhaseGroupX, dockedGroupX, returnToDockProgress);
 
       // Rotation: rack faces right (negative ry = faces right in 3D) during cap travel
-      const baseRackRy = lerp(-7, 9, whatRackTravelProgress);
-      const swungRackRy = lerp(9, -9, swingToRight);
-      // During cap travel: starts facing right (-9), stays facing right as it moves left
-      const proofRackRy = 9; // faces right on the left side.
-      const postProofRackRy = lerp(proofRackRy, -9, postProofReturnProgress);
+      const baseRackRy = lerp(-5, 7, whatRackTravelProgress);
+      const swungRackRy = lerp(7, -7, swingToRight);
+      // During cap travel: starts facing right (-7), stays facing right as it moves left
+      const proofRackRy = 7; // faces right on the left side.
+      // Rotation completes at 65% of travel so the rack is already facing left when it arrives on the right
+      const postProofRotProgress = clamp(postProofReturnProgress / 0.65);
+      const postProofRackRy = lerp(proofRackRy, -9, postProofRotProgress);
       const rackRotateY = postProofReturnProgress > 0 ? postProofRackRy
         : proofRackTravelProgress > 0 ? proofRackRy
         : postSectionSwingProgress > 0 ? swungRackRy
         : baseRackRy;
 
-      const baseAssemblyRy = lerp(lerp(0, -18, cornerProgress), 18, whatRackTravelProgress);
-      const swungAssemblyRy = lerp(18, -18, swingToRight);
-      const proofAssemblyRy = 18;
-      const postProofAssemblyRy = lerp(proofAssemblyRy, -18, postProofReturnProgress);
+      const baseAssemblyRy = lerp(lerp(0, -13, cornerProgress), 13, whatRackTravelProgress);
+      const swungAssemblyRy = lerp(13, -13, swingToRight);
+      const proofAssemblyRy = 13;
+      const postProofAssemblyRy = lerp(proofAssemblyRy, -16, postProofRotProgress);
       const assemblyRotateY = postProofReturnProgress > 0 ? postProofAssemblyRy
         : proofRackTravelProgress > 0 ? proofAssemblyRy
         : postSectionSwingProgress > 0 ? swungAssemblyRy
@@ -513,8 +515,8 @@ function useRackScrollAnimation(
         const localProgress = easeInOutCubic(clamp((dockProgress - device.delay) / (1 - device.delay)));
         const floatAmount = (1 - localProgress) * idleStrength;
         const elapsed = time * 0.001;
-        const maxStartX = Math.max(0, stageWidth / 2 - 330);
-        const maxStartY = Math.max(0, stageHeight / 2 - 112);
+        const maxStartX = Math.max(0, stageWidth / 2 - 310);
+        const maxStartY = Math.max(0, stageHeight / 2 - 120);
         const startX = clamp(device.startX * stageWidth, -maxStartX, maxStartX);
         const startY = clamp(device.startY * stageHeight, -maxStartY, maxStartY);
         const targetX = 0;

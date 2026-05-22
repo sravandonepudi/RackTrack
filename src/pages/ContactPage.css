@@ -26,10 +26,8 @@
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 48px;
-  min-height: 72vh;
-  padding: 120px clamp(32px, 6vw, 96px) 64px;
+  min-height: 90vh;
+  padding: 120px clamp(32px, 5vw, 80px) 80px;
   overflow: hidden;
 }
 
@@ -47,6 +45,7 @@
   z-index: 2;
   max-width: 520px;
   flex-shrink: 0;
+  width: 44%;
 }
 
 .contact-eyebrow-pill {
@@ -114,126 +113,24 @@
   box-shadow: 0 0 40px rgba(0, 209, 255, 0.38), 0 0 56px rgba(139, 92, 246, 0.22);
 }
 
-/* ── Hero Visual (rack) ── */
+/* ── Hero Visual ── */
 .contact-hero-visual {
-  position: relative;
-  flex-shrink: 0;
-  width: min(38vw, 460px);
-}
-
-.chv-rack {
-  position: relative;
-  border: 1.5px solid rgba(0, 209, 255, 0.4);
-  border-radius: 10px;
-  background: linear-gradient(160deg, rgba(11, 16, 38, 0.92), rgba(5, 8, 22, 0.72));
-  padding: 28px 36px;
-  box-shadow: 0 0 48px rgba(0, 209, 255, 0.14), 0 32px 64px rgba(0, 0, 0, 0.5),
-              inset 0 1px 0 rgba(255, 255, 255, 0.07);
-  transform: perspective(900px) rotateY(-8deg) rotateX(3deg);
-  overflow: hidden;
-}
-
-.chv-rack-rail--left,
-.chv-rack-rail--right {
   position: absolute;
-  top: 16px;
-  bottom: 16px;
-  width: 18px;
-  border: 1px solid rgba(0, 209, 255, 0.3);
-  border-radius: 4px;
-  background: linear-gradient(180deg, rgba(0, 209, 255, 0.08), rgba(0, 0, 0, 0.3));
-}
-
-.chv-rack-rail--left { left: 10px; }
-.chv-rack-rail--right { right: 10px; }
-
-.chv-rack-slots {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.chv-device {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 10px;
-  border: 1px solid color-mix(in srgb, var(--dev-color) 30%, transparent);
-  border-radius: 5px;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--dev-color) 10%, transparent), rgba(0,0,0,0.3));
-  box-shadow: 0 0 10px color-mix(in srgb, var(--dev-color) 20%, transparent);
-}
-
-.chv-device-led {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--dev-color);
-  box-shadow: 0 0 6px var(--dev-color);
-  flex-shrink: 0;
-  animation: chv-blink 1.8s ease-in-out infinite;
-  animation-delay: calc(var(--i, 0) * 0.2s);
-}
-
-@keyframes chv-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.2; }
-}
-
-.chv-device-bar {
-  height: 6px;
-  border-radius: 3px;
-  background: linear-gradient(90deg, var(--dev-color), color-mix(in srgb, var(--dev-color) 40%, transparent));
-  box-shadow: 0 0 8px color-mix(in srgb, var(--dev-color) 50%, transparent);
-}
-
-.chv-device-ports {
-  margin-left: auto;
-  width: 40px;
-  height: 8px;
-  border-radius: 2px;
-  background: repeating-linear-gradient(
-    90deg,
-    rgba(255,255,255,0.12) 0 4px,
-    transparent 4px 6px
-  );
-}
-
-.chv-scan-line {
-  position: absolute;
-  left: 0;
+  top: 0;
   right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.9), transparent);
-  box-shadow: 0 0 12px rgba(0, 240, 255, 0.8);
-  animation: chv-scan 2.8s linear infinite;
+  bottom: 0;
+  width: 60%;
+  pointer-events: none;
+  z-index: 1;
 }
 
-@keyframes chv-scan {
-  0% { top: 10%; opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { top: 90%; opacity: 0; }
+.chv-infographic-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  object-position: top right;
 }
-
-.chv-badge {
-  position: absolute;
-  padding: 6px 12px;
-  border: 1px solid rgba(0, 209, 255, 0.28);
-  border-radius: 6px;
-  background: rgba(5, 8, 22, 0.88);
-  color: var(--accent-cyan);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  white-space: nowrap;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 0 16px rgba(0, 209, 255, 0.12);
-}
-
-.chv-badge--1 { top: -14px; left: 12px; }
-.chv-badge--2 { bottom: 24px; right: -20px; color: #19ff8a; border-color: rgba(25, 255, 138, 0.28); }
-.chv-badge--3 { top: 40%; right: -28px; color: #8b5cf6; border-color: rgba(139, 92, 246, 0.28); }
 
 /* ── Contact Paths ── */
 .contact-paths-section {
@@ -479,17 +376,27 @@
   .contact-hero {
     flex-direction: column;
     padding-top: 100px;
+    padding-bottom: 48px;
     gap: 40px;
+    min-height: auto;
+  }
+
+  .contact-hero-text {
+    width: 100%;
   }
 
   .contact-hero-visual {
+    position: static;
     width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
+    pointer-events: auto;
   }
 
-  .chv-badge--2,
-  .chv-badge--3 { display: none; }
+  .chv-infographic-img {
+    height: auto;
+    max-width: 560px;
+    margin: 0 auto;
+    object-position: center;
+  }
 
   .contact-paths-grid {
     grid-template-columns: 1fr;

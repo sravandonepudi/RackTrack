@@ -1,6 +1,5 @@
 import type { ReactElement } from 'react'
 import { Link } from 'react-router-dom'
-import RackTrackLogo from './RackTrackLogo'
 import './Footer.css'
 
 const footerGroups = [
@@ -44,7 +43,7 @@ export default function Footer(): ReactElement {
       <div className="footer-inner">
         <section className="footer-about" aria-label="RackTrack">
           <Link to="/" className="footer-brand" aria-label="RackTrack home">
-            <RackTrackLogo />
+            <img src="/RackTrack_Logo.png" alt="RackTrack" className="footer-logo-img" />
             <span>RackTrack</span>
           </Link>
           <p>Physical Intelligence Layer for the modern data center.</p>
