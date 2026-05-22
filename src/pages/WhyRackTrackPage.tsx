@@ -1,10 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import rackBg from '../rack-bg.png';
+import rackImg from '../rack.png';
 import './WhyRackTrackPage.css';
+
 
 const WHY = {
   body: 'Existing tools sense the rack. Or they read from the network. Or they track vendor and security data. ',
   bodyHighlight: 'RackTrack does all three, in the same pass, and reconciles them',
   bodyTail: ' — which is why the output is trustworthy enough to defend in an audit, fast enough to use in an incident, and complete enough to drive capacity and procurement decisions.',
+  
   pillars: [
     {
       num: '01',
@@ -249,6 +253,7 @@ const NetworkIllustration = () => {
   }, []);
   return <canvas ref={canvasRef} style={{ width:'175px', height:'175px', flexShrink:0 }} />;
 };
+
 /* 03 Enrich — layers drop in one by one and stack */
 const LayersIllustration = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -339,7 +344,6 @@ const LayersIllustration = () => {
           cy = -60 + (restY[i]+60)*easeOutBack(Math.min(p,1));
           alpha = Math.min(p*4,1);
         } else {
-          // stay permanently at rest — no fade out
           cy = restY[i]; alpha = 1;
         }
 
@@ -354,7 +358,6 @@ const LayersIllustration = () => {
         grad.addColorStop(0,col.c1); grad.addColorStop(1,col.c2);
         ctx.strokeStyle=grad; ctx.lineWidth=2.2; ctx.stroke();
 
-        // inner glow
         const ig=ctx.createRadialGradient(cx,cy,0,cx,cy,hw*0.6);
         ig.addColorStop(0,'rgba(80,60,200,0.07)'); ig.addColorStop(1,'transparent');
         diamond(cx,cy,hw-6,hh-6); ctx.fillStyle=ig; ctx.fill();
@@ -371,10 +374,16 @@ const LayersIllustration = () => {
   return <canvas ref={canvasRef} style={{width:'145px',height:'200px',flexShrink:0}}/>;
 };
 
-
 /* ══════════════════════════════════════════
-   FEATURE ICONS & CONNECTOR
+   HERO IMAGE
 ══════════════════════════════════════════ */
+const RackAnimationOverlay = () => (
+  <img
+    src={rackImg}
+    alt="RackTrack — scans hardware, reads the wire, pulls vendor data, reconciled in one pass"
+    style={{width:'100%',height:'auto',display:'block',mixBlendMode:'screen', filter:'brightness(1.1) contrast(1.15)'}}
+  />
+);
 const FeatShield = () => (
   <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
     <rect width="44" height="44" rx="10" fill="rgba(8,18,60,0.9)" stroke="rgba(79,142,247,0.3)" strokeWidth="1"/>
@@ -407,7 +416,151 @@ function Connector() {
   );
 }
 
-/* ── Custom cursor ── */
+/* ── Tool Gap Card with hover highlight + animated divider ── */
+function ToolGapCard({ t }: { t: { cat: string; pros: string; gaps: string } }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <div
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        borderRadius: '1rem',
+        padding: '2rem',
+        position: 'relative',
+        overflow: 'hidden',
+        cursor: 'default',
+        background: hov ? 'rgba(10,22,58,0.95)' : 'rgba(8,18,48,0.85)',
+        border: hov ? '1px solid rgba(79,142,247,0.78)' : '1px solid rgba(174,183,194,0.08)',
+        boxShadow: hov ? '0 18px 46px rgba(2,10,34,0.38), 0 0 36px rgba(79,142,247,0.2)' : 'none',
+        transform: hov ? 'translateY(-4px)' : 'translateY(0)',
+        transition: 'all 0.25s ease',
+      }}
+    >
+      {/* top shimmer line */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
+        background: hov
+          ? 'linear-gradient(90deg, transparent, #4F8EF7, transparent)'
+          : 'linear-gradient(90deg, transparent, rgba(79,142,247,0.18), transparent)',
+        transition: 'background 0.25s',
+      }} />
+      {/* mouse glow */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none', borderRadius: 'inherit',
+        opacity: hov ? 1 : 0,
+        background: 'radial-gradient(circle at 50% 0%, rgba(79,142,247,0.14) 0%, transparent 65%)',
+        transition: 'opacity 0.25s',
+      }} />
+
+      <h4 style={{
+        fontFamily: 'Archivo Black,sans-serif', fontSize: '1.0625rem', fontWeight: 600,
+        color: hov ? '#67D5FF' : '#EAF2FF',
+        marginBottom: '1.25rem',
+        transition: 'color 0.25s',
+      }}>{t.cat}</h4>
+
+      <div style={{ marginBottom: '1rem' }}>
+        <div style={{
+          fontSize: '0.625rem', fontWeight: 600, letterSpacing: '0.12em',
+          textTransform: 'uppercase', color: '#4F8EF7', marginBottom: '0.5rem',
+        }}>Strengths</div>
+        <p style={{ fontSize: '0.875rem', color: hov ? '#C8D8F0' : '#8CA0B8', fontWeight: 300, lineHeight: 1.7, transition: 'color 0.25s' }}>{t.pros}</p>
+      </div>
+
+      {/* animated divider line */}
+      <div style={{
+        width: '100%', height: '1px', margin: '1rem 0', position: 'relative', overflow: 'hidden',
+        background: 'rgba(174,183,194,0.07)',
+      }}>
+        <div style={{
+          position: 'absolute', top: 0, left: hov ? '0%' : '-100%',
+          width: '100%', height: '100%',
+          background: 'linear-gradient(90deg, transparent, #4F8EF7, #00F0FF, transparent)',
+          transition: 'left 0.55s ease',
+        }} />
+      </div>
+
+      <div>
+        <div style={{
+          fontSize: '0.625rem', fontWeight: 600, letterSpacing: '0.12em',
+          textTransform: 'uppercase', color: hov ? '#8CA0B8' : '#8CA0B8', marginBottom: '0.5rem',
+        }}>Where it falls short</div>
+        <p style={{ fontSize: '0.875rem', color: hov ? '#C8D8F0' : '#8CA0B8', fontWeight: 300, lineHeight: 1.7, transition: 'color 0.25s' }}>{t.gaps}</p>
+      </div>
+    </div>
+  );
+}
+
+/* ── Hover row for table ── */
+function HoverRow({ children, isRT, isLast, index }: { children: React.ReactNode; isRT: boolean; isLast: boolean; index: number }) {
+  const [hov, setHov] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const delay = setTimeout(() => {
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+        { threshold: 0.15 }
+      );
+      obs.observe(el);
+      return () => obs.disconnect();
+    }, index * 100);
+    return () => clearTimeout(delay);
+  }, [index]);
+
+  return (
+    <div
+      ref={ref}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      className={`table-row-animate${visible ? ' visible' : ''}`}
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '1.6fr 1fr 1fr 1fr 1fr',
+        borderBottom: isLast ? 'none' : '1px solid rgba(56,152,255,.1)',
+        position: 'relative',
+        overflow: 'hidden',
+        background: hov
+          ? isRT
+            ? 'linear-gradient(90deg, rgba(26,240,160,0.08) 0%, rgba(26,240,160,0.02) 100%)'
+            : 'linear-gradient(90deg, rgba(0,207,255,0.06) 0%, rgba(0,207,255,0.01) 100%)'
+          : isRT ? 'rgba(26,240,160,0.025)' : 'transparent',
+        boxShadow: hov ? (isRT ? 'inset 2px 0 0 rgba(26,240,160,0.8)' : 'inset 2px 0 0 rgba(0,207,255,0.5)') : isRT ? 'inset 2px 0 0 rgba(26,240,160,0.3)' : 'none',
+        transition: 'background 0.3s ease, box-shadow 0.3s ease',
+      }}
+    >
+      {/* scan line on hover */}
+      <div className="row-scan-line" />
+      {/* RackTrack periodic shimmer */}
+      {isRT && <div className="rt-sweep-bar" />}
+      {children}
+    </div>
+  );
+}
+
+/* ── Counter card that animates its number on scroll ── */
+function CounterCard({ label, value, border }: { label: string; value: string; border: string }) {
+  const [visible, setVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current; if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } }, { threshold: 0.4 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return (
+    <div ref={ref} className="stat-card" style={{ flex:1, minWidth:'120px', background:'rgba(8,20,45,.85)', border:`1px solid ${border}`, borderRadius:'10px', padding:'16px 18px', cursor:'default' }}>
+      <span style={{ fontSize:'15px', fontWeight:600, color:'#00CFFF', letterSpacing:'.08em', textTransform:'uppercase', display:'block', marginBottom:'8px' }}>{label}</span>
+      {visible && (
+        <p className="counter-value" style={{ margin:0, fontSize:'2.25rem', fontWeight:700, color:'#ffffff', letterSpacing:'-0.02em' }}>{value}</p>
+      )}
+    </div>
+  );
+}
+
 /* ── Hover glow card ── */
 function GlowCard({children, style, className}:{children:React.ReactNode; style?:React.CSSProperties; className?: string}) {
   const [hov, setHov] = useState(false);
@@ -451,59 +604,170 @@ export default function WhyRackTrackPage() {
     }
   };
 
+  const rackDots = useMemo(() => [
+    // ── left column 8% ──
+    { top:'22%', left:'8%',  color:'#4F8EF7' },
+    { top:'35%', left:'8%',  color:'#22C55E' },
+    { top:'50%', left:'8%',  color:'#4F8EF7' },
+    { top:'65%', left:'8%',  color:'#F59E0B' },
+    { top:'76%', left:'8%',  color:'#22C55E' },
+    { top:'85%', left:'8%',  color:'#4F8EF7' },
+    { top:'92%', left:'8%',  color:'#F59E0B' },
+    // ── column 21% ──
+    { top:'22%', left:'21%', color:'#22C55E' },
+    { top:'38%', left:'21%', color:'#4F8EF7' },
+    { top:'55%', left:'21%', color:'#22C55E' },
+    { top:'68%', left:'21%', color:'#4F8EF7' },
+    { top:'78%', left:'21%', color:'#F59E0B' },
+    { top:'88%', left:'21%', color:'#22C55E' },
+    // ── column 36% ──
+    { top:'25%', left:'36%', color:'#4F8EF7' },
+    { top:'40%', left:'36%', color:'#F59E0B' },
+    { top:'55%', left:'36%', color:'#4F8EF7' },
+    { top:'70%', left:'36%', color:'#22C55E' },
+    { top:'80%', left:'36%', color:'#4F8EF7' },
+    { top:'90%', left:'36%', color:'#F59E0B' },
+    // ── column 50% ──
+    { top:'22%', left:'50%', color:'#22C55E' },
+    { top:'38%', left:'50%', color:'#4F8EF7' },
+    { top:'54%', left:'50%', color:'#F59E0B' },
+    { top:'68%', left:'50%', color:'#4F8EF7' },
+    { top:'77%', left:'50%', color:'#22C55E' },
+    { top:'87%', left:'50%', color:'#4F8EF7' },
+    { top:'93%', left:'50%', color:'#F59E0B' },
+    // ── column 64% ──
+    { top:'25%', left:'64%', color:'#4F8EF7' },
+    { top:'40%', left:'64%', color:'#22C55E' },
+    { top:'56%', left:'64%', color:'#4F8EF7' },
+    { top:'70%', left:'64%', color:'#F59E0B' },
+    { top:'79%', left:'64%', color:'#22C55E' },
+    { top:'89%', left:'64%', color:'#4F8EF7' },
+    // ── column 79% ──
+    { top:'22%', left:'79%', color:'#22C55E' },
+    { top:'36%', left:'79%', color:'#4F8EF7' },
+    { top:'52%', left:'79%', color:'#22C55E' },
+    { top:'66%', left:'79%', color:'#4F8EF7' },
+    { top:'75%', left:'79%', color:'#F59E0B' },
+    { top:'84%', left:'79%', color:'#22C55E' },
+    { top:'92%', left:'79%', color:'#4F8EF7' },
+    // ── right column 92% ──
+    { top:'24%', left:'92%', color:'#4F8EF7' },
+    { top:'40%', left:'92%', color:'#F59E0B' },
+    { top:'56%', left:'92%', color:'#4F8EF7' },
+    { top:'70%', left:'92%', color:'#22C55E' },
+    { top:'80%', left:'92%', color:'#4F8EF7' },
+    { top:'90%', left:'92%', color:'#F59E0B' },
+  ], []);
+
+  const [litDots, setLitDots] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    const timers: ReturnType<typeof setTimeout>[] = [];
+
+    const scheduleDot = (i: number) => {
+      // random delay before next blink: 400ms – 3500ms
+      const delay = 400 + Math.random() * 3100;
+      const t = setTimeout(() => {
+        // turn on
+        setLitDots(prev => new Set([...prev, i]));
+        // keep it lit for 120ms – 500ms, then turn off
+        const onDuration = 120 + Math.random() * 380;
+        const t2 = setTimeout(() => {
+          setLitDots(prev => { const next = new Set(prev); next.delete(i); return next; });
+          scheduleDot(i); // schedule next blink for this dot
+        }, onDuration);
+        timers.push(t2);
+      }, delay);
+      timers.push(t);
+    };
+
+    // stagger initial start so they don't all fire at once
+    rackDots.forEach((_, i) => {
+      const t = setTimeout(() => scheduleDot(i), Math.random() * 2000);
+      timers.push(t);
+    });
+
+    return () => timers.forEach(clearTimeout);
+  }, [rackDots.length]);
+
   return (
     <div className="why-racktrack-page">
       
       {/* MASTER CONTAINER */}
-      <section style={{ position:'relative', paddingTop:'2.5rem', paddingBottom:'2rem', paddingLeft:'10px', paddingRight:'2.5rem' }}>
+      <section style={{ position:'relative', paddingTop:'clamp(1.5rem, 3vw, 2.5rem)', paddingBottom:'0', paddingLeft:'clamp(1rem, 4vw, 4rem)', paddingRight:'clamp(1rem, 4vw, 4rem)' }}>
         
-        <div style={{ maxWidth:'90rem', margin:'0 auto', width:'100%' }}>
+        <div style={{ maxWidth:'112.5rem', margin:'0 auto', width:'100%' }}>
           
-          {/* HERO TEXT */}
-          <div style={{ position:'relative', zIndex:20, maxWidth:'700px', textAlign: 'left', marginBottom:'3.5rem' }}>
+          {/* HERO — text left, image right */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 'clamp(1.5rem, 3vw, 3rem)',
+            marginBottom: 'clamp(2rem, 3vw, 3.5rem)',
+            minHeight: '420px',
+            flexWrap: 'wrap',
+          }}>
+
+            {/* HERO TEXT */}
+            <div style={{ flex: '1 1 min(44%, 340px)', minWidth: 0, zIndex: 20 }}>
             
-            <h1 style={{ 
-              fontFamily:'Archivo Black,sans-serif', 
-              fontSize:'clamp(2rem, 5vw, 3.75rem)', 
-              fontWeight:900, 
-              lineHeight:1.05, 
-              letterSpacing:'-0.01em', 
-              color:'#FFFFFF', 
-              marginBottom:'1.5rem',
-              marginTop: 0 
-            }}>
-              Three things<br />
-              every tool does.<br />
-              <span style={{ 
-                background:'linear-gradient(90deg, #FFFFFF 0%, #00F0FF 35%, #4F8EF7 70%, #8B5CF6 100%)', 
-                WebkitBackgroundClip:'text', 
-                WebkitTextFillColor:'transparent' 
+              <h1 style={{ 
+                fontFamily:'Archivo Black,sans-serif', 
+                fontSize:'clamp(1.75rem, 3.2vw, 3rem)', 
+                fontWeight:900, 
+                lineHeight:1.08, 
+                letterSpacing:'-0.01em', 
+                color:'#FFFFFF', 
+                marginBottom:'1.75rem',
+                marginTop: 0 
               }}>
-                Only one does<br />
-                all three.
-              </span>
-            </h1>
-            
-            <p style={{ fontSize:'1.15rem', color:'#F8FAFC', lineHeight:1.85, fontWeight:400, margin:0, maxWidth:'680px', textAlign:'justify' }}>
-              {WHY.body}
-              <strong style={{ color: '#67D5FF', fontWeight: 700 }}>{WHY.bodyHighlight}</strong>
-              {WHY.bodyTail}
-            </p>
-            
+                Three things<br />
+                every tool does.<br />
+                <span style={{ 
+                  background:'linear-gradient(90deg, #FFFFFF 0%, #00F0FF 35%, #4F8EF7 70%, #8B5CF6 100%)', 
+                  WebkitBackgroundClip:'text', 
+                  WebkitTextFillColor:'transparent' 
+                }}>
+                  Only one does<br />
+                  all three.
+                </span>
+              </h1>
+              
+              <p style={{ fontSize:'clamp(0.95rem, 1.1vw, 1.1rem)', color:'#D8E8F8', lineHeight:1.85, fontWeight:400, margin:0, textAlign:'left' }}>
+                {WHY.body}
+                <strong style={{ color: '#67D5FF', fontWeight: 700 }}>{WHY.bodyHighlight}</strong>
+                {WHY.bodyTail}
+              </p>
+              
+            </div>
+
+            {/* HERO IMAGE — right, fills remaining space */}
+            <div style={{
+              flex: '1 1 min(54%, 400px)',
+              minWidth: 0,
+              alignSelf: 'center',
+              display: 'flex',
+              alignItems: 'center',
+              background: '#000',
+              borderRadius: '0.75rem',
+              overflow: 'hidden',
+            }}>
+              <RackAnimationOverlay />
+            </div>
+
           </div>
           
           {/* 3 PILLARS SECTION */}
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,minmax(420px,1fr))', gap:'2.75rem' }} className="max-xl:grid-cols-2 max-lg:grid-cols-1">
+          <div className="why-card-grid max-lg:grid-cols-1">
             {WHY.pillars.map((p, index)=>(
-              <GlowCard key={p.num} className="why-pillar-card" style={{ borderRadius:'1.5rem', padding:'1.75rem 2.15rem 1.75rem 10px' }}>
-                <div className="why-pillar-card-content" style={{ position:'relative', zIndex:2 }}>
-                  {/* text left */}
+              <GlowCard key={p.num} className="why-pillar-card" style={{ borderRadius:'1.5rem' }}>
+                <div className="why-pillar-card-content">
                   <div className="why-pillar-copy">
-                    <div style={{ fontFamily:'Archivo Black,sans-serif', fontSize:'2.5rem', fontWeight:800, color:'#5EA6FF', lineHeight:1, marginBottom:'0.6rem', userSelect:'none' }}>{p.num}</div>
-                    <h3 style={{ fontFamily:'Archivo Black,sans-serif', fontSize:'1.45rem', fontWeight:800, color:'#FFFFFF', marginBottom:'0.75rem' }}>{p.title}</h3>
-                    <p style={{ fontSize:'0.9rem', color:'#C8D8F0', fontWeight:400, lineHeight:1.7, margin:0 }}>{p.desc}</p>
+                    <div className="why-pillar-number">{p.num}</div>
+                    <h3 className="why-pillar-title">{p.title}</h3>
+                    <p className="why-pillar-desc">{p.desc}</p>
                   </div>
-                  {/* illustration right — clipped inside card */}
                   <div className="why-pillar-visual">
                     {getIllustration(index)}
                   </div>
@@ -513,23 +777,23 @@ export default function WhyRackTrackPage() {
           </div>
 
           {/* CONNECTORS (Hidden on mobile) */}
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,minmax(420px,1fr))', gap:'2.75rem' }} className="max-lg:grid-cols-1 max-lg:hidden">
+          <div className="why-connector-grid max-lg:hidden">
             <Connector/><Connector/><Connector/>
           </div>
 
-          {/* FEATURE CARDS (Bottom Row) */}
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,minmax(420px,1fr))', gap:'2.75rem', marginBottom:'4rem' }} className="max-lg:grid-cols-1">
+          {/* FEATURE CARDS (Bottom Row) — no bottom margin so image touches */}
+          <div className="why-card-grid max-lg:grid-cols-1" style={{ marginBottom: 0 }}>
             {[
               {Icon:FeatShield, title:'Audit-ready',    desc:'Defensible in any compliance review.'},
               {Icon:FeatBolt,   title:'Incident-speed', desc:'Fast enough for a live outage.'},
               {Icon:FeatChart,  title:'Decision-grade', desc:'Drives capacity and procurement.'},
             ].map(f=>(
-              <GlowCard key={f.title} className="why-feature-card" style={{ borderRadius:'1rem', padding:'1.25rem 1.5rem' }}>
-                <div style={{ display:'flex', alignItems:'center', gap:'1rem' }}>
+              <GlowCard key={f.title} className="why-feature-card">
+                <div className="why-feature-card-inner">
                   <div className="why-feature-icon"><f.Icon/></div>
-                  <div style={{display:'flex', flexDirection:'column', justifyContent:'center'}}>
-                    <div style={{fontSize:'1rem',fontWeight:700,color:'#EAF2FF',marginBottom:'0.25rem', lineHeight:1.3}}>{f.title}</div>
-                    <p style={{fontSize:'0.875rem',color:'#C8D8F0',fontWeight:400,lineHeight:1.55, margin:0}}>{f.desc}</p>
+                  <div className="why-feature-text">
+                    <div className="why-feature-title">{f.title}</div>
+                    <p className="why-feature-desc">{f.desc}</p>
                   </div>
                 </div>
               </GlowCard>
@@ -538,47 +802,183 @@ export default function WhyRackTrackPage() {
         </div>
       </section>
 
-      {/* COMPARISON TABLE */}
-      <section id="comparison" style={{ padding:'0 2.5rem 7rem 10px', position:'relative' }}>
-        <div style={{ maxWidth:'90rem', margin:'0 auto' }}>
-          <h2 style={{ fontFamily:'Archivo Black,sans-serif', fontSize:'2.5rem', fontWeight:700, color:'#EAF2FF', letterSpacing:0, marginBottom:'4rem' }}>Three things. One comparison.</h2>
-          <div style={{ background:'rgba(8,18,48,0.85)', backdropFilter:'blur(14px)', border:'1px solid rgba(174,183,194,0.08)', borderRadius:'1.25rem', overflow:'hidden', maxWidth:'56rem' }}>
-            <div style={{ display:'grid', gridTemplateColumns:'2fr 1fr 1fr 1fr', padding:'1rem 1.5rem', background:'rgba(26,37,53,0.5)', borderBottom:'1px solid rgba(174,183,194,0.08)' }}>
-              {WHY.compTable.headers.map(h=><span key={h} style={{ fontSize:'0.6875rem', fontWeight:600, letterSpacing:'0.1em', textTransform:'uppercase', color:'#8CA0B8', textAlign: h==='System'?'left':'center' }}>{h}</span>)}
+      {/* COMPARISON MATRIX SECTION — same 2rem side padding as master */}
+      <section id="comparison" style={{ padding:'0 clamp(1rem, 4vw, 4rem)', position:'relative' }}>
+        <div style={{ maxWidth:'112.5rem', margin:'0 auto', width:'100%' }}>
+
+          {/* RACK IMAGE BANNER — full viewport width, breaks out of container */}
+          <div style={{
+            position: 'relative',
+            left: '50%',
+            right: '50%',
+            marginLeft: '-50vw',
+            marginRight: '-50vw',
+            width: '100vw',
+            minHeight: '420px',
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            {/* Rack image — full brightness */}
+            <img
+              src={rackBg}
+              alt=""
+              aria-hidden="true"
+              style={{
+                position: 'absolute', inset: 0,
+                width: '100%', height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center',
+                filter: 'brightness(0.85)',
+              }}
+            />
+            {/* Subtle dark vignette only at very edges */}
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(to bottom, rgba(2,8,16,0.55) 0%, rgba(2,8,16,0.05) 20%, rgba(2,8,16,0.05) 80%, rgba(2,8,16,0.55) 100%)',
+            }} />
+            {/* Blinking rack lights overlay */}
+            <div style={{ position:'absolute', inset:0, pointerEvents:'none', zIndex:1 }}>
+              {rackDots.map((dot, i) => {
+                const isLit = litDots.has(i);
+                return (
+                  <div key={i} style={{
+                    position:'absolute',
+                    top: dot.top, left: dot.left,
+                    width:'4px', height:'4px',
+                    borderRadius:'50%',
+                    background: dot.color,
+                    boxShadow: isLit ? `0 0 10px 4px ${dot.color}` : `0 0 5px 1px rgba(0,0,0,0.1)`,
+                    opacity: isLit ? 1 : 0.18,
+                    transform: isLit ? 'scale(1.3)' : 'scale(0.85)',
+                    filter: isLit ? 'brightness(1.6)' : 'brightness(0.7)',
+                    transition: 'opacity 0.22s ease, transform 0.22s ease, filter 0.22s ease, box-shadow 0.22s ease',
+                  }} />
+                );
+              })}
             </div>
-            {WHY.compTable.rows.map(row=>(
-              <div key={row.name} style={{ display:'grid', gridTemplateColumns:'2fr 1fr 1fr 1fr', padding:'1rem 1.5rem', borderBottom:'1px solid rgba(174,183,194,0.06)', alignItems:'center', background: row.highlight?'rgba(79,142,247,0.06)':'transparent' }}>
-                <span style={{ fontSize:'0.9375rem', color: row.highlight?'#4F8EF7':'#8CA0B8', fontWeight: row.highlight?500:400 }}>{row.name}</span>
-                {row.cells.map((c,i)=>(
-                  <span key={i} style={{ textAlign:'center', fontSize: c==='Yes'?'0.8125rem':'0.75rem', color: c==='Yes'?'#22C55E': c==='No'?'rgba(255,255,255,0.2)':'#8CA0B8' }}>{c}</span>
+            {/* Headline text */}
+            <h2 className="why-comparison-headline" style={{ position: 'relative', zIndex: 2, margin: 0, padding: 'clamp(3rem, 6vw, 6rem) clamp(1rem, 2vw, 2rem)', fontSize: 'clamp(1.5rem, 4.5vw, 4rem)' }}>
+              <span style={{
+                background: 'linear-gradient(90deg, #FFFFFF 0%, #00F0FF 35%, #4F8EF7 70%, #8B5CF6 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}>
+                Most tools report what they find.<br />
+                RackTrack knows what&apos;s actually there.
+              </span>
+            </h2>
+          </div>
+          
+          <div style={{ background:'#060d1a', borderRadius:'0 0 16px 16px', padding:'clamp(1rem, 2vw, 2rem)', fontFamily:'var(--font-sans)', position:'relative', overflow:'hidden', border:'1px solid rgba(56,152,255,.15)', borderTop:'none', marginBottom:'clamp(3rem, 7vw, 7rem)', marginTop:'2.5rem' }}>
+            <div style={{ position:'absolute', top:0, left:0, right:0, bottom:0, background:'radial-gradient(ellipse 60% 40% at 50% 0%,rgba(30,80,200,.12) 0%,transparent 70%)', pointerEvents:'none' }}></div>
+            <div style={{ position:'absolute', top:0, left:0, right:0, bottom:0, opacity:.04, backgroundImage:'repeating-linear-gradient(0deg,rgba(56,152,255,.5) 0px,rgba(56,152,255,.5) 1px,transparent 1px,transparent 32px),repeating-linear-gradient(90deg,rgba(56,152,255,.5) 0px,rgba(56,152,255,.5) 1px,transparent 1px,transparent 32px)', pointerEvents:'none' }}></div>
+
+            <div style={{ position:'relative', background:'rgba(8,20,45,.7)', border:'1px solid rgba(56,152,255,.18)', borderRadius:'12px', overflow:'hidden' }}>
+
+              {/* HEADER */}
+              <div style={{ display:'grid', gridTemplateColumns:'1.6fr 1fr 1fr 1fr 1fr', borderBottom:'1px solid rgba(56,152,255,.2)', background:'rgba(4,11,26,0.6)' }}>
+                <div style={{ padding:'16px 16px' }} />
+                {[
+                  { label:'Physical Sensing' },
+                  { label:'Network Identification' },
+                  { label:'Enrich Data' },
+                  { label:'Single Source of Truth', highlight: true },
+                ].map((col, i) => (
+                  <div key={i} style={{ position:'relative', padding:'20px 12px', borderLeft:'1px solid rgba(56,152,255,.12)', textAlign:'center', fontSize:'15px', fontWeight:700, color:'#00CFFF', letterSpacing:'.06em', textTransform:'uppercase' }}>
+                    <div className="col-header-accent" />
+                    {col.label}
+                  </div>
                 ))}
               </div>
-            ))}
+
+              {/* ROWS */}
+              {(()=>{
+                const Check = ({ isRT }: { isRT?: boolean }) => (
+                  <svg className={isRT ? 'check-icon-live' : ''} width="24" height="24" viewBox="0 0 20 20" fill="none">
+                    <circle cx="10" cy="10" r="8.5" fill="rgba(26,240,160,.1)" stroke="rgba(26,240,160,.45)" strokeWidth="1"/>
+                    <path d="M5.5 10.2l3 3 6-6" stroke="#1af0a0" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                );
+                const Partial = () => (
+                  <div style={{ width:'24px', height:'24px', borderRadius:'4px', background:'rgba(245,158,11,.08)', border:'1px solid rgba(245,158,11,.35)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'11px', fontWeight:700, color:'rgba(245,158,11,.9)', letterSpacing:'.04em' }}>
+                    P
+                  </div>
+                );
+                const Dash = () => (
+                  <svg width="16" height="2" viewBox="0 0 16 2">
+                    <line x1="1" y1="1" x2="15" y2="1" stroke="rgba(255,255,255,.2)" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                );
+                const rows = [
+                  { name:'RackTrack',         isRT:true,  cells:['check','check','check','check'] },
+                  { name:'DCIM Platforms',    isRT:false, cells:['partial','partial','dash','dash'] },
+                  { name:'Network Discovery', isRT:false, cells:['check','partial','dash','dash'] },
+                  { name:'Manual Rack Audits',isRT:false, cells:['check','dash','dash','dash'] },
+                  { name:'CMDB',              isRT:false, cells:['dash','dash','check','dash'] },
+                ];
+                return rows.map((row, ri) => (
+                  <HoverRow key={row.name} isRT={row.isRT} isLast={ri === rows.length - 1} index={ri}>
+                    <div style={{ padding:'18px 16px', display:'flex', alignItems:'center', gap:'10px' }}>
+                      <div
+                        className={row.isRT ? 'row-dot-live' : ''}
+                        style={{ width:'7px', height:'7px', borderRadius:'50%', flexShrink:0, background: row.isRT ? '#1af0a0' : 'rgba(56,152,255,.3)' }}
+                      />
+                      <span style={{ fontSize:'17px', fontWeight: row.isRT ? 700 : 500, color: row.isRT ? '#ffffff' : 'rgba(255,255,255,0.88)', letterSpacing: row.isRT ? '.01em' : '0' }}>
+                        {row.name}
+                      </span>
+                    </div>
+                    {row.cells.map((cell, ci) => (
+                      <div key={ci} style={{ padding:'18px 12px', borderLeft:'1px solid rgba(56,152,255,.08)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                        {cell==='check'   && <Check isRT={row.isRT} />}
+                        {cell==='partial' && <Partial />}
+                        {cell==='dash'    && <Dash />}
+                      </div>
+                    ))}
+                  </HoverRow>
+                ));
+              })()}
+            </div>
+
+            <div style={{ display:'flex', gap:'16px', marginTop:'1.5rem', flexWrap:'wrap' }}>
+              <CounterCard label="Full Coverage" value="4 / 4" border="rgba(26,240,160,.2)" />
+              <CounterCard label="Competitors Avg" value="1.3 / 4" border="rgba(56,152,255,.2)" />
+              <div className="stat-card" style={{ flex:1, minWidth:'160px', background:'rgba(8,20,45,.85)', border:'1px solid rgba(56,152,255,.15)', borderRadius:'10px', padding:'16px 18px' }}>
+                <p style={{ margin:'0 0 12px', fontSize:'15px', fontWeight:600, color:'#00CFFF', letterSpacing:'.08em', textTransform:'uppercase' }}>Legend</p>
+                <div style={{ display:'flex', flexDirection:'column', gap:'10px' }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:'10px', fontSize:'16px', fontWeight:500, color:'#ffffff' }}>
+                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style={{flexShrink:0}}><circle cx="10" cy="10" r="8.5" fill="rgba(26,240,160,.1)" stroke="rgba(26,240,160,.45)" strokeWidth="1"/><path d="M5.5 10.2l3 3 6-6" stroke="#1af0a0" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    Full support
+                  </div>
+                  <div style={{ display:'flex', alignItems:'center', gap:'10px', fontSize:'16px', fontWeight:500, color:'#ffffff' }}>
+                    <div style={{ width:'18px', height:'18px', borderRadius:'4px', background:'rgba(245,158,11,.08)', border:'1px solid rgba(245,158,11,.35)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'10px', fontWeight:700, color:'rgba(245,158,11,.9)', flexShrink:0 }}>P</div>
+                    Partial support
+                  </div>
+                  <div style={{ display:'flex', alignItems:'center', gap:'10px', fontSize:'16px', fontWeight:500, color:'#ffffff' }}>
+                    <svg width="16" height="2" viewBox="0 0 16 2" style={{flexShrink:0}}><line x1="1" y1="1" x2="15" y2="1" stroke="rgba(255,255,255,.25)" strokeWidth="1.5" strokeLinecap="round"/></svg>
+                    Not available
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
+
         </div>
       </section>
 
       {/* TOOL GAPS */}
-      <section style={{ padding:'0 2.5rem 7rem 10px', position:'relative' }}>
+      <section style={{ padding:'0 clamp(1rem, 4vw, 4rem) clamp(3rem, 7vw, 7rem)', position:'relative' }}>
         <div style={{ maxWidth:'90rem', margin:'0 auto' }}>
           <div style={{ fontSize:'0.6875rem', fontWeight:500, letterSpacing:'0.15em', textTransform:'uppercase', color:'#4F8EF7', marginBottom:'1rem', display:'flex', alignItems:'center', gap:'0.75rem' }}>
             <span style={{ display:'block', width:'1.5rem', height:'1px', background:'#4F8EF7' }} />Tool Landscape
           </div>
-          <h2 style={{ fontFamily:'Archivo Black,sans-serif', fontSize:'2.5rem', fontWeight:700, color:'#EAF2FF', letterSpacing:0, marginBottom:'4rem' }}>What every category does — and where it falls short.</h2>
+          <h2 style={{ fontFamily:'Archivo Black,sans-serif', fontSize:'clamp(1.5rem, 2.5vw, 2.5rem)', fontWeight:700, color:'#EAF2FF', letterSpacing:0, marginBottom:'clamp(2rem, 4vw, 4rem)' }}>What every category does — and where it falls short.</h2>
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1.25rem' }} className="max-md:grid-cols-1">
             {TOOL_GAPS.map(t=>(
-              <GlowCard key={t.cat} style={{ border:'1px solid rgba(174,183,194,0.08)', borderRadius:'1rem', padding:'2rem' }}>
-                <h4 style={{ fontFamily:'Archivo Black,sans-serif', fontSize:'1.0625rem', fontWeight:600, color:'#EAF2FF', marginBottom:'1.25rem' }}>{t.cat}</h4>
-                <div style={{ marginBottom:'1rem' }}>
-                  <div style={{ fontSize:'0.625rem', fontWeight:600, letterSpacing:'0.12em', textTransform:'uppercase', color:'#4F8EF7', marginBottom:'0.5rem' }}>Strengths</div>
-                  <p style={{ fontSize:'0.875rem', color:'#8CA0B8', fontWeight:300, lineHeight:1.7 }}>{t.pros}</p>
-                </div>
-                <div style={{ width:'100%', height:'1px', background:'rgba(174,183,194,0.07)', margin:'1rem 0' }} />
-                <div>
-                  <div style={{ fontSize:'0.625rem', fontWeight:600, letterSpacing:'0.12em', textTransform:'uppercase', color:'#8CA0B8', marginBottom:'0.5rem' }}>Where it falls short</div>
-                  <p style={{ fontSize:'0.875rem', color:'#8CA0B8', fontWeight:300, lineHeight:1.7 }}>{t.gaps}</p>
-                </div>
-              </GlowCard>
+              <ToolGapCard key={t.cat} t={t} />
             ))}
           </div>
         </div>
