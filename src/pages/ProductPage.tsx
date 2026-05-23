@@ -100,6 +100,7 @@ const STAGES = [
     title: 'Walk the floor.\nFrame the rack.',
     body: 'Point a smartphone at any rack and record what\'s there. RackTrack reads device identities, rack-unit positions, visible labels, and port connectivity from ordinary video. No specialist hardware. No rack downtime. No preparation required.',
     accent: '#00D1FF',
+    image: '/product_1.png',
   },
   {
     num: '02',
@@ -107,6 +108,7 @@ const STAGES = [
     title: 'Every device checked\nagainst record.',
     body: 'Each observed device is matched against what your CMDB, DCIM, or spreadsheet says should be present. Discrepancies surface immediately — assets in the wrong slot, unlisted devices drawing power, expected hardware that isn\'t there.',
     accent: '#8B5CF6',
+    image: '/product_2.png',
   },
   {
     num: '03',
@@ -114,6 +116,7 @@ const STAGES = [
     title: 'Verified identity becomes\nlive intelligence.',
     body: 'Once confirmed, each asset pulls in operational context automatically — security exposure, end-of-life status, capacity load, and replacement horizon. The record doesn\'t just reflect reality. It tells you what to do next.',
     accent: '#10B981',
+    image: '/product_3.png',
   },
 ];
 
@@ -238,13 +241,20 @@ export default function ProductPage() {
           {STAGES.map((st, i) => (
             <Reveal key={st.num} from="bottom" delay={i * 120}>
               <article className="pp-stage-card" style={{ '--stg-accent': st.accent } as CSSProperties}>
-                <div className="pp-stage-top-bar" />
-                <div className="pp-stage-header">
-                  <span className="pp-stage-num">{st.num}</span>
-                  <span className="pp-stage-label">{st.label}</span>
+                <div className="pp-stage-card-inner">
+                  <div className="pp-stage-card-front">
+                    <div className="pp-stage-top-bar" />
+                    <div className="pp-stage-header">
+                      <span className="pp-stage-num">{st.num}</span>
+                      <span className="pp-stage-label">{st.label}</span>
+                    </div>
+                    <h3 className="pp-stage-title">{st.title}</h3>
+                    <p className="pp-stage-body">{st.body}</p>
+                  </div>
+                  <div className="pp-stage-card-back">
+                    <img src={st.image} alt={st.label} className="pp-stage-card-img" />
+                  </div>
                 </div>
-                <h3 className="pp-stage-title">{st.title}</h3>
-                <p className="pp-stage-body">{st.body}</p>
               </article>
             </Reveal>
           ))}

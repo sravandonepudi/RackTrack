@@ -1,16 +1,36 @@
+import { useState, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import './ResourcesPage.css';
 
-const GATED_ASSETS = [
+/* ── icons ──────────────────────────────────────────── */
+function LockIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+      <rect x="2" y="6" width="9" height="6.5" rx="1.5" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M4.5 6V4.5a2 2 0 014 0V6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function ArrowIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+      <path d="M2.5 6.5h8M7 3l3.5 3.5L7 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+/* ── data ───────────────────────────────────────────── */
+const GATED = [
   {
     cat: 'Calculator',
     title: 'ROI Calculator',
-    desc: 'An interactive sensitivity model behind the $1M-$2.5M annual value claim for a 500-rack footprint.',
+    desc: 'An interactive sensitivity model behind the $1M–$2.5M annual value claim for a 500-rack footprint. Adjustable for rack count, audit frequency, and headcount assumptions.',
   },
   {
     cat: 'Whitepaper',
-    title: 'Buyer\'s Guide to Physical Intelligence',
-    desc: 'A category-defining guide for teams evaluating evidence-grade inventory and topology.',
+    title: "Buyer's Guide to Physical Intelligence",
+    desc: 'A category-defining guide for teams evaluating evidence-grade inventory and topology. ~12 pages.',
   },
   {
     cat: 'Mapping Guide',
@@ -24,101 +44,194 @@ const GATED_ASSETS = [
   },
 ];
 
-const PUBLIC_ASSETS = [
-  {
-    title: 'The Cost of CMDB Drift',
-    desc: 'Why intent records decay, where the hidden costs show up, and how teams can frame the problem.',
-  },
-  {
-    title: 'Why Manual Rack Audits Fail',
-    desc: 'A plain-language look at point-in-time evidence, spreadsheet decay, and audit fatigue.',
-  },
-  {
-    title: 'Evidence-Grade Inventory',
-    desc: 'What defensible inventory means for infrastructure, security, and compliance teams.',
-  },
-  {
-    title: 'The Physical Layer in Incident Response',
-    desc: 'Why responders lose time at the rack and how better physical truth changes the workflow.',
-  },
+const POSTS = [
+  { cat: 'CMDB',           catColor: '#00D1FF', readTime: '6 min', title: 'The Cost of CMDB Drift',                               desc: 'Why intent records decay, where the hidden costs show up, and how teams can frame the problem before they can justify fixing it.' },
+  { cat: 'Infrastructure', catColor: '#10B981', readTime: '5 min', title: 'Why Manual Rack Audits Fail',                          desc: 'A plain-language look at point-in-time evidence, spreadsheet decay, and audit fatigue — and why clipboard-and-human is structurally broken.' },
+  { cat: 'Inventory',      catColor: '#8B5CF6', readTime: '7 min', title: 'Evidence-Grade Inventory',                             desc: 'What defensible inventory means for infrastructure, security, and compliance teams — and why "checked last quarter" is not the same as "known."' },
+  { cat: 'Operations',     catColor: '#F59E0B', readTime: '5 min', title: 'The Physical Layer in Incident Response',              desc: 'Why responders lose time at the rack and how better physical truth changes the workflow from the first moment of an incident.' },
+  { cat: 'Compliance',     catColor: '#06B6D4', readTime: '8 min', title: 'What SOC 2 Auditors Actually Want at the Rack',       desc: 'The control families that touch physical access and asset evidence — and why screenshot-level proof is replacing spreadsheet attestation.' },
+  { cat: 'Infrastructure', catColor: '#10B981', readTime: '6 min', title: "The Infrastructure Gap Network Discovery Can't Close", desc: 'Network discovery finds what has a management plane. It misses power units, KVMs, unmanaged switches, and anything that fell off DHCP.' },
+  { cat: 'Lifecycle',      catColor: '#FB923C', readTime: '5 min', title: "Hardware End-of-Life Starts with Knowing What's There",desc: "You can't retire hardware you don't know you have. The lifecycle management problem is, at its root, an inventory problem." },
+  { cat: 'CMDB',           catColor: '#00D1FF', readTime: '6 min', title: 'Physical Moves, Logical Blindness: How Racks Drift',   desc: "Every physical swap that doesn't trigger a ticket is a CMDB lie. This maps the failure modes: what moves silently, why, and what it costs." },
+  { cat: 'Security',       catColor: '#EF4444', readTime: '7 min', title: 'Physical Inventory Is a Security Problem',             desc: 'Unknown devices draw power, hold firmware, and occupy ports. Security posture is only as good as the accuracy of the physical record.' },
+  { cat: 'Operations',     catColor: '#F59E0B', readTime: '5 min', title: 'Capacity Planning Starts at the Physical Layer',       desc: "U-space, power draw, and cooling load per rack — none of these can be planned from a CMDB that has drifted from physical reality." },
 ];
 
-function PageHeroScene() {
-  const theme = { accent: '#8B5CF6', secondary: '#00F0FF', glow: 'rgba(139,92,246,0.24)' };
+const CATS = ['All', 'CMDB', 'Infrastructure', 'Compliance', 'Security', 'Operations', 'Lifecycle', 'Inventory'];
 
-  return (
-    <div aria-hidden="true" style={{ position:'absolute', inset:0, zIndex:0, pointerEvents:'none', overflow:'hidden', background:'transparent' }}>
-      <div style={{ position:'absolute', right:'6%', top:'18%', width:'min(38vw, 520px)', minWidth:'280px', aspectRatio:'0.82', border:'1px solid rgba(0,209,255,0.16)', borderRadius:'8px', transform:'perspective(900px) rotateY(-16deg) rotateX(6deg)', boxShadow:'inset 0 1px 0 rgba(255,255,255,0.08)', background:'linear-gradient(160deg, rgba(11,16,38,0.88), rgba(5,8,22,0.58))', padding:'18px', display:'grid', gridTemplateColumns:'repeat(2, 1fr)', gap:'12px', opacity:0.92 }}>
-        {Array.from({ length: 10 }).map((_, rackIndex) => (
-          <div key={rackIndex} style={{ border:'1px solid rgba(0,209,255,0.12)', borderRadius:'6px', background:'rgba(0,0,0,0.35)', padding:'8px', display:'flex', flexDirection:'column', gap:'6px' }}>
-            {Array.from({ length: 4 }).map((_, rowIndex) => (
-              <span key={rowIndex} style={{ height: rowIndex === 1 ? '18px' : '10px', borderRadius:'3px', background: rowIndex === rackIndex % 4 ? `linear-gradient(90deg, ${theme.accent}, ${theme.secondary})` : 'rgba(182,194,217,0.16)', boxShadow: rowIndex === rackIndex % 4 ? `0 0 12px ${theme.glow}` : 'none' }} />
-            ))}
-          </div>
-        ))}
-      </div>
-      <div style={{ display:'none' }} />
-    </div>
-  );
-}
 
+/* ── page ───────────────────────────────────────────── */
 export default function ResourcesPage() {
+  const [filter, setFilter] = useState('All');
+
+  const featured = POSTS[0];
+  const showAll  = filter === 'All';
+  const gridPosts = showAll ? POSTS.slice(1) : POSTS.filter(p => p.cat === filter);
+
   return (
-    <div className="resources-page">
-      <section style={{ position:'relative', minHeight:'80vh', display:'flex', alignItems:'center', overflow:'hidden', paddingTop:'7rem', paddingBottom:'2rem', paddingLeft:'4rem', paddingRight:'4rem' }}>
-        <PageHeroScene />
-        <div style={{ position:'absolute', bottom:0, left:0, right:0, height:'160px', background:'linear-gradient(to top, #050816, transparent)', pointerEvents:'none', zIndex:10 }} />
-        <div style={{ position:'relative', zIndex:20, maxWidth:'660px' }}>
-          <div style={{ display:'inline-flex', alignItems:'center', gap:'0.5rem', background:'rgba(139,92,246,0.10)', border:'1px solid rgba(139,92,246,0.28)', borderRadius:'999px', padding:'0.375rem 1rem', marginBottom:'2rem' }}>
-            <span style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#8B5CF6' }} />
-            <span style={{ fontSize:'0.6875rem', fontWeight:500, letterSpacing:'0.12em', textTransform:'uppercase', color:'#8B5CF6' }}>Resources</span>
+    <div className="rp">
+
+      {/* ══ HERO ══════════════════════════════════════ */}
+      <section className="rp-hero">
+        <div className="rp-hero-text">
+          <div className="rp-pill">
+            <span className="rp-pill-dot" />Resources
           </div>
-          <h1 style={{ fontFamily:'Archivo Black,sans-serif', fontSize:'3.25rem', fontWeight:700, lineHeight:1.08, letterSpacing:0, color:'#FFFFFF', marginBottom:'1.5rem' }}>
-            Useful enough to trade an email for.{' '}
-            <span style={{ background:'linear-gradient(100deg,#00F0FF,#8B5CF6)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>Careful enough to publish.</span>
+          <h1 className="rp-hero-h1">
+            Intelligence worth<br />protecting.{' '}
+            <span className="rp-grad">Knowledge<br />worth sharing.</span>
           </h1>
-          <p style={{ fontSize:'1.0625rem', color:'#B6C2D9', lineHeight:1.78, fontWeight:300, maxWidth:'520px' }}>
-            Gated models and guides for serious buyers, plus public writing on CMDB drift, manual audit failure modes, and evidence-grade physical inventory.
+          <p className="rp-hero-sub">
+            Four gated assets for buyers doing the math, and ten public posts on CMDB
+            drift, audit failure modes, and evidence-grade physical inventory.
           </p>
-        </div>
-      </section>
-
-      <section style={{ padding:'6rem 4rem 3rem', position:'relative' }}>
-        <div style={{ maxWidth:'80rem', margin:'0 auto' }}>
-          <div style={{ fontSize:'0.6875rem', fontWeight:500, letterSpacing:'0.15em', textTransform:'uppercase', color:'#8B5CF6', marginBottom:'1rem', display:'flex', alignItems:'center', gap:'0.75rem' }}>
-            <span style={{ display:'block', width:'1.5rem', height:'1px', background:'#8B5CF6' }} />Gated Assets
-          </div>
-          <h2 style={{ fontFamily:'Archivo Black,sans-serif', fontSize:'2.5rem', fontWeight:700, color:'#FFFFFF', letterSpacing:0, marginBottom:'1rem' }}>Resources for buyers doing the math.</h2>
-          <p style={{ fontSize:'1rem', color:'#B6C2D9', fontWeight:300, lineHeight:1.75, marginBottom:'3rem', maxWidth:'42rem' }}>
-            These assets are designed for qualified evaluations and keep implementation details, source lists, and architecture out of public view.
-          </p>
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'1.25rem' }} className="max-xl:grid-cols-2 max-md:grid-cols-1">
-            {GATED_ASSETS.map((asset) => (
-              <article key={asset.title} style={{ background:'rgba(11,16,38,0.62)', backdropFilter:'blur(14px)', border:'1px solid rgba(0,209,255,0.08)', borderRadius:'0.5rem', padding:'2rem', minHeight:'260px', display:'flex', flexDirection:'column' }}>
-                <span style={{ alignSelf:'flex-start', fontSize:'0.625rem', fontWeight:600, letterSpacing:'0.12em', textTransform:'uppercase', background:'rgba(139,92,246,0.14)', color:'#8B5CF6', border:'1px solid rgba(139,92,246,0.24)', padding:'0.2rem 0.625rem', borderRadius:'999px', marginBottom:'1.25rem' }}>{asset.cat}</span>
-                <h3 style={{ fontFamily:'Archivo Black,sans-serif', fontSize:'1.05rem', fontWeight:600, color:'#FFFFFF', marginBottom:'0.75rem', lineHeight:1.35 }}>{asset.title}</h3>
-                <p style={{ fontSize:'0.875rem', color:'#B6C2D9', fontWeight:300, lineHeight:1.7, marginBottom:'1.5rem' }}>{asset.desc}</p>
-                <Link to="/contact" style={{ marginTop:'auto', fontSize:'0.8125rem', color:'#8B5CF6', textDecoration:'none' }}>Request access</Link>
-              </article>
-            ))}
+          <div className="rp-stats">
+            <div className="rp-stat">
+              <span className="rp-stat-n">4</span>
+              <span className="rp-stat-l">Gated resources</span>
+            </div>
+            <div className="rp-stat-sep" />
+            <div className="rp-stat">
+              <span className="rp-stat-n">10</span>
+              <span className="rp-stat-l">Public posts</span>
+            </div>
+            <div className="rp-stat-sep" />
+            <div className="rp-stat">
+              <span className="rp-stat-n">0</span>
+              <span className="rp-stat-l">Architecture details</span>
+            </div>
           </div>
         </div>
       </section>
 
-      <section style={{ padding:'4rem 4rem 7rem', position:'relative' }}>
-        <div style={{ maxWidth:'80rem', margin:'0 auto' }}>
-          <div style={{ fontSize:'0.6875rem', fontWeight:500, letterSpacing:'0.15em', textTransform:'uppercase', color:'#8B5CF6', marginBottom:'1rem', display:'flex', alignItems:'center', gap:'0.75rem' }}>
-            <span style={{ display:'block', width:'1.5rem', height:'1px', background:'#8B5CF6' }} />Public Reading
+      {/* ══ VAULT ═════════════════════════════════════ */}
+      <section className="rp-vault">
+        <div className="rp-vault-bg-glow" />
+        <div className="rp-container">
+
+          <div className="rp-eyebrow rp-eyebrow--pu">
+            <LockIcon />Restricted Access
           </div>
-          <h2 style={{ fontFamily:'Archivo Black,sans-serif', fontSize:'2.5rem', fontWeight:700, color:'#FFFFFF', letterSpacing:0, marginBottom:'3rem' }}>Category thinking, without the blueprint.</h2>
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:'1rem' }} className="max-md:grid-cols-1">
-            {PUBLIC_ASSETS.map((asset) => (
-              <article key={asset.title} style={{ background:'rgba(11,16,38,0.62)', backdropFilter:'blur(14px)', border:'1px solid rgba(0,209,255,0.08)', borderRadius:'0.5rem', padding:'2rem' }}>
-                <h3 style={{ fontFamily:'Archivo Black,sans-serif', fontSize:'1rem', fontWeight:600, color:'#FFFFFF', marginBottom:'0.75rem' }}>{asset.title}</h3>
-                <p style={{ fontSize:'0.875rem', color:'#B6C2D9', fontWeight:300, lineHeight:1.7 }}>{asset.desc}</p>
+          <h2 className="rp-h2">The documents behind the claim.</h2>
+          <p className="rp-sub">
+            Designed for qualified evaluations. Implementation details, source lists,
+            and architecture stay out of public view.
+          </p>
+
+          {/* Featured vault card — ROI Calculator */}
+          <article className="rp-vault-hero">
+            <div className="rp-vault-hero-body">
+              <span className="rp-vault-badge">Calculator</span>
+              <h3 className="rp-vault-hero-title">ROI Calculator</h3>
+              <p className="rp-vault-hero-desc">
+                An interactive sensitivity model behind the $1M–$2.5M annual value claim
+                for a 500-rack footprint. Adjustable for rack count, audit cycle frequency,
+                and headcount assumptions.
+              </p>
+              <Link to="/contact" className="rp-vault-cta">
+                Request access <ArrowIcon />
+              </Link>
+            </div>
+            <div className="rp-vault-hero-aside">
+              <p className="rp-vault-aside-value">$1M–$2.5M</p>
+              <p className="rp-vault-aside-label">annual value modeled</p>
+              <p className="rp-vault-aside-sub">500-rack footprint · adjustable inputs</p>
+            </div>
+          </article>
+
+          {/* Three smaller vault cards */}
+          <div className="rp-vault-grid">
+            {GATED.slice(1).map(asset => (
+              <article key={asset.title} className="rp-vault-card">
+                <div className="rp-vault-card-top">
+                  <span className="rp-vault-badge">{asset.cat}</span>
+                  <span className="rp-vault-lock"><LockIcon /></span>
+                </div>
+                <h3 className="rp-vault-card-title">{asset.title}</h3>
+                <p className="rp-vault-card-desc">{asset.desc}</p>
+                <Link to="/contact" className="rp-vault-link">Request access →</Link>
               </article>
             ))}
           </div>
+
+        </div>
+      </section>
+
+      {/* ══ BRIEF ═════════════════════════════════════ */}
+      <section className="rp-brief">
+        <div className="rp-container">
+
+          <div className="rp-eyebrow rp-eyebrow--cy">
+            <span className="rp-dot" />Public Reading
+          </div>
+          <h2 className="rp-h2">Category thinking,<br />without the blueprint.</h2>
+          <p className="rp-sub">
+            Eight to twelve posts on CMDB drift, audit failure modes, and evidence-grade
+            physical inventory. Categorical, not technical. No product methodology.
+          </p>
+
+          {/* Category filters */}
+          <div className="rp-filters" role="group" aria-label="Filter by category">
+            {CATS.map(cat => (
+              <button
+                key={cat}
+                className={'rp-filter' + (filter === cat ? ' rp-filter--on' : '')}
+                onClick={() => setFilter(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Featured post — shown only in "All" view */}
+          {showAll && (
+            <article className="rp-post-hero">
+              <div className="rp-post-hero-body">
+                <div className="rp-post-meta">
+                  <span className="rp-post-cat" style={{ color: featured.catColor, background: `${featured.catColor}1A`, borderColor: `${featured.catColor}40` }}>
+                    {featured.cat}
+                  </span>
+                  <span className="rp-post-time">{featured.readTime} read</span>
+                </div>
+                <h3 className="rp-post-hero-title">{featured.title}</h3>
+                <p className="rp-post-hero-desc">{featured.desc}</p>
+                <Link to="/contact" className="rp-post-hero-cta" style={{ color: featured.catColor }}>
+                  Read the piece →
+                </Link>
+              </div>
+              <div className="rp-post-hero-art" style={{ '--art': featured.catColor } as CSSProperties}>
+                <span className="rp-art-n">01</span>
+                <div className="rp-art-bars">
+                  <span style={{ height: '60%' }} /><span style={{ height: '85%' }} />
+                  <span style={{ height: '45%' }} /><span style={{ height: '70%' }} />
+                  <span style={{ height: '55%' }} />
+                </div>
+              </div>
+            </article>
+          )}
+
+          {/* Post grid */}
+          <div className="rp-post-grid">
+            {gridPosts.map(post => (
+              <article key={post.title} className="rp-post-card" style={{ '--c': post.catColor } as CSSProperties}>
+                <div className="rp-post-meta">
+                  <span className="rp-post-cat" style={{ color: post.catColor, background: `${post.catColor}1A`, borderColor: `${post.catColor}40` }}>
+                    {post.cat}
+                  </span>
+                  <span className="rp-post-time">{post.readTime} read</span>
+                </div>
+                <h3 className="rp-post-card-title">{post.title}</h3>
+                <p className="rp-post-card-desc">{post.desc}</p>
+                <Link to="/contact" className="rp-post-read" style={{ color: post.catColor }}>
+                  Read →
+                </Link>
+              </article>
+            ))}
+            {gridPosts.length === 0 && (
+              <p className="rp-no-posts">No posts in this category yet.</p>
+            )}
+          </div>
+
         </div>
       </section>
     </div>
