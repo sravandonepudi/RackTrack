@@ -24,7 +24,7 @@
 
 .why-comparison-headline {
   background: none !important;
-  color: #ffffff;
+  color: var(--text-primary);
   font-family: system-ui, "Segoe UI", Roboto, sans-serif;
   font-size: clamp(2.25rem, 3.8vw, 3.25rem);
   font-weight: 500;
@@ -37,12 +37,12 @@
 }
 
 .page-content .why-comparison-headline .why-headline-white {
-  background: linear-gradient(100deg, #f2fbff 0%, #d8ffff 36%, #98f8ff 68%, #48e7ff 100%) !important;
+  background: linear-gradient(100deg, #0F172A 0%, #1E40AF 36%, #0369A1 68%, #0EA5E9 100%) !important;
   background-clip: text !important;
   color: transparent;
   display: inline-block;
   opacity: 1;
-  text-shadow: 0 0 14px rgba(0, 209, 255, 0.1);
+  text-shadow: none;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
 }
