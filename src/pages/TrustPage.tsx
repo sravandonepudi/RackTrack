@@ -37,20 +37,18 @@ const VIDEO_STEPS = [
   { icon: 'control', title: '4. Your Control', body: 'Retain, delete, or reprocess.' },
 ];
 
+const VIDEO_ACTIONS = [
+  { icon: 'evidence', title: 'Retain as Evidence', body: 'Keep what matters.' },
+  { icon: 'delete', title: 'Delete Anytime', body: 'Remove when needed.' },
+  { icon: 'reprocess', title: 'Reprocess as Platform Improves', body: 'Always getting better.' },
+];
+
 const DEPLOYMENTS = [
   { icon: 'cloud', title: 'Cloud-Hosted', body: 'Secure, scalable, and fastest time to value.' },
   { icon: 'private', title: 'Private Cloud / Customer VPC', body: 'Deployed in your private environment with full control.' },
   { icon: 'onprem', title: 'On-Premise Deployment', body: 'Runs in your data center for regulated environments.' },
   { icon: 'airgap', title: 'Air-Gapped Deployment', body: 'For classified or restricted facilities with no external access.' },
 ];
-
-function IconGlyph({ name }: { name: string }) {
-  return (
-    <span className={`trust-icon trust-icon--${name}`} aria-hidden="true">
-      <span />
-    </span>
-  );
-}
 
 function SecurityPostureLogo({ name }: { name: string }) {
   return (
@@ -214,6 +212,73 @@ function DeploymentLogo({ name }: { name: string }) {
   );
 }
 
+function CtaShieldLogo() {
+  return (
+    <span className="cta-shield-hud" aria-hidden="true">
+      <span className="cta-shield-topology" />
+      <span className="cta-shield-ring" />
+      <span className="cta-shield-core">
+        <svg viewBox="0 0 120 140">
+          <path d="M60 7 104 24v40c0 31-17 55-44 70C33 119 16 95 16 64V24L60 7Z" />
+          <path d="M40 47h29c13 0 21 8 21 19 0 8-5 15-13 18l15 22H73L60 87h-4v19H40V47Zm16 13v14h12c5 0 8-3 8-7s-3-7-8-7H56Z" />
+        </svg>
+      </span>
+    </span>
+  );
+}
+
+function HeroVisual() {
+  return (
+    <figure className="trust-hero-visual" aria-label="RackTrack secure datacenter visualization">
+      <img
+        className="trust-hero-image"
+        src="/trust-hero-security.png"
+        alt="Cinematic datacenter racks with a holographic RackTrack shield, AI scanning beam, and security data cards"
+      />
+    </figure>
+  );
+}
+
+function VideoActionIcon({ name }: { name: string }) {
+  return (
+    <span className={`video-action-icon video-action-icon--${name}`} aria-hidden="true">
+      {name === 'evidence' && (
+        <svg viewBox="0 0 64 64">
+          <path d="M8 19c0-4 3-7 7-7h12l6 7h16c4 0 7 3 7 7v21c0 4-3 7-7 7H15c-4 0-7-3-7-7V19Z" />
+          <path d="M22 37h21" />
+          <rect x="34" y="31" width="18" height="18" rx="3" />
+          <path d="M38 31v-4c0-4 2-7 5-7s5 3 5 7v4" />
+          <path d="M43 39v4" />
+        </svg>
+      )}
+      {name === 'delete' && (
+        <svg viewBox="0 0 64 64">
+          <path d="M17 20h30" />
+          <path d="M25 20v-7h14v7" />
+          <path d="M21 25l2 27c0 4 3 6 7 6h4c4 0 7-2 7-6l2-27" />
+          <path d="M29 31v17M36 31v17" />
+        </svg>
+      )}
+      {name === 'reprocess' && (
+        <svg viewBox="0 0 64 64">
+          <path d="M49 25a18 18 0 0 0-31-6" />
+          <path d="M47 13v12H35" />
+          <path d="M15 39a18 18 0 0 0 31 6" />
+          <path d="M17 51V39h12" />
+          <path d="M32 23v9l7 4" />
+        </svg>
+      )}
+      {name === 'lock' && (
+        <svg viewBox="0 0 64 64">
+          <rect x="17" y="28" width="30" height="24" rx="5" />
+          <path d="M23 28v-7c0-7 4-12 9-12s9 5 9 12v7" />
+          <path d="M32 37v7" />
+        </svg>
+      )}
+    </span>
+  );
+}
+
 function VideoFlow() {
   return (
     <div className="trust-video-flow" aria-label="Rack video handling workflow">
@@ -230,12 +295,21 @@ function VideoFlow() {
           </div>
         ))}
       </div>
-      <div className="video-actions">
-        <span>Retain as evidence</span>
-        <span>Delete anytime</span>
-        <span>Reprocess as platform improves</span>
+      <div className="video-actions" aria-label="Raw footage control actions">
+        {VIDEO_ACTIONS.map((action) => (
+          <article className="video-action-card" key={action.title}>
+            <VideoActionIcon name={action.icon} />
+            <span className="video-action-copy">
+              <strong>{action.title}</strong>
+              <small>{action.body}</small>
+            </span>
+          </article>
+        ))}
       </div>
-      <p className="video-control-note">Raw footage never leaves your control</p>
+      <p className="video-control-note">
+        <VideoActionIcon name="lock" />
+        <span>Raw footage never leaves your control</span>
+      </p>
     </div>
   );
 }
@@ -262,11 +336,7 @@ export default function TrustPage() {
             </Link>
           </div>
         </div>
-        <img
-          className="trust-hero-image"
-          src="/trust-hero-security.png"
-          alt="RackTrack security visualization with server racks, AI scanning, structured data, and secure tenant callouts"
-        />
+        <HeroVisual />
       </section>
 
       <section className="trust-section trust-section--center" id="security-posture">
@@ -325,7 +395,7 @@ export default function TrustPage() {
 
       <section className="trust-bottom-cta">
         <div className="cta-emblem">
-          <IconGlyph name="shield" />
+          <CtaShieldLogo />
         </div>
         <div>
           <h2>Built for secure infrastructure operations at enterprise scale.</h2>
