@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { motion, useMotionValueEvent, useScroll, useTransform } from 'motion/react';
 import rackBg from '../rack-bg.png';
 import rackImg from '../rack.png';
+import highlightSource from '../highlight-source.png';
+import highlightNetwork from '../highlight-network.png';
+import highlightTimestamp from '../highlight-timestamp.png';
+import highlightAudit from '../highlight-audit.png';
 import './WhyRackTrackPage.css';
 
 
@@ -416,78 +421,110 @@ function Connector() {
   );
 }
 
-/* ── Tool Gap Card with hover highlight + animated divider ── */
-function ToolGapCard({ t }: { t: { cat: string; pros: string; gaps: string } }) {
-  const [hov, setHov] = useState(false);
+/* ── Icons for Tool Highlight Carousel ── */
+const IconLink = () => (
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="#4F8EF7" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="#4F8EF7" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+const IconClock = () => (
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="10" stroke="#4F8EF7" strokeWidth="1.8"/>
+    <polyline points="12 6 12 12 16 14" stroke="#4F8EF7" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+const IconGlobe = () => (
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="10" stroke="#4F8EF7" strokeWidth="1.8"/>
+    <line x1="2" y1="12" x2="22" y2="12" stroke="#4F8EF7" strokeWidth="1.8"/>
+    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="#4F8EF7" strokeWidth="1.8"/>
+  </svg>
+);
+const IconShieldCheck = () => (
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#4F8EF7" strokeWidth="1.8" strokeLinejoin="round"/>
+    <polyline points="9 12 11 14 15 10" stroke="#4F8EF7" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+/* ── Tool Highlight Carousel — one block with left/right arrow navigation ── */
+type ToolHighlight = {
+  name: string;
+  heading: string;
+  desc: string;
+  tag: string;
+  Icon: () => React.ReactElement;
+  image: string;
+  imageAlt: string;
+};
+
+function ToolHighlightCarousel({ items }: { items: ToolHighlight[] }) {
+  const targetRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: targetRef });
+  const [maxTranslate, setMaxTranslate] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const measure = () => {
+      const track = trackRef.current;
+      const viewport = viewportRef.current;
+      if (!track || !viewport) return;
+      setMaxTranslate(Math.max(0, track.scrollWidth - viewport.clientWidth));
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [items.length]);
+
+  const x = useTransform(scrollYProgress, [0, 1], [0, -maxTranslate]);
+
+  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
+    const clamped = Math.max(0, Math.min(1, latest));
+    const idx = Math.round(clamped * (items.length - 1));
+    setActiveIndex(idx);
+  });
+
   return (
-    <div
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        borderRadius: '1rem',
-        padding: '2rem',
-        position: 'relative',
-        overflow: 'hidden',
-        cursor: 'default',
-        background: hov ? 'rgba(10,22,58,0.95)' : 'rgba(8,18,48,0.85)',
-        border: hov ? '1px solid rgba(79,142,247,0.78)' : '1px solid rgba(174,183,194,0.08)',
-        boxShadow: hov ? '0 18px 46px rgba(2,10,34,0.38), 0 0 36px rgba(79,142,247,0.2)' : 'none',
-        transform: hov ? 'translateY(-4px)' : 'translateY(0)',
-        transition: 'all 0.25s ease',
-      }}
+    <section
+      ref={targetRef}
+      className="tool-highlight-scroll-section"
+      style={{ height: `${items.length * 100}vh` }}
     >
-      {/* top shimmer line */}
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
-        background: hov
-          ? 'linear-gradient(90deg, transparent, #4F8EF7, transparent)'
-          : 'linear-gradient(90deg, transparent, rgba(79,142,247,0.18), transparent)',
-        transition: 'background 0.25s',
-      }} />
-      {/* mouse glow */}
-      <div style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none', borderRadius: 'inherit',
-        opacity: hov ? 1 : 0,
-        background: 'radial-gradient(circle at 50% 0%, rgba(79,142,247,0.14) 0%, transparent 65%)',
-        transition: 'opacity 0.25s',
-      }} />
-
-      <h4 style={{
-        fontFamily: 'Archivo Black,sans-serif', fontSize: '1.0625rem', fontWeight: 600,
-        color: hov ? '#67D5FF' : '#EAF2FF',
-        marginBottom: '1.25rem',
-        transition: 'color 0.25s',
-      }}>{t.cat}</h4>
-
-      <div style={{ marginBottom: '1rem' }}>
-        <div style={{
-          fontSize: '0.625rem', fontWeight: 600, letterSpacing: '0.12em',
-          textTransform: 'uppercase', color: '#4F8EF7', marginBottom: '0.5rem',
-        }}>Strengths</div>
-        <p style={{ fontSize: '0.875rem', color: hov ? '#C8D8F0' : '#8CA0B8', fontWeight: 300, lineHeight: 1.7, transition: 'color 0.25s' }}>{t.pros}</p>
+      <div ref={viewportRef} className="tool-highlight-sticky">
+        <motion.div ref={trackRef} style={{ x }} className="tool-highlight-track">
+          {items.map((item, i) => (
+            <article key={i} className="tool-highlight-card">
+              <div className="tool-highlight-inner">
+                <div className="tool-highlight-shimmer" />
+                <div className="tool-highlight-content">
+                  <h3 className="tool-highlight-heading">{item.heading}</h3>
+                  <p className="tool-highlight-desc">{item.desc}</p>
+                  <div className="tool-highlight-tag">{item.tag}</div>
+                </div>
+                <div className="tool-highlight-media">
+                  <img
+                    src={item.image}
+                    alt={item.imageAlt}
+                    className="tool-highlight-image"
+                  />
+                </div>
+              </div>
+            </article>
+          ))}
+        </motion.div>
+        <div className="tool-highlight-dots" aria-hidden="true">
+          {items.map((_, i) => (
+            <span
+              key={i}
+              className={`tool-highlight-dot ${i === activeIndex ? 'active' : ''}`}
+            />
+          ))}
+        </div>
       </div>
-
-      {/* animated divider line */}
-      <div style={{
-        width: '100%', height: '1px', margin: '1rem 0', position: 'relative', overflow: 'hidden',
-        background: 'rgba(174,183,194,0.07)',
-      }}>
-        <div style={{
-          position: 'absolute', top: 0, left: hov ? '0%' : '-100%',
-          width: '100%', height: '100%',
-          background: 'linear-gradient(90deg, transparent, #4F8EF7, #00F0FF, transparent)',
-          transition: 'left 0.55s ease',
-        }} />
-      </div>
-
-      <div>
-        <div style={{
-          fontSize: '0.625rem', fontWeight: 600, letterSpacing: '0.12em',
-          textTransform: 'uppercase', color: hov ? '#8CA0B8' : '#8CA0B8', marginBottom: '0.5rem',
-        }}>Where it falls short</div>
-        <p style={{ fontSize: '0.875rem', color: hov ? '#C8D8F0' : '#8CA0B8', fontWeight: 300, lineHeight: 1.7, transition: 'color 0.25s' }}>{t.gaps}</p>
-      </div>
-    </div>
+    </section>
   );
 }
 
@@ -587,11 +624,43 @@ function GlowCard({children, style, className}:{children:React.ReactNode; style?
   );
 }
 
-const TOOL_GAPS = [
-  { cat:'DCIM platforms',         pros:'Comprehensive DC management, capacity and power tracking.', gaps:'Physical inventory manually entered. No real-time verification. Drift builds invisibly.' },
-  { cat:'Network discovery tools',pros:'Accurate picture of traffic. Good layer 2/3 topology.',      gaps:'Only sees what has network presence. Agents and decommissioned devices invisible. No rack position context.' },
-  { cat:'Manual audits',          pros:'Ground truth when done carefully. Compliance teams trust it.',gaps:'Point-in-time, immediately drifts, takes 3-6 weeks per cycle. Doesn\'t scale to modern footprint.' },
-  { cat:'CMDB',                   pros:'Central record of intent, drives ITSM and change management.',gaps:'Describes what should be there, not what is. Accuracy degrades with every undocumented change.' },
+const TOOL_HIGHLIGHTS: ToolHighlight[] = [
+  {
+    name: 'Source Traceable',
+    heading: 'Every data point traceable to its source',
+    desc: 'Each device record links to the physical signal or network signal that produced it. Every claim carries provenance, so trust never relies on inference.',
+    tag: 'SOURCE-LINKED',
+    Icon: IconLink,
+    image: highlightSource,
+    imageAlt: 'Device record with tracer lines flowing back to physical and network source signals',
+  },
+  {
+    name: 'Network Verified',
+    heading: 'Every identification verifiable against the live network',
+    desc: 'Camera-captured physical state is cross-referenced against CDP and LLDP from your switch fabric. Physical and logical must agree before a device is marked verified. 99%+ accuracy after cross-validation.',
+    tag: 'NETWORK-VERIFIED',
+    Icon: IconGlobe,
+    image: highlightNetwork,
+    imageAlt: 'Camera-captured state and network packets converging on a verified server',
+  },
+  {
+    name: 'Timestamped Changes',
+    heading: 'Every change timestamped',
+    desc: 'State changes, device appearances, and departures are captured with verified event timing. Reconciliation is continuous, not annual, so the rack and the record stop diverging in the first place.',
+    tag: 'TIMESTAMPED',
+    Icon: IconClock,
+    image: highlightTimestamp,
+    imageAlt: 'Continuous data stream with device changes captured along a live timeline',
+  },
+  {
+    name: 'Audit-Ready',
+    heading: 'Data your compliance owners can defend',
+    desc: 'Outputs mapped to the controls cited by SOC 2, ISO 27001, HIPAA, and PCI-DSS 9. Evidence is a query, not a project. Built for compliance owners, security teams, and on-call engineers who carry the consequences.',
+    tag: 'AUDIT-READY',
+    Icon: IconShieldCheck,
+    image: highlightAudit,
+    imageAlt: 'Compliance shield with framework badges and queryable evidence panels',
+  },
 ];
 
 export default function WhyRackTrackPage() {
@@ -919,6 +988,7 @@ export default function WhyRackTrackPage() {
                   { name:'Manual Rack Audits',isRT:false, cells:['check','dash','dash','dash'] },
                   { name:'CMDB',              isRT:false, cells:['dash','dash','check','dash'] },
                 ];
+    
                 return rows.map((row, ri) => (
                   <HoverRow key={row.name} isRT={row.isRT} isLast={ri === rows.length - 1} index={ri}>
                     <div style={{ padding:'18px 16px', display:'flex', alignItems:'center', gap:'10px' }}>
@@ -969,20 +1039,46 @@ export default function WhyRackTrackPage() {
         </div>
       </section>
 
-      {/* TOOL GAPS */}
-      <section style={{ padding:'0 clamp(1rem, 4vw, 4rem) clamp(3rem, 7vw, 7rem)', position:'relative' }}>
+      {/* DEFENSIBILITY & TRUST */}
+      <section style={{ padding:'0 clamp(1rem, 4vw, 4rem)', position:'relative' }}>
         <div style={{ maxWidth:'90rem', margin:'0 auto' }}>
           <div style={{ fontSize:'0.6875rem', fontWeight:500, letterSpacing:'0.15em', textTransform:'uppercase', color:'#4F8EF7', marginBottom:'1rem', display:'flex', alignItems:'center', gap:'0.75rem' }}>
-            <span style={{ display:'block', width:'1.5rem', height:'1px', background:'#4F8EF7' }} />Tool Landscape
+            <span style={{ display:'block', width:'1.5rem', height:'1px', background:'#4F8EF7' }} />Defensibility &amp; Trust
           </div>
-          <h2 style={{ fontFamily:'Archivo Black,sans-serif', fontSize:'clamp(1.5rem, 2.5vw, 2.5rem)', fontWeight:700, color:'#EAF2FF', letterSpacing:0, marginBottom:'clamp(2rem, 4vw, 4rem)' }}>What every category does — and where it falls short.</h2>
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1.25rem' }} className="max-md:grid-cols-1">
-            {TOOL_GAPS.map(t=>(
-              <ToolGapCard key={t.cat} t={t} />
-            ))}
-          </div>
+          <h2 style={{
+            fontFamily:'Archivo Black,sans-serif',
+            fontSize:'clamp(1.75rem, 3.2vw, 3rem)',
+            fontWeight:900,
+            lineHeight:1.08,
+            letterSpacing:'-0.01em',
+            color:'#FFFFFF',
+            marginTop:0,
+            marginBottom:'1.5rem',
+          }}>
+            Built to be trusted by<br />
+            <span style={{
+              background:'linear-gradient(90deg, #FFFFFF 0%, #00F0FF 35%, #4F8EF7 70%, #8B5CF6 100%)',
+              WebkitBackgroundClip:'text',
+              WebkitTextFillColor:'transparent',
+              backgroundClip:'text',
+            }}>
+              the people who carry<br />
+              the consequences.
+            </span>
+          </h2>
+          <p style={{
+            color:'#D8E8F8',
+            fontSize:'clamp(0.95rem, 1.1vw, 1.1rem)',
+            fontWeight:400,
+            lineHeight:1.85,
+            margin:0,
+            maxWidth:'56rem',
+          }}>
+            Every data point in RackTrack is traceable to its source. Every device identification is verifiable against the live network. Every change is timestamped. Compliance owners, security teams, and on-call engineers don&apos;t need another dashboard they need data they can defend. RackTrack is built for that bar.
+          </p>
         </div>
       </section>
+      <ToolHighlightCarousel items={TOOL_HIGHLIGHTS} />
     </div>
   );
 }
