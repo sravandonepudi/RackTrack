@@ -373,3 +373,169 @@
 .stat-card:hover {
   transform: translateY(-3px);
 }
+
+/* ══════════════════════════════════════════
+   TOOL HIGHLIGHT — horizontal scroll carousel
+   Section is 300vh tall; inside, the cards stick to the viewport
+   and translate horizontally as the user scrolls down.
+══════════════════════════════════════════ */
+.tool-highlight-scroll-section {
+  position: relative;
+}
+
+.tool-highlight-sticky {
+  align-items: center;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  position: sticky;
+  top: 0;
+}
+
+.tool-highlight-dots {
+  bottom: clamp(1.5rem, 3vw, 2.5rem);
+  display: flex;
+  gap: 0.625rem;
+  justify-content: center;
+  left: 50%;
+  pointer-events: none;
+  position: absolute;
+  transform: translateX(-50%);
+  z-index: 5;
+}
+
+.tool-highlight-dot {
+  background: rgba(79, 142, 247, 0.3);
+  border-radius: 999px;
+  display: block;
+  height: 8px;
+  transition: background 0.35s ease, width 0.35s ease, box-shadow 0.35s ease;
+  width: 8px;
+}
+
+.tool-highlight-dot.active {
+  background: #4F8EF7;
+  box-shadow: 0 0 12px rgba(79, 142, 247, 0.55);
+  width: 28px;
+}
+
+.tool-highlight-track {
+  display: flex;
+  gap: 0;
+  padding: 0;
+}
+
+.tool-highlight-card {
+  align-items: center;
+  display: flex;
+  flex: 0 0 100vw;
+  justify-content: center;
+  padding: clamp(1rem, 3vw, 3rem) clamp(1rem, 5vw, 5rem);
+  position: relative;
+  width: 100vw;
+}
+
+.tool-highlight-inner {
+  align-items: center;
+  background: rgba(8, 18, 48, 0.85);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(79, 142, 247, 0.3);
+  border-radius: 1rem;
+  display: flex;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  justify-content: space-between;
+  max-width: 90rem;
+  min-height: 72vh;
+  overflow: hidden;
+  padding: clamp(2rem, 4vw, 4rem);
+  position: relative;
+  width: 100%;
+}
+
+.tool-highlight-shimmer {
+  background: linear-gradient(90deg, transparent, #4F8EF7, transparent);
+  height: 1px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.tool-highlight-content {
+  flex: 1 1 50%;
+  min-width: 0;
+}
+
+.tool-highlight-media {
+  align-items: center;
+  display: flex;
+  flex: 1 1 50%;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.tool-highlight-image {
+  display: block;
+  height: auto;
+  max-height: 56vh;
+  max-width: 100%;
+  mix-blend-mode: screen;
+  object-fit: contain;
+  transform: scale(1.05);
+  width: 100%;
+}
+
+.tool-highlight-heading {
+  color: #EAF2FF;
+  font-family: "Archivo Black", sans-serif;
+  font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 1.25rem;
+}
+
+.tool-highlight-desc {
+  color: #8CA0B8;
+  font-size: clamp(0.95rem, 1.15vw, 1.125rem);
+  font-weight: 300;
+  line-height: 1.75;
+  margin: 0 0 1.75rem;
+  max-width: 36rem;
+}
+
+.tool-highlight-tag {
+  background: rgba(8, 30, 40, 0.5);
+  border: 1px solid rgba(26, 209, 215, 0.35);
+  border-radius: 4px;
+  color: #1ad1d7;
+  display: inline-block;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 0.35rem 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .tool-highlight-card {
+    padding: 1rem;
+  }
+
+  .tool-highlight-inner {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-height: 78vh;
+    padding: 1.75rem;
+  }
+
+  .tool-highlight-content,
+  .tool-highlight-media {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  .tool-highlight-image {
+    max-height: 32vh;
+  }
+}
