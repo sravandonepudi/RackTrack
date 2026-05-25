@@ -339,7 +339,7 @@ export default function TrustPage() {
         <HeroVisual />
       </section>
 
-      <section className="trust-section trust-section--center" id="security-posture">
+      <section className="trust-section trust-section--center trust-content-container" id="security-posture">
         <h2>Security Posture</h2>
         <p>Built to meet the enterprise security signals procurement teams expect.</p>
         <div className="security-card-grid">
@@ -360,7 +360,7 @@ export default function TrustPage() {
         </div>
       </section>
 
-      <section className="trust-section trust-video-section" id="data-handling">
+      <section className="trust-section trust-video-section trust-content-container" id="data-handling">
         <div className="video-copy">
           <h2>
             Your video,
@@ -379,7 +379,7 @@ export default function TrustPage() {
         <VideoFlow />
       </section>
 
-      <section className="trust-section trust-section--center" id="deployment-options">
+      <section className="trust-section trust-section--center trust-content-container" id="deployment-options">
         <h2>Deployment Options</h2>
         <p>Flexible deployment models to meet your environment and compliance needs.</p>
         <div className="deployment-card-grid">
@@ -393,7 +393,7 @@ export default function TrustPage() {
         </div>
       </section>
 
-      <section className="trust-bottom-cta">
+      <section className="trust-bottom-cta trust-content-container">
         <div className="cta-emblem">
           <CtaShieldLogo />
         </div>
