@@ -445,11 +445,19 @@
   gap: clamp(1.5rem, 4vw, 3.5rem);
   justify-content: space-between;
   max-width: 90rem;
-  min-height: 72vh;
+  min-height: 40vh;
   overflow: hidden;
   padding: clamp(2rem, 4vw, 4rem);
   position: relative;
   width: 100%;
+  transition: border-color 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease;
+  will-change: transform, box-shadow;
+}
+
+.tool-highlight-inner:hover {
+  border-color: rgba(79, 142, 247, 0.92);
+  box-shadow: 0 24px 56px rgba(2, 10, 34, 0.52), 0 0 48px rgba(79, 142, 247, 0.38), 0 0 16px rgba(79, 142, 247, 0.18);
+  transform: translateY(-8px) scale(1.015);
 }
 
 .tool-highlight-shimmer {
@@ -473,6 +481,21 @@
   justify-content: center;
   min-width: 0;
   overflow: hidden;
+  position: relative;
+}
+
+/* Thin edge-only overlays — just enough to hide the border, not the content */
+.tool-highlight-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background:
+    linear-gradient(to right,  rgb(8, 18, 48) 0%, rgba(8, 18, 48, 0.6) 4%, transparent 12%),
+    linear-gradient(to left,   rgb(8, 18, 48) 0%, rgba(8, 18, 48, 0.6) 4%, transparent 12%),
+    linear-gradient(to bottom, rgba(8, 18, 48, 0.9) 0%, rgba(8, 18, 48, 0.3) 5%, transparent 14%),
+    linear-gradient(to top,    rgba(8, 18, 48, 0.9) 0%, rgba(8, 18, 48, 0.3) 5%, transparent 14%);
 }
 
 .tool-highlight-image {
@@ -480,10 +503,25 @@
   height: auto;
   max-height: 56vh;
   max-width: 100%;
-  mix-blend-mode: screen;
   object-fit: contain;
-  transform: scale(1.05);
   width: 100%;
+  position: relative;
+  z-index: 1;
+  animation: cardImgFloat 5s ease-in-out infinite;
+  -webkit-mask-image: radial-gradient(
+    ellipse 96% 92% at 58% 50%,
+    black 55%,
+    rgba(0, 0, 0, 0.7) 75%,
+    rgba(0, 0, 0, 0.2) 90%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 96% 92% at 58% 50%,
+    black 55%,
+    rgba(0, 0, 0, 0.7) 75%,
+    rgba(0, 0, 0, 0.2) 90%,
+    transparent 100%
+  );
 }
 
 .tool-highlight-heading {
@@ -525,7 +563,7 @@
     align-items: stretch;
     flex-direction: column;
     gap: 1.5rem;
-    min-height: 78vh;
+    min-height: 48vh;
     padding: 1.75rem;
   }
 
@@ -537,5 +575,24 @@
 
   .tool-highlight-image {
     max-height: 32vh;
+    -webkit-mask-image: radial-gradient(
+      ellipse 96% 92% at 50% 50%,
+      black 55%,
+      rgba(0, 0, 0, 0.7) 75%,
+      rgba(0, 0, 0, 0.2) 90%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      ellipse 96% 92% at 50% 50%,
+      black 55%,
+      rgba(0, 0, 0, 0.7) 75%,
+      rgba(0, 0, 0, 0.2) 90%,
+      transparent 100%
+    );
   }
+}
+
+@keyframes cardImgFloat {
+  0%, 100% { transform: scale(1.1) translateY(0px);  filter: drop-shadow(0 0 0px rgba(79,142,247,0)); }
+  50%       { transform: scale(1.1) translateY(-10px); filter: drop-shadow(0 8px 24px rgba(79,142,247,0.25)); }
 }
