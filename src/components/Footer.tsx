@@ -1,6 +1,5 @@
 import type { ReactElement } from 'react'
 import { Link } from 'react-router-dom'
-import RackTrackLogo from './RackTrackLogo'
 import './Footer.css'
 
 const footerGroups = [
@@ -41,10 +40,14 @@ const footerGroups = [
 export default function Footer(): ReactElement {
   return (
     <footer className="footer">
+      {/* Top glow divider */}
+      <div className="footer-glow-line" aria-hidden="true" />
+
       <div className="footer-inner">
+        {/* Brand column */}
         <section className="footer-about" aria-label="RackTrack">
           <Link to="/" className="footer-brand" aria-label="RackTrack home">
-            <RackTrackLogo />
+            <img src="/RackTrack_Logo.png" alt="RackTrack" className="footer-logo-img" />
             <span>RackTrack</span>
           </Link>
           <p>Physical Intelligence Layer for the modern data center.</p>
@@ -62,6 +65,7 @@ export default function Footer(): ReactElement {
           </div>
         </section>
 
+        {/* Link columns */}
         <nav className="footer-links" aria-label="Footer">
           {footerGroups.map((group) => (
             <section className="footer-column" key={group.title}>
@@ -74,6 +78,20 @@ export default function Footer(): ReactElement {
             </section>
           ))}
         </nav>
+      </div>
+
+      {/* Bottom bar */}
+      <div className="footer-bottom">
+        <div className="footer-bottom-inner">
+          <span className="footer-copy">
+            © {new Date().getFullYear()} RackTrack. All rights reserved.
+          </span>
+          <div className="footer-bottom-links">
+            <Link to="/trust">Security</Link>
+            <span aria-hidden="true" className="footer-sep">·</span>
+            <Link to="/contact">Contact</Link>
+          </div>
+        </div>
       </div>
     </footer>
   )
