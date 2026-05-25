@@ -390,24 +390,24 @@ const RackAnimationOverlay = () => (
   />
 );
 const FeatShield = () => (
-  <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
-    <rect width="44" height="44" rx="10" fill="rgba(8,18,60,0.9)" stroke="rgba(79,142,247,0.3)" strokeWidth="1"/>
-    <path d="M22 9l11 5v8c0 7-4.5 11-11 13-6.5-2-11-6-11-13v-8l11-5z" stroke="#4F8EF7" strokeWidth="1.4" fill="none"/>
-    <path d="M17 22l3.5 3.5L27 18" stroke="#4F8EF7" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+  <svg width="44" height="44" viewBox="0 0 44 44" fill="none" style={{ filter: 'drop-shadow(0 0 10px rgba(34,197,94,0.6))' }}>
+    <rect width="44" height="44" rx="10" fill="rgba(10,40,22,0.95)" stroke="rgba(34,197,94,0.70)" strokeWidth="1.2"/>
+    <path d="M22 9l11 5v8c0 7-4.5 11-11 13-6.5-2-11-6-11-13v-8l11-5z" stroke="#22C55E" strokeWidth="1.6" fill="rgba(34,197,94,0.15)" strokeLinejoin="round"/>
+    <path d="M17 22l3.5 3.5L27 18" stroke="#4ADE80" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 const FeatBolt = () => (
-  <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
-    <rect width="44" height="44" rx="10" fill="rgba(8,18,60,0.9)" stroke="rgba(79,142,247,0.3)" strokeWidth="1"/>
-    <path d="M25 10l-9 13h8l-4 11 11-15h-8l2-9z" stroke="#4F8EF7" strokeWidth="1.4" fill="none" strokeLinejoin="round"/>
+  <svg width="44" height="44" viewBox="0 0 44 44" fill="none" style={{ filter: 'drop-shadow(0 0 10px rgba(251,191,36,0.6))' }}>
+    <rect width="44" height="44" rx="10" fill="rgba(40,28,6,0.95)" stroke="rgba(251,191,36,0.70)" strokeWidth="1.2"/>
+    <path d="M25 10l-9 13h8l-4 11 11-15h-8l2-9z" stroke="#FBBF24" strokeWidth="1.6" fill="rgba(251,191,36,0.18)" strokeLinejoin="round"/>
   </svg>
 );
 const FeatChart = () => (
-  <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
-    <rect width="44" height="44" rx="10" fill="rgba(8,18,60,0.9)" stroke="rgba(79,142,247,0.3)" strokeWidth="1"/>
-    <rect x="12" y="27" width="5" height="8"  rx="1" fill="#4F8EF7" opacity="0.65"/>
-    <rect x="20" y="21" width="5" height="14" rx="1" fill="#4F8EF7" opacity="0.82"/>
-    <rect x="28" y="15" width="5" height="20" rx="1" fill="#4F8EF7"/>
+  <svg width="44" height="44" viewBox="0 0 44 44" fill="none" style={{ filter: 'drop-shadow(0 0 10px rgba(52,211,153,0.55))' }}>
+    <rect width="44" height="44" rx="10" fill="rgba(10,30,50,0.95)" stroke="rgba(52,211,153,0.68)" strokeWidth="1.2"/>
+    <rect x="12" y="27" width="5" height="8"  rx="1" fill="#60A5FA"/>
+    <rect x="20" y="21" width="5" height="14" rx="1" fill="#34D399"/>
+    <rect x="28" y="15" width="5" height="20" rx="1" fill="#4ADE80"/>
   </svg>
 );
 
@@ -447,6 +447,142 @@ const IconShieldCheck = () => (
     <polyline points="9 12 11 14 15 10" stroke="#4F8EF7" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
+
+
+/* ── Animated canvas overlay — original PNG preserved as base ── */
+function SourceImageAnimated({ src, alt }: { src: string; alt: string }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const cv = canvasRef.current!;
+    const ctx = cv.getContext('2d')!;
+    let raf: number;
+    let t = 0;
+
+    const resize = () => {
+      cv.width  = cv.offsetWidth  || 500;
+      cv.height = cv.offsetHeight || 300;
+    };
+
+    /* cubic bezier point */
+    const bz = (u: number, a: number, b: number, c: number, d: number) => {
+      const v = 1 - u;
+      return v*v*v*a + 3*v*v*u*b + 3*v*u*u*c + u*u*u*d;
+    };
+
+    /* 15 staggered particles across 5 streams */
+    const parts = Array.from({ length: 15 }, (_, i) => ({
+      progress: i / 15,
+      speed: 0.0030 + (i % 5) * 0.0004,
+      stream: i % 5,
+    }));
+
+    const draw = () => {
+      t += 0.016;
+      const W = cv.width, H = cv.height;
+      ctx.clearRect(0, 0, W, H);
+
+      /* layout anchors as fractions */
+      const nX   = W * 0.13;
+      const hubX = W * 0.50, hubY = H * 0.50;
+      const shX  = W * 0.83, shY  = H * 0.50;
+      const nodeYs = [H*0.20, H*0.34, H*0.50, H*0.66, H*0.80];
+
+      /* ── hub ambient glow ── */
+      const hg = ctx.createRadialGradient(hubX, hubY, 0, hubX, hubY, W*0.12);
+      hg.addColorStop(0, `rgba(0,207,255,${0.22 + 0.13*Math.sin(t*0.8)})`);
+      hg.addColorStop(1, 'transparent');
+      ctx.fillStyle = hg;
+      ctx.beginPath(); ctx.arc(hubX, hubY, W*0.12, 0, Math.PI*2); ctx.fill();
+
+      /* ── hub ripple rings ── */
+      [0, 0.9, 1.8].forEach(off => {
+        const ph = (t * 0.38 + off) % 1;
+        ctx.beginPath();
+        ctx.arc(hubX, hubY, W*0.04 + ph*W*0.12, 0, Math.PI*2);
+        ctx.strokeStyle = `rgba(0,207,255,${(1-ph)*0.60})`;
+        ctx.lineWidth = 1.4; ctx.stroke();
+      });
+
+      /* ── shield glow ── */
+      const sg = ctx.createRadialGradient(shX, shY, 0, shX, shY, W*0.10);
+      sg.addColorStop(0, `rgba(79,142,247,${0.20 + 0.12*Math.sin(t*0.65+1)})`);
+      sg.addColorStop(1, 'transparent');
+      ctx.fillStyle = sg;
+      ctx.beginPath(); ctx.arc(shX, shY, W*0.10, 0, Math.PI*2); ctx.fill();
+
+      /* ── shield verification pulse ── */
+      const sp = (t * 0.40 + 0.6) % 1;
+      ctx.beginPath();
+      ctx.arc(shX, shY, W*0.05 + sp*W*0.08, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(0,207,255,${(1-sp)*0.60})`; ctx.lineWidth = 1.1; ctx.stroke();
+
+      /* ── node pulse rings ── */
+      nodeYs.forEach((ny, i) => {
+        const ph = (t * 0.36 + i * 0.22) % 1;
+        ctx.beginPath();
+        ctx.arc(nX, ny, W*0.018 + ph*W*0.055, 0, Math.PI*2);
+        ctx.strokeStyle = `rgba(${i%2===0?'79,142,247':'0,207,255'},${(1-ph)*0.55})`;
+        ctx.lineWidth = 1; ctx.stroke();
+      });
+
+      /* ── stream particles (nodes → hub) ── */
+      parts.forEach(p => {
+        p.progress = (p.progress + p.speed) % 1;
+        const u  = p.progress, si = p.stream;
+        const y0 = nodeYs[si];
+        const px = bz(u, nX, nX+(hubX-nX)*0.45, nX+(hubX-nX)*0.55, hubX);
+        const py = bz(u, y0, y0, hubY, hubY);
+        const al = Math.sin(u * Math.PI) * 0.90;
+        const rgb = si%2===0 ? '79,142,247' : '0,207,255';
+
+        /* glow halo */
+        const gg = ctx.createRadialGradient(px, py, 0, px, py, 9);
+        gg.addColorStop(0, `rgba(${rgb},${al})`);
+        gg.addColorStop(1, 'transparent');
+        ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(px, py, 9, 0, Math.PI*2); ctx.fill();
+        /* core dot */
+        ctx.beginPath(); ctx.arc(px, py, 2.8, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(${rgb},${Math.min(al*1.3,1)})`; ctx.fill();
+      });
+
+      /* ── hub → shield particle ── */
+      const hp  = (t * 0.50) % 1;
+      const hpx = bz(hp, hubX, hubX+(shX-hubX)*0.35, hubX+(shX-hubX)*0.65, shX);
+      const ha  = Math.sin(hp * Math.PI) * 0.90;
+      const hpg = ctx.createRadialGradient(hpx, hubY, 0, hpx, hubY, 9);
+      hpg.addColorStop(0, `rgba(0,207,255,${ha})`); hpg.addColorStop(1, 'transparent');
+      ctx.fillStyle = hpg; ctx.beginPath(); ctx.arc(hpx, hubY, 9, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(hpx, hubY, 2.8, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(0,207,255,${Math.min(ha*1.3,1)})`; ctx.fill();
+
+      /* ── ambient floating particles ── */
+      ([[0.26,0.26],[0.38,0.13],[0.61,0.72],[0.72,0.26],[0.44,0.82],[0.57,0.44]] as [number,number][])
+        .forEach(([xf,yf],i) => {
+          const ax = xf*W, ay = (yf + Math.sin(t*0.42+i)*0.025)*H;
+          const oa = 0.15 + 0.32*Math.abs(Math.sin(t*0.5+i*1.1));
+          ctx.beginPath(); ctx.arc(ax, ay, 1.6, 0, Math.PI*2);
+          ctx.fillStyle = `rgba(${i%2===0?'79,142,247':'0,207,255'},${oa})`; ctx.fill();
+        });
+
+      raf = requestAnimationFrame(draw);
+    };
+
+    const t0 = setTimeout(() => { resize(); draw(); }, 120);
+    window.addEventListener('resize', resize);
+    return () => { clearTimeout(t0); cancelAnimationFrame(raf); window.removeEventListener('resize', resize); };
+  }, []);
+
+  return (
+    <div style={{ position:'relative', width:'100%', animation:'cardImgFloat 5s ease-in-out infinite' }}>
+      <img src={src} alt={alt} className="tool-highlight-image" style={{ animation:'none' }} />
+      <canvas
+        ref={canvasRef}
+        style={{ position:'absolute', inset:0, width:'100%', height:'100%', mixBlendMode:'screen', pointerEvents:'none' }}
+      />
+    </div>
+  );
+}
 
 /* ── Tool Highlight Carousel — one block with left/right arrow navigation ── */
 type ToolHighlight = {
@@ -505,11 +641,10 @@ function ToolHighlightCarousel({ items }: { items: ToolHighlight[] }) {
                   <div className="tool-highlight-tag">{item.tag}</div>
                 </div>
                 <div className="tool-highlight-media">
-                  <img
-                    src={item.image}
-                    alt={item.imageAlt}
-                    className="tool-highlight-image"
-                  />
+                  {i === 0
+                    ? <SourceImageAnimated src={item.image} alt={item.imageAlt} />
+                    : <img src={item.image} alt={item.imageAlt} className="tool-highlight-image" />
+                  }
                 </div>
               </div>
             </article>
@@ -610,10 +745,10 @@ function GlowCard({children, style, className}:{children:React.ReactNode; style?
       style={{
         position:'relative', overflow:'hidden', borderRadius:'1rem', cursor:'default',
         background:'rgba(8,18,48,0.85)', backdropFilter:'blur(14px)',
-        border: hov ? '1px solid rgba(79,142,247,0.78)' : '1px solid rgba(79,142,247,0.2)',
-        boxShadow: hov ? '0 18px 46px rgba(2,10,34,0.38), 0 0 36px rgba(79,142,247,0.26)' : '0 0 0 rgba(79,142,247,0)',
-        transform: hov ? 'translateY(-5px) scale(1.01)' : 'translateY(0) scale(1)',
-        transition:'border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease',
+        border: hov ? '1px solid rgba(79,142,247,0.92)' : '1px solid rgba(79,142,247,0.2)',
+        boxShadow: hov ? '0 24px 56px rgba(2,10,34,0.52), 0 0 48px rgba(79,142,247,0.38), 0 0 16px rgba(79,142,247,0.18)' : '0 0 0 rgba(79,142,247,0)',
+        transform: hov ? 'translateY(-8px) scale(1.015)' : 'translateY(0) scale(1)',
+        transition:'border-color 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease',
         willChange:'transform, box-shadow',
         ...style,
       }}>
@@ -1042,9 +1177,7 @@ export default function WhyRackTrackPage() {
       {/* DEFENSIBILITY & TRUST */}
       <section style={{ padding:'0 clamp(1rem, 4vw, 4rem)', position:'relative' }}>
         <div style={{ maxWidth:'90rem', margin:'0 auto' }}>
-          <div style={{ fontSize:'0.6875rem', fontWeight:500, letterSpacing:'0.15em', textTransform:'uppercase', color:'#4F8EF7', marginBottom:'1rem', display:'flex', alignItems:'center', gap:'0.75rem' }}>
-            <span style={{ display:'block', width:'1.5rem', height:'1px', background:'#4F8EF7' }} />Defensibility &amp; Trust
-          </div>
+
           <h2 style={{
             fontFamily:'Archivo Black,sans-serif',
             fontSize:'clamp(1.75rem, 3.2vw, 3rem)',
