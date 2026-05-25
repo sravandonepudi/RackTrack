@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { motion, useMotionValueEvent, useScroll, useTransform } from 'motion/react';
 import rackBg from '../rack-bg.png';
 import rackImg from '../rack.png';
@@ -382,12 +382,66 @@ const LayersIllustration = () => {
 /* ══════════════════════════════════════════
    HERO IMAGE
 ══════════════════════════════════════════ */
+const EXISTING_RACK_BLUE_LEDS = [
+  { top: '16.8%', left: '57.6%', delay: '-0.2s', duration: '2.4s' },
+  { top: '18.9%', left: '57.6%', delay: '-1.4s', duration: '2.9s' },
+  { top: '23.7%', left: '57.7%', delay: '-0.9s', duration: '2.2s' },
+  { top: '26.3%', left: '57.8%', delay: '-2.1s', duration: '3.1s' },
+  { top: '32.5%', left: '55.7%', delay: '-1.7s', duration: '2.6s' },
+  { top: '33.1%', left: '59.4%', delay: '-0.4s', duration: '3s' },
+  { top: '38.8%', left: '55.4%', delay: '-2.6s', duration: '2.5s' },
+  { top: '39.2%', left: '58.9%', delay: '-1.1s', duration: '2.8s' },
+  { top: '50.6%', left: '57.4%', delay: '-0.6s', duration: '3.2s' },
+  { top: '51.5%', left: '43.7%', delay: '-1.9s', duration: '2.3s' },
+  { top: '50.5%', left: '41.0%', delay: '-2.5s', duration: '2.8s' },
+  { top: '50.7%', left: '45.5%', delay: '-0.8s', duration: '3.1s' },
+  { top: '52.5%', left: '44.3%', delay: '-1.6s', duration: '2.4s' },
+  { top: '52.7%', left: '56.4%', delay: '-2.9s', duration: '2.9s' },
+  { top: '58.5%', left: '57.1%', delay: '-2.8s', duration: '2.7s' },
+  { top: '57.8%', left: '41.2%', delay: '-0.7s', duration: '3.4s' },
+  { top: '58.1%', left: '44.8%', delay: '-2.2s', duration: '2.6s' },
+  { top: '59.9%', left: '43.1%', delay: '-1.2s', duration: '3s' },
+  { top: '63.5%', left: '57.9%', delay: '-1.3s', duration: '3.3s' },
+  { top: '62.7%', left: '40.9%', delay: '-3.1s', duration: '2.7s' },
+  { top: '64.2%', left: '46.2%', delay: '-0.4s', duration: '3.2s' },
+  { top: '65.0%', left: '55.6%', delay: '-1.8s', duration: '2.5s' },
+  { top: '73.1%', left: '57.7%', delay: '-0.1s', duration: '2.6s' },
+  { top: '72.0%', left: '43.2%', delay: '-2.3s', duration: '3.1s' },
+  { top: '73.8%', left: '45.7%', delay: '-0.9s', duration: '2.8s' },
+  { top: '74.4%', left: '56.3%', delay: '-1.5s', duration: '3.3s' },
+  { top: '82.5%', left: '57.8%', delay: '-2.2s', duration: '2.9s' },
+  { top: '80.8%', left: '43.4%', delay: '-1.1s', duration: '2.5s' },
+  { top: '82.2%', left: '46.8%', delay: '-3s', duration: '3.2s' },
+  { top: '84.0%', left: '55.8%', delay: '-0.5s', duration: '2.7s' },
+  { top: '86.7%', left: '55.8%', delay: '-1.9s', duration: '3.4s' },
+  { top: '88.8%', left: '57.6%', delay: '-2.7s', duration: '2.6s' },
+];
+
 const RackAnimationOverlay = () => (
+  <div className="why-rack-scan-visual">
   <img
     src={rackImg}
     alt="RackTrack — scans hardware, reads the wire, pulls vendor data, reconciled in one pass"
     style={{width:'100%',height:'auto',display:'block',mixBlendMode:'screen', filter:'brightness(1.1) contrast(1.15)'}}
   />
+    <div className="why-existing-led-layer" aria-hidden="true">
+      {EXISTING_RACK_BLUE_LEDS.map((led, index) => (
+        <span
+          key={`${led.top}-${led.left}-${index}`}
+          className="why-existing-blue-led"
+          style={{
+            top: led.top,
+            left: led.left,
+            '--led-delay': led.delay,
+            '--led-duration': led.duration,
+          } as CSSProperties}
+        />
+      ))}
+    </div>
+    <div className="why-rack-scan-window" aria-hidden="true">
+      <div className="why-rack-scan-line" />
+    </div>
+  </div>
 );
 const FeatShield = () => (
   <svg width="44" height="44" viewBox="0 0 44 44" fill="none" style={{ filter: 'drop-shadow(0 0 10px rgba(34,197,94,0.6))' }}>
@@ -464,13 +518,11 @@ function SourceImageAnimated({ src, alt }: { src: string; alt: string }) {
       cv.height = cv.offsetHeight || 300;
     };
 
-    /* cubic bezier point */
     const bz = (u: number, a: number, b: number, c: number, d: number) => {
       const v = 1 - u;
       return v*v*v*a + 3*v*v*u*b + 3*v*u*u*c + u*u*u*d;
     };
 
-    /* 15 staggered particles across 5 streams */
     const parts = Array.from({ length: 15 }, (_, i) => ({
       progress: i / 15,
       speed: 0.0030 + (i % 5) * 0.0004,
@@ -482,20 +534,17 @@ function SourceImageAnimated({ src, alt }: { src: string; alt: string }) {
       const W = cv.width, H = cv.height;
       ctx.clearRect(0, 0, W, H);
 
-      /* layout anchors as fractions */
       const nX   = W * 0.13;
       const hubX = W * 0.50, hubY = H * 0.50;
       const shX  = W * 0.83, shY  = H * 0.50;
       const nodeYs = [H*0.20, H*0.34, H*0.50, H*0.66, H*0.80];
 
-      /* ── hub ambient glow ── */
       const hg = ctx.createRadialGradient(hubX, hubY, 0, hubX, hubY, W*0.12);
       hg.addColorStop(0, `rgba(0,207,255,${0.22 + 0.13*Math.sin(t*0.8)})`);
       hg.addColorStop(1, 'transparent');
       ctx.fillStyle = hg;
       ctx.beginPath(); ctx.arc(hubX, hubY, W*0.12, 0, Math.PI*2); ctx.fill();
 
-      /* ── hub ripple rings ── */
       [0, 0.9, 1.8].forEach(off => {
         const ph = (t * 0.38 + off) % 1;
         ctx.beginPath();
@@ -504,20 +553,17 @@ function SourceImageAnimated({ src, alt }: { src: string; alt: string }) {
         ctx.lineWidth = 1.4; ctx.stroke();
       });
 
-      /* ── shield glow ── */
       const sg = ctx.createRadialGradient(shX, shY, 0, shX, shY, W*0.10);
       sg.addColorStop(0, `rgba(79,142,247,${0.20 + 0.12*Math.sin(t*0.65+1)})`);
       sg.addColorStop(1, 'transparent');
       ctx.fillStyle = sg;
       ctx.beginPath(); ctx.arc(shX, shY, W*0.10, 0, Math.PI*2); ctx.fill();
 
-      /* ── shield verification pulse ── */
       const sp = (t * 0.40 + 0.6) % 1;
       ctx.beginPath();
       ctx.arc(shX, shY, W*0.05 + sp*W*0.08, 0, Math.PI*2);
       ctx.strokeStyle = `rgba(0,207,255,${(1-sp)*0.60})`; ctx.lineWidth = 1.1; ctx.stroke();
 
-      /* ── node pulse rings ── */
       nodeYs.forEach((ny, i) => {
         const ph = (t * 0.36 + i * 0.22) % 1;
         ctx.beginPath();
@@ -526,7 +572,6 @@ function SourceImageAnimated({ src, alt }: { src: string; alt: string }) {
         ctx.lineWidth = 1; ctx.stroke();
       });
 
-      /* ── stream particles (nodes → hub) ── */
       parts.forEach(p => {
         p.progress = (p.progress + p.speed) % 1;
         const u  = p.progress, si = p.stream;
@@ -535,18 +580,14 @@ function SourceImageAnimated({ src, alt }: { src: string; alt: string }) {
         const py = bz(u, y0, y0, hubY, hubY);
         const al = Math.sin(u * Math.PI) * 0.90;
         const rgb = si%2===0 ? '79,142,247' : '0,207,255';
-
-        /* glow halo */
         const gg = ctx.createRadialGradient(px, py, 0, px, py, 9);
         gg.addColorStop(0, `rgba(${rgb},${al})`);
         gg.addColorStop(1, 'transparent');
         ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(px, py, 9, 0, Math.PI*2); ctx.fill();
-        /* core dot */
         ctx.beginPath(); ctx.arc(px, py, 2.8, 0, Math.PI*2);
         ctx.fillStyle = `rgba(${rgb},${Math.min(al*1.3,1)})`; ctx.fill();
       });
 
-      /* ── hub → shield particle ── */
       const hp  = (t * 0.50) % 1;
       const hpx = bz(hp, hubX, hubX+(shX-hubX)*0.35, hubX+(shX-hubX)*0.65, shX);
       const ha  = Math.sin(hp * Math.PI) * 0.90;
@@ -556,7 +597,6 @@ function SourceImageAnimated({ src, alt }: { src: string; alt: string }) {
       ctx.beginPath(); ctx.arc(hpx, hubY, 2.8, 0, Math.PI*2);
       ctx.fillStyle = `rgba(0,207,255,${Math.min(ha*1.3,1)})`; ctx.fill();
 
-      /* ── ambient floating particles ── */
       ([[0.26,0.26],[0.38,0.13],[0.61,0.72],[0.72,0.26],[0.44,0.82],[0.57,0.44]] as [number,number][])
         .forEach(([xf,yf],i) => {
           const ax = xf*W, ay = (yf + Math.sin(t*0.42+i)*0.025)*H;
@@ -745,10 +785,10 @@ function GlowCard({children, style, className}:{children:React.ReactNode; style?
       style={{
         position:'relative', overflow:'hidden', borderRadius:'1rem', cursor:'default',
         background:'rgba(8,18,48,0.85)', backdropFilter:'blur(14px)',
-        border: hov ? '1px solid rgba(79,142,247,0.92)' : '1px solid rgba(79,142,247,0.2)',
-        boxShadow: hov ? '0 24px 56px rgba(2,10,34,0.52), 0 0 48px rgba(79,142,247,0.38), 0 0 16px rgba(79,142,247,0.18)' : '0 0 0 rgba(79,142,247,0)',
-        transform: hov ? 'translateY(-8px) scale(1.015)' : 'translateY(0) scale(1)',
-        transition:'border-color 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease',
+        border: hov ? '1px solid rgba(79,142,247,0.78)' : '1px solid rgba(79,142,247,0.2)',
+        boxShadow: hov ? '0 18px 46px rgba(2,10,34,0.38), 0 0 36px rgba(79,142,247,0.26)' : '0 0 0 rgba(79,142,247,0)',
+        transform: hov ? 'translateY(-5px) scale(1.01)' : 'translateY(0) scale(1)',
+        transition:'border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease',
         willChange:'transform, box-shadow',
         ...style,
       }}>
@@ -907,48 +947,48 @@ export default function WhyRackTrackPage() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: 'clamp(1.5rem, 3vw, 3rem)',
-            marginBottom: 'clamp(2rem, 3vw, 3.5rem)',
-            minHeight: '420px',
+            gap: 'clamp(1.25rem, 2.4vw, 2.6rem)',
+            marginBottom: 'clamp(4rem, 6vw, 7rem)',
+            minHeight: 'clamp(520px, 39vw, 670px)',
             flexWrap: 'wrap',
           }}>
 
             {/* HERO TEXT */}
-            <div style={{ flex: '1 1 min(44%, 340px)', minWidth: 0, zIndex: 20 }}>
-            
-              <h1 style={{ 
-                fontFamily:'Archivo Black,sans-serif', 
-                fontSize:'clamp(1.75rem, 3.2vw, 3rem)', 
-                fontWeight:900, 
-                lineHeight:1.08, 
-                letterSpacing:'-0.01em', 
-                color:'#FFFFFF', 
-                marginBottom:'1.75rem',
-                marginTop: 0 
+            <div style={{ flex: '1 1 min(42%, 340px)', minWidth: 0, zIndex: 20 }}>
+
+              <h1 style={{
+                fontFamily:'Archivo Black,sans-serif',
+                fontSize:'clamp(2.35rem, 4.15vw, 3.95rem)',
+                fontWeight:900,
+                lineHeight:1.08,
+                letterSpacing:'-0.01em',
+                color:'#FFFFFF',
+                marginBottom:'2rem',
+                marginTop: 0
               }}>
                 Three things<br />
                 every tool does.<br />
-                <span style={{ 
-                  background:'linear-gradient(90deg, #FFFFFF 0%, #00F0FF 35%, #4F8EF7 70%, #8B5CF6 100%)', 
-                  WebkitBackgroundClip:'text', 
-                  WebkitTextFillColor:'transparent' 
+                <span style={{
+                  background:'linear-gradient(90deg, #FFFFFF 0%, #00F0FF 35%, #4F8EF7 70%, #8B5CF6 100%)',
+                  WebkitBackgroundClip:'text',
+                  WebkitTextFillColor:'transparent'
                 }}>
                   Only one does<br />
                   all three.
                 </span>
               </h1>
-              
-              <p style={{ fontSize:'clamp(0.95rem, 1.1vw, 1.1rem)', color:'#D8E8F8', lineHeight:1.85, fontWeight:400, margin:0, textAlign:'left' }}>
+
+              <p style={{ fontSize:'clamp(1rem, 1.18vw, 1.18rem)', color:'#F4FAFF', lineHeight:1.86, fontWeight:500, margin:0, textAlign:'justify' }}>
                 {WHY.body}
-                <strong style={{ color: '#67D5FF', fontWeight: 700 }}>{WHY.bodyHighlight}</strong>
+                <strong style={{ color: '#7FEAFF', fontWeight: 800 }}>{WHY.bodyHighlight}</strong>
                 {WHY.bodyTail}
               </p>
-              
+
             </div>
 
             {/* HERO IMAGE — right, fills remaining space */}
             <div style={{
-              flex: '1 1 min(54%, 400px)',
+              flex: '1.22 1 min(58%, 460px)',
               minWidth: 0,
               alignSelf: 'center',
               display: 'flex',
@@ -956,6 +996,7 @@ export default function WhyRackTrackPage() {
               background: '#000',
               borderRadius: '0.75rem',
               overflow: 'hidden',
+              marginRight: 'clamp(-1.25rem, -1vw, -0.25rem)',
             }}>
               <RackAnimationOverlay />
             </div>
@@ -963,7 +1004,7 @@ export default function WhyRackTrackPage() {
           </div>
           
           {/* 3 PILLARS SECTION */}
-          <div className="why-card-grid max-lg:grid-cols-1">
+          <div className="why-card-grid max-lg:grid-cols-1" style={{ marginTop: 'clamp(1.5rem, 4vw, 4.5rem)' }}>
             {WHY.pillars.map((p, index)=>(
               <GlowCard key={p.num} className="why-pillar-card" style={{ borderRadius:'1.5rem' }}>
                 <div className="why-pillar-card-content">
@@ -1176,40 +1217,72 @@ export default function WhyRackTrackPage() {
 
       {/* DEFENSIBILITY & TRUST */}
       <section style={{ padding:'0 clamp(1rem, 4vw, 4rem)', position:'relative' }}>
-        <div style={{ maxWidth:'90rem', margin:'0 auto' }}>
-
-          <h2 style={{
+        <motion.div
+          style={{ maxWidth:'90rem', margin:'0 auto', textAlign:'center' }}
+        >
+          <motion.h2
+            initial={{ y: 96 }}
+            whileInView={{ y: 0 }}
+            viewport={{ once: true, amount: 0.12 }}
+            transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
+            style={{
             fontFamily:'Archivo Black,sans-serif',
-            fontSize:'clamp(1.75rem, 3.2vw, 3rem)',
+            fontSize:'clamp(2.35rem, 4.15vw, 3.95rem)',
             fontWeight:900,
             lineHeight:1.08,
             letterSpacing:'-0.01em',
             color:'#FFFFFF',
             marginTop:0,
             marginBottom:'1.5rem',
+            textAlign:'center',
           }}>
-            Built to be trusted by<br />
+            <span style={{
+              background:'linear-gradient(90deg, #FFFFFF 0%, #EFFFFF 18%, #00F0FF 42%, #4F8EF7 72%, #8B5CF6 100%)',
+              WebkitBackgroundClip:'text',
+              WebkitTextFillColor:'transparent',
+              backgroundClip:'text',
+            }}>
+              Built to be trusted by
+            </span><br />
+            <span style={{
+              background:'linear-gradient(90deg, #00F0FF 0%, #4F8EF7 55%, #8B5CF6 100%)',
+              WebkitBackgroundClip:'text',
+              WebkitTextFillColor:'transparent',
+              backgroundClip:'text',
+            }}>
+              the people who carry
+            </span><br />
             <span style={{
               background:'linear-gradient(90deg, #FFFFFF 0%, #00F0FF 35%, #4F8EF7 70%, #8B5CF6 100%)',
               WebkitBackgroundClip:'text',
               WebkitTextFillColor:'transparent',
               backgroundClip:'text',
             }}>
-              the people who carry<br />
               the consequences.
             </span>
-          </h2>
-          <p style={{
-            color:'#D8E8F8',
-            fontSize:'clamp(0.95rem, 1.1vw, 1.1rem)',
-            fontWeight:400,
-            lineHeight:1.85,
+          </motion.h2>
+          <motion.p
+            initial={{ y: 68 }}
+            whileInView={{ y: 0 }}
+            viewport={{ once: true, amount: 0.12 }}
+            transition={{ duration: 0.9, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+            color:'#F4FAFF',
+            fontSize:'clamp(1rem, 1.18vw, 1.18rem)',
+            fontWeight:500,
+            lineHeight:1.86,
             margin:0,
-            maxWidth:'56rem',
+            maxWidth:'68rem',
+            marginLeft:'auto',
+            marginRight:'auto',
+            textAlign:'center',
           }}>
-            Every data point in RackTrack is traceable to its source. Every device identification is verifiable against the live network. Every change is timestamped. Compliance owners, security teams, and on-call engineers don&apos;t need another dashboard they need data they can defend. RackTrack is built for that bar.
-          </p>
-        </div>
+            Every data point in RackTrack is traceable to its source. Every device<br />
+            identification is verifiable against the live network. Every change is<br />
+            timestamped. Compliance owners, security teams, and on-call engineers<br />
+            don&apos;t need another dashboard — they need data they can defend.
+          </motion.p>
+        </motion.div>
       </section>
       <ToolHighlightCarousel items={TOOL_HIGHLIGHTS} />
     </div>
