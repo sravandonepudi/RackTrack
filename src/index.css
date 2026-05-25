@@ -1,28 +1,28 @@
 :root {
-  --bg-primary: #F8FAFF;
-  --bg-secondary: #EEF2FF;
-  --bg-tertiary: #E0E7FF;
-  --surface: rgba(255, 255, 255, 0.85);
-  --surface-strong: rgba(255, 255, 255, 0.97);
-  --surface-soft: rgba(79, 70, 229, 0.06);
-  --text-primary: #0F172A;
-  --text-secondary: #334155;
-  --text-muted: #64748B;
-  --text-h: #0F172A;
-  --accent-cyan: #0EA5E9;
-  --accent-blue: #0EA5E9;
-  --accent-aqua: #06B6D4;
+  --bg-primary: #050816;
+  --bg-secondary: #0B1026;
+  --bg-tertiary: #10172E;
+  --surface: rgba(11, 16, 38, 0.74);
+  --surface-strong: rgba(9, 13, 31, 0.9);
+  --surface-soft: rgba(0, 209, 255, 0.06);
+  --text-primary: #FFFFFF;
+  --text-secondary: #B6C2D9;
+  --text-muted: #7F8AA8;
+  --text-h: #FFFFFF;
+  --accent-cyan: #00D1FF;
+  --accent-blue: #00D1FF;
+  --accent-aqua: #00F0FF;
   --accent-purple: #8B5CF6;
   --accent-magenta: #A855F7;
   --accent-green: var(--accent-purple);
-  --border: rgba(79, 70, 229, 0.18);
-  --border-soft: rgba(15, 23, 42, 0.08);
-  --glow-cyan: rgba(14, 165, 233, 0.2);
-  --glow-purple: rgba(139, 92, 246, 0.2);
-  --gradient-primary: linear-gradient(135deg, #0EA5E9, #8B5CF6);
-  --gradient-secondary: linear-gradient(135deg, #06B6D4, #A855F7);
-  --gradient-heading: linear-gradient(120deg, #0F172A 8%, #0EA5E9 46%, #8B5CF6 92%);
-  --gradient-panel: linear-gradient(145deg, rgba(14, 165, 233, 0.07), rgba(255, 255, 255, 0.97) 48%, rgba(139, 92, 246, 0.05));
+  --border: rgba(0, 209, 255, 0.22);
+  --border-soft: rgba(182, 194, 217, 0.12);
+  --glow-cyan: rgba(0, 209, 255, 0.34);
+  --glow-purple: rgba(139, 92, 246, 0.34);
+  --gradient-primary: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+  --gradient-secondary: linear-gradient(135deg, var(--accent-aqua), var(--accent-magenta));
+  --gradient-heading: linear-gradient(120deg, #ffffff 8%, var(--accent-aqua) 46%, var(--accent-purple) 92%);
+  --gradient-panel: linear-gradient(145deg, rgba(0, 209, 255, 0.12), rgba(11, 16, 38, 0.82) 48%, rgba(139, 92, 246, 0.14));
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -30,7 +30,7 @@
 
   font: 18px/145% var(--sans);
   letter-spacing: 0;
-  color-scheme: light;
+  color-scheme: dark;
   color: var(--text-primary);
   background: var(--bg-primary);
   font-synthesis: none;
@@ -46,22 +46,22 @@ body {
   min-height: 100vh;
 }
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   :root {
     --text: var(--text-secondary);
-    --text-h: #0F172A;
+    --text-h: #ffffff;
     --bg: var(--bg-primary);
-    --code-bg: rgba(238, 242, 255, 0.9);
+    --code-bg: rgba(11, 16, 38, 0.86);
     --accent: var(--accent-cyan);
-    --accent-bg: rgba(14, 165, 233, 0.1);
-    --accent-border: rgba(139, 92, 246, 0.35);
-    --social-bg: rgba(255, 255, 255, 0.8);
+    --accent-bg: rgba(0, 209, 255, 0.13);
+    --accent-border: rgba(139, 92, 246, 0.5);
+    --social-bg: rgba(11, 16, 38, 0.7);
     --shadow:
-      rgba(15, 23, 42, 0.08) 0 10px 15px -3px, rgba(15, 23, 42, 0.05) 0 4px 6px -2px;
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
   }
 
   #social .button-icon {
-    filter: none;
+    filter: invert(1) brightness(2);
   }
 }
 
@@ -102,8 +102,8 @@ h2 {
 
 .page-content h3,
 .page-content h4 {
-  color: var(--accent-cyan) !important;
-  text-shadow: 0 0 12px rgba(14, 165, 233, 0.2);
+  color: var(--accent-aqua) !important;
+  text-shadow: 0 0 18px rgba(0, 209, 255, 0.18);
 }
 
 h1 {
@@ -133,7 +133,7 @@ code {
   font-size: 15px;
   line-height: 135%;
   padding: 4px 8px;
-  background: var(--code-bg, rgba(238, 242, 255, 0.9));
+  background: var(--code-bg);
 }
 
 @media (max-width: 1024px) {
