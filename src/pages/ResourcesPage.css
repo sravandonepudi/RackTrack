@@ -18,7 +18,7 @@
 
 /* ── gradient text ───────────────────────────────── */
 .rp-grad {
-  background: linear-gradient(100deg, #0EA5E9, #8B5CF6);
+  background: linear-gradient(100deg, #00F0FF, #8B5CF6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -36,13 +36,13 @@
   margin-bottom: 1.25rem;
 }
 .rp-eyebrow--pu { color: #8B5CF6; }
-.rp-eyebrow--cy { color: #0EA5E9; }
+.rp-eyebrow--cy { color: #00D1FF; }
 
 .rp-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #0EA5E9;
+  background: #00D1FF;
   animation: rp-pulse 2s ease-in-out infinite;
   flex-shrink: 0;
 }
@@ -52,7 +52,7 @@
   font-family: 'Archivo Black', sans-serif;
   font-size: clamp(1.8rem, 3.5vw, 2.6rem);
   font-weight: 700;
-  color: var(--text-primary);
+  color: #fff;
   line-height: 1.1;
   margin: 0 0 1rem;
   letter-spacing: 0;
@@ -60,7 +60,7 @@
 
 .rp-sub {
   font-size: 1rem;
-  color: var(--text-secondary);
+  color: #B6C2D9;
   font-weight: 300;
   line-height: 1.75;
   max-width: 48rem;
@@ -78,7 +78,7 @@
   padding: 60px clamp(32px, 5vw, 80px) 80px;
   overflow: hidden;
   background:
-    linear-gradient(to right, rgba(248,250,255,0.97) 0%, rgba(248,250,255,0.92) 38%, rgba(248,250,255,0.3) 65%, transparent 100%),
+    linear-gradient(to right, rgba(5,8,22,0.96) 0%, rgba(5,8,22,0.88) 38%, rgba(5,8,22,0.2) 65%, transparent 100%),
     url('/resourcepage_hero.png') top center / cover no-repeat;
 }
 
@@ -125,7 +125,7 @@
   font-family: 'Archivo Black', sans-serif;
   font-size: clamp(2.4rem, 4.5vw, 3.75rem);
   font-weight: 700;
-  color: var(--text-primary);
+  color: #fff;
   line-height: 1.07;
   letter-spacing: -0.01em;
   margin: 0 0 1.5rem;
@@ -133,7 +133,7 @@
 
 .rp-hero-sub {
   font-size: 1.0625rem;
-  color: var(--text-secondary);
+  color: #B6C2D9;
   line-height: 1.78;
   font-weight: 300;
   max-width: 460px;
@@ -145,13 +145,12 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  background: rgba(255, 255, 255, 0.88);
-  border: 1px solid rgba(79, 70, 229, 0.12);
+  background: rgba(11, 16, 38, 0.6);
+  border: 1px solid rgba(0, 209, 255, 0.1);
   border-radius: 0.875rem;
   padding: 1.25rem 1.75rem;
   backdrop-filter: blur(14px);
   width: fit-content;
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.07);
 }
 
 .rp-stat {
@@ -164,13 +163,13 @@
   font-family: 'Archivo Black', sans-serif;
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: #fff;
   line-height: 1;
 }
 
 .rp-stat-l {
   font-size: 0.695rem;
-  color: var(--text-muted);
+  color: #6B7A99;
   font-weight: 400;
   letter-spacing: 0.04em;
   white-space: nowrap;
@@ -189,7 +188,7 @@
   left: 0;
   right: 0;
   height: 180px;
-  background: linear-gradient(to top, var(--bg-primary), transparent);
+  background: linear-gradient(to top, #050816, transparent);
   pointer-events: none;
 }
 
@@ -221,14 +220,14 @@
   grid-template-columns: 1fr auto;
   gap: 3rem;
   align-items: center;
-  background: rgba(255, 255, 255, 0.97);
-  border: 1px solid rgba(79, 70, 229, 0.18);
+  background: linear-gradient(160deg, rgba(13, 21, 45, 0.97), rgba(6, 9, 24, 0.97));
+  border: 1px solid rgba(0, 209, 255, 0.18);
   border-radius: 1.25rem;
   padding: 2.75rem 3rem;
   margin-bottom: 1.25rem;
   overflow: hidden;
   backdrop-filter: blur(16px);
-  box-shadow: 0 4px 32px rgba(15, 23, 42, 0.08), 0 0 40px rgba(14, 165, 233, 0.05);
+  box-shadow: 0 0 40px rgba(0, 209, 255, 0.07), inset 0 1px 0 rgba(255,255,255,0.04);
   isolation: isolate;
 }
 
@@ -239,7 +238,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, #0EA5E9, #8B5CF6, transparent);
+  background: linear-gradient(90deg, #00D1FF, #8B5CF6, transparent);
   z-index: 1;
 }
 
@@ -266,9 +265,9 @@
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  background: rgba(14, 165, 233, 0.08);
-  color: #0EA5E9;
-  border: 1px solid rgba(14, 165, 233, 0.28);
+  background: rgba(0, 209, 255, 0.1);
+  color: #00D1FF;
+  border: 1px solid rgba(0, 209, 255, 0.28);
   padding: 0.2rem 0.625rem;
   border-radius: 999px;
   margin-bottom: 1.25rem;
@@ -278,14 +277,14 @@
   font-family: 'Archivo Black', sans-serif;
   font-size: clamp(1.4rem, 2.5vw, 1.9rem);
   font-weight: 700;
-  color: var(--text-primary);
+  color: #fff;
   margin: 0 0 1rem;
   line-height: 1.2;
 }
 
 .rp-vault-hero-desc {
   font-size: 0.9375rem;
-  color: var(--text-secondary);
+  color: #B6C2D9;
   font-weight: 300;
   line-height: 1.75;
   max-width: 44rem;
@@ -316,19 +315,19 @@
 .rp-vault-hero-aside {
   text-align: center;
   padding: 1.75rem 2rem;
-  background: rgba(255, 255, 255, 0.97);
-  border: 1px solid rgba(79, 70, 229, 0.18);
+  background: linear-gradient(160deg, rgba(13, 21, 45, 0.97), rgba(6, 9, 24, 0.97));
+  border: 1px solid rgba(0, 209, 255, 0.2);
   border-radius: 1rem;
   min-width: 210px;
   flex-shrink: 0;
-  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 0 24px rgba(0, 209, 255, 0.08);
 }
 
 .rp-vault-aside-value {
   font-family: 'Archivo Black', sans-serif;
   font-size: 2rem;
   font-weight: 700;
-  background: linear-gradient(100deg, #0EA5E9, #8B5CF6);
+  background: linear-gradient(100deg, #00D1FF, #8B5CF6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -338,14 +337,14 @@
 
 .rp-vault-aside-label {
   font-size: 0.75rem;
-  color: var(--text-primary);
+  color: #fff;
   font-weight: 500;
   margin: 0 0 0.5rem;
 }
 
 .rp-vault-aside-sub {
   font-size: 0.65rem;
-  color: var(--text-muted);
+  color: #6B7A99;
   font-weight: 400;
   margin: 0;
   line-height: 1.55;
@@ -360,15 +359,15 @@
 
 .rp-vault-card {
   position: relative;
-  background: rgba(255, 255, 255, 0.97);
+  background: linear-gradient(160deg, rgba(13, 21, 45, 0.97), rgba(6, 9, 24, 0.97));
   backdrop-filter: blur(14px);
-  border: 1px solid rgba(79, 70, 229, 0.14);
+  border: 1px solid rgba(0, 209, 255, 0.12);
   border-radius: 0.875rem;
   padding: 2rem;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.07);
+  box-shadow: 0 0 20px rgba(0, 209, 255, 0.05), inset 0 1px 0 rgba(255,255,255,0.03);
   transition: border-color 250ms ease, box-shadow 250ms ease, transform 220ms ease;
 }
 
@@ -380,12 +379,12 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, #0EA5E9, #8B5CF6, transparent);
+  background: linear-gradient(90deg, #00D1FF, #8B5CF6, transparent);
 }
 
 .rp-vault-card:hover {
-  border-color: rgba(14, 165, 233, 0.3);
-  box-shadow: 0 8px 40px rgba(15, 23, 42, 0.12), 0 0 24px rgba(14, 165, 233, 0.08);
+  border-color: rgba(0, 209, 255, 0.3);
+  box-shadow: 0 0 40px rgba(0, 209, 255, 0.12), inset 0 1px 0 rgba(255,255,255,0.04);
   transform: translateY(-3px);
 }
 
@@ -397,21 +396,21 @@
 }
 
 .rp-vault-lock {
-  color: rgba(14, 165, 233, 0.55);
+  color: rgba(0, 209, 255, 0.45);
 }
 
 .rp-vault-card-title {
   font-family: 'Archivo Black', sans-serif;
   font-size: 1.0625rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #fff;
   margin: 0 0 0.75rem;
   line-height: 1.3;
 }
 
 .rp-vault-card-desc {
   font-size: 0.875rem;
-  color: var(--text-secondary);
+  color: #B6C2D9;
   font-weight: 300;
   line-height: 1.7;
   margin: 0 0 1.5rem;
@@ -420,7 +419,7 @@
 
 .rp-vault-link {
   font-size: 0.8125rem;
-  color: var(--accent-cyan);
+  color: #00D1FF;
   text-decoration: none;
   font-weight: 500;
   margin-top: auto;
@@ -446,10 +445,10 @@
 }
 
 .rp-filter {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(79, 70, 229, 0.18);
+  background: rgba(11, 16, 38, 0.55);
+  border: 1px solid rgba(0, 209, 255, 0.1);
   border-radius: 999px;
-  color: var(--text-muted);
+  color: #6B7A99;
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -459,14 +458,14 @@
 }
 
 .rp-filter:hover {
-  border-color: rgba(14, 165, 233, 0.4);
-  color: var(--text-primary);
+  border-color: rgba(0, 209, 255, 0.25);
+  color: #fff;
 }
 
 .rp-filter--on {
-  background: rgba(14, 165, 233, 0.08);
-  border-color: rgba(14, 165, 233, 0.35);
-  color: var(--accent-cyan);
+  background: rgba(0, 209, 255, 0.1);
+  border-color: rgba(0, 209, 255, 0.35);
+  color: #00D1FF;
 }
 
 /* ── featured post card ──────────────────────────── */
@@ -475,14 +474,14 @@
   grid-template-columns: 1fr 220px;
   gap: 2rem;
   align-items: stretch;
-  background: rgba(255, 255, 255, 0.97);
+  background: linear-gradient(160deg, rgba(13, 21, 45, 0.97), rgba(6, 9, 24, 0.97));
   backdrop-filter: blur(14px);
-  border: 1px solid rgba(79, 70, 229, 0.16);
+  border: 1px solid rgba(0, 209, 255, 0.15);
   border-radius: 1rem;
   padding: 2.75rem 2.75rem 2.75rem 3rem;
   margin-bottom: 1.25rem;
   overflow: hidden;
-  box-shadow: 0 4px 32px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 0 32px rgba(0, 209, 255, 0.07), inset 0 1px 0 rgba(255,255,255,0.04);
   position: relative;
   transition: border-color 250ms ease, box-shadow 250ms ease;
 }
@@ -492,12 +491,12 @@
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 2px;
-  background: linear-gradient(90deg, #0EA5E9, #8B5CF6, transparent);
+  background: linear-gradient(90deg, #00D1FF, #8B5CF6, transparent);
 }
 
 .rp-post-hero:hover {
-  border-color: rgba(14, 165, 233, 0.3);
-  box-shadow: 0 8px 48px rgba(15, 23, 42, 0.12), 0 0 24px rgba(14, 165, 233, 0.07);
+  border-color: rgba(0, 209, 255, 0.28);
+  box-shadow: 0 0 48px rgba(0, 209, 255, 0.11), inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
 .rp-post-meta {
@@ -519,7 +518,7 @@
 
 .rp-post-time {
   font-size: 0.75rem;
-  color: var(--text-muted);
+  color: #6B7A99;
   font-weight: 400;
 }
 
@@ -527,14 +526,14 @@
   font-family: 'Archivo Black', sans-serif;
   font-size: clamp(1.25rem, 2.2vw, 1.65rem);
   font-weight: 700;
-  color: var(--text-primary);
+  color: #fff;
   margin: 0 0 0.875rem;
   line-height: 1.22;
 }
 
 .rp-post-hero-desc {
   font-size: 0.9375rem;
-  color: var(--text-secondary);
+  color: #B6C2D9;
   font-weight: 300;
   line-height: 1.75;
   margin: 0 0 1.5rem;
@@ -604,22 +603,22 @@
 }
 
 .rp-post-card {
-  background: rgba(255, 255, 255, 0.97);
+  background: linear-gradient(160deg, rgba(13, 21, 45, 0.97), rgba(6, 9, 24, 0.97));
   backdrop-filter: blur(14px);
-  border: 1px solid rgba(79, 70, 229, 0.12);
+  border: 1px solid rgba(0, 209, 255, 0.1);
   border-top: 2px solid var(--c);
   border-radius: 0.625rem;
   padding: 1.75rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 0 20px rgba(0, 209, 255, 0.04), inset 0 1px 0 rgba(255,255,255,0.03);
   transition: border-color 250ms ease, box-shadow 250ms ease, transform 220ms ease;
 }
 
 .rp-post-card:hover {
-  border-color: rgba(14, 165, 233, 0.28);
-  box-shadow: 0 8px 36px rgba(15, 23, 42, 0.1);
+  border-color: rgba(0, 209, 255, 0.2);
+  box-shadow: 0 0 36px rgba(0, 209, 255, 0.09);
   transform: translateY(-3px);
 }
 
@@ -627,14 +626,14 @@
   font-family: 'Archivo Black', sans-serif;
   font-size: 0.9375rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #fff;
   line-height: 1.35;
   margin: 0;
 }
 
 .rp-post-card-desc {
   font-size: 0.8125rem;
-  color: var(--text-secondary);
+  color: #B6C2D9;
   font-weight: 300;
   line-height: 1.7;
   margin: 0;
@@ -655,7 +654,7 @@
 .rp-no-posts {
   grid-column: 1 / -1;
   text-align: center;
-  color: var(--text-muted);
+  color: #6B7A99;
   font-size: 0.875rem;
   padding: 3rem 0;
 }

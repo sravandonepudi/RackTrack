@@ -9,7 +9,6 @@
   position: relative;
 }
 
-/* ── Light animated mesh background ─────────────────────────────────────── */
 .milkyway-bg {
   position: fixed;
   inset: -35vh -18vw;
@@ -17,38 +16,95 @@
   pointer-events: none;
   --stars-x: 0px;
   --stars-y: 0px;
-  background: #F8FAFF;
+  --stars-rotate: 0deg;
+  --stars-far-y: 0px;
+  --stars-far-rotate: 0deg;
+  background: #000000;
 }
 
-.milkyway-bg::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 15% 12%, rgba(14, 165, 233, 0.25) 0%, transparent 42%),
-    radial-gradient(ellipse at 85% 8%,  rgba(139, 92, 246, 0.20) 0%, transparent 38%),
-    radial-gradient(ellipse at 50% 88%, rgba(6, 182, 212, 0.18) 0%, transparent 48%),
-    radial-gradient(ellipse at 8%  72%, rgba(99, 102, 241, 0.14) 0%, transparent 38%),
-    radial-gradient(ellipse at 92% 55%, rgba(168, 85, 247, 0.12) 0%, transparent 40%),
-    radial-gradient(ellipse at 45% 45%, rgba(14, 165, 233, 0.06) 0%, transparent 55%);
-  transform: translate3d(var(--stars-x), var(--stars-y), 0);
-  animation: light-mesh-breathe 9s ease-in-out infinite alternate;
-}
-
+.milkyway-bg::before,
 .milkyway-bg::after {
   content: '';
   position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(99, 102, 241, 0.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(99, 102, 241, 0.055) 1px, transparent 1px);
-  background-size: 64px 64px;
-  opacity: 0.75;
+  inset: -10%;
+  pointer-events: none;
+  transform-origin: center;
+  will-change: transform, background-position;
 }
 
-@keyframes light-mesh-breathe {
-  0%   { opacity: 0.60; }
-  100% { opacity: 1.00; }
+.milkyway-bg::before {
+  opacity: 0.9;
+  background:
+    radial-gradient(circle at 6% 13%, rgba(255, 255, 255, 0.56) 0 1px, transparent 2px),
+    radial-gradient(circle at 11% 42%, rgba(255, 255, 255, 0.36) 0 0.8px, transparent 1.8px),
+    radial-gradient(circle at 18% 78%, rgba(255, 255, 255, 0.48) 0 1px, transparent 2px),
+    radial-gradient(circle at 27% 34%, rgba(255, 255, 255, 0.7) 0 1.2px, transparent 2.4px),
+    radial-gradient(circle at 31% 88%, rgba(255, 255, 255, 0.38) 0 0.9px, transparent 1.9px),
+    radial-gradient(circle at 38% 9%, rgba(255, 255, 255, 0.74) 0 1px, transparent 2px),
+    radial-gradient(circle at 48% 60%, rgba(255, 255, 255, 0.5) 0 1px, transparent 2px),
+    radial-gradient(circle at 53% 36%, rgba(255, 255, 255, 0.34) 0 0.8px, transparent 1.8px),
+    radial-gradient(circle at 58% 22%, rgba(255, 255, 255, 0.64) 0 1px, transparent 2.2px),
+    radial-gradient(circle at 66% 82%, rgba(255, 255, 255, 0.54) 0 1px, transparent 2px),
+    radial-gradient(circle at 71% 11%, rgba(255, 255, 255, 0.4) 0 0.9px, transparent 1.9px),
+    radial-gradient(circle at 77% 43%, rgba(255, 255, 255, 0.44) 0 1px, transparent 2px),
+    radial-gradient(circle at 88% 16%, rgba(255, 255, 255, 0.62) 0 1.2px, transparent 2.4px),
+    radial-gradient(circle at 83% 91%, rgba(255, 255, 255, 0.38) 0 0.8px, transparent 1.8px),
+    radial-gradient(circle at 94% 68%, rgba(255, 255, 255, 0.52) 0 1px, transparent 2px);
+  background-size:
+    260px 260px,
+    420px 420px,
+    310px 310px,
+    520px 520px,
+    610px 610px,
+    340px 340px,
+    760px 760px,
+    470px 470px,
+    290px 290px,
+    680px 680px,
+    570px 570px,
+    360px 360px,
+    830px 830px,
+    640px 640px,
+    330px 330px,
+    500px 500px;
+  transform: translate3d(var(--stars-x), var(--stars-y), 0) rotate(var(--stars-rotate)) scale(1.08);
+  animation: twinkle-stars 5.5s ease-in-out infinite alternate;
+}
+
+.milkyway-bg::after {
+  opacity: 0.62;
+  background:
+    radial-gradient(circle at 14% 24%, rgba(255, 255, 255, 0.88) 0 1.5px, transparent 3px),
+    radial-gradient(circle at 21% 52%, rgba(255, 255, 255, 0.5) 0 0.9px, transparent 2px),
+    radial-gradient(circle at 36% 7%, rgba(255, 255, 255, 0.78) 0 1.4px, transparent 3px),
+    radial-gradient(circle at 45% 86%, rgba(255, 255, 255, 0.48) 0 0.9px, transparent 2px),
+    radial-gradient(circle at 61% 34%, rgba(255, 255, 255, 0.86) 0 1.4px, transparent 3px),
+    radial-gradient(circle at 74% 78%, rgba(255, 255, 255, 0.76) 0 1.3px, transparent 3px),
+    radial-gradient(circle at 80% 48%, rgba(255, 255, 255, 0.46) 0 0.9px, transparent 2px),
+    radial-gradient(circle at 92% 12%, rgba(255, 255, 255, 0.74) 0 1.4px, transparent 3px),
+    linear-gradient(90deg, transparent 0 49.8%, rgba(255, 255, 255, 0.02) 50%, transparent 50.2%),
+    linear-gradient(0deg, transparent 0 49.8%, rgba(255, 255, 255, 0.018) 50%, transparent 50.2%);
+  background-size: 880px 880px, 460px 460px, 740px 740px, 530px 530px, 980px 980px, 820px 820px, 500px 500px, 1120px 1120px, 4px 4px, 4px 4px;
+  transform: translate3d(calc(var(--stars-x) * -0.7), var(--stars-far-y), 0) rotate(var(--stars-far-rotate)) scale(1.12);
+  animation: twinkle-bright-stars 6.8s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle-stars {
+  from {
+    opacity: 0.68;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes twinkle-bright-stars {
+  from {
+    opacity: 0.46;
+  }
+  to {
+    opacity: 0.76;
+  }
 }
 
 .navbar,
@@ -94,7 +150,7 @@
     z-index: 9999;
     pointer-events: none;
     opacity: 0;
-    mix-blend-mode: multiply;
+    mix-blend-mode: screen;
     transition: opacity 0.18s ease;
   }
 
@@ -114,10 +170,10 @@
   .cursor-ring {
     width: 38px;
     height: 38px;
-    border: 1.5px solid rgba(14, 165, 233, 0.65);
+    border: 1px solid rgba(0, 209, 255, 0.72);
     border-radius: 999px;
-    background: rgba(14, 165, 233, 0.05);
-    box-shadow: 0 0 18px rgba(14, 165, 233, 0.18), inset 0 0 12px rgba(139, 92, 246, 0.08);
+    background: rgba(0, 209, 255, 0.045);
+    box-shadow: 0 0 24px rgba(0, 209, 255, 0.3), inset 0 0 18px rgba(139, 92, 246, 0.14);
     transition: width 0.18s ease, height 0.18s ease, border-color 0.18s ease, background 0.18s ease;
     visibility: hidden;
   }
@@ -131,23 +187,23 @@
     height: 7px;
     border-radius: 999px;
     background: #8b5cf6;
-    box-shadow: 0 0 12px rgba(139, 92, 246, 0.55);
+    box-shadow: 0 0 18px rgba(139, 92, 246, 0.78);
     transition: opacity 0.18s ease, background 0.18s ease;
   }
 
   .mouse-cursor.is-active .cursor-ring {
     width: 58px;
     height: 58px;
-    border-color: rgba(139, 92, 246, 0.6);
-    background: rgba(139, 92, 246, 0.07);
+    border-color: rgba(139, 92, 246, 0.78);
+    background: rgba(139, 92, 246, 0.1);
   }
 
   .mouse-cursor.is-text .cursor-ring {
     width: 26px;
     height: 44px;
-    border-color: rgba(15, 23, 42, 0.5);
+    border-color: rgba(255, 255, 255, 0.65);
     border-radius: 10px;
-    background: rgba(15, 23, 42, 0.04);
+    background: rgba(255, 255, 255, 0.045);
   }
 
   .mouse-cursor.is-text .cursor-dot {
@@ -157,7 +213,7 @@
   .mouse-cursor.is-down .cursor-ring {
     width: 30px;
     height: 30px;
-    background: rgba(14, 165, 233, 0.12);
+    background: rgba(0, 209, 255, 0.16);
   }
 }
 
@@ -177,4 +233,5 @@
   .page-content {
     padding: 0 14px;
   }
+
 }
