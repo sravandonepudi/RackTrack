@@ -1,161 +1,215 @@
+import { useState } from 'react';
 import './ContactPage.css';
 
-const CONTACT_CONTENT = {
-  hero: {
-    eyebrow: 'Book Assessment',
-    title: 'Twenty minutes. One rack. Verified.',
-    highlightedTitle: 'One rack.',
-    body: 'Book a baseline assessment. We show you exactly what RackTrack sees - before any commitment.',
-  },
-  form: {
-    eyebrow: 'Assessment request',
-    title: 'Tell us what you want to baseline.',
-    body:
-      'Share the environment size, security requirements, and the systems you want RackTrack to compare against.',
-    nameLabel: 'Name',
-    emailLabel: 'Work email',
-    companyLabel: 'Company',
-    messageLabel: 'What should we assess?',
-    messagePlaceholder: 'One rack, one row, a cage, or a specific audit need.',
-    submitLabel: 'Request Assessment',
-  },
-} as const;
 
-function PageHeroScene() {
-  const theme = { accent: '#8B5CF6', secondary: '#00F0FF', glow: 'rgba(139,92,246,0.28)' };
+const CONTACT_PATHS = [
+  {
+    label: 'Sales',
+    desc: 'Book a call with our team for qualified buyers.',
+    action: 'Schedule a Call →',
+    href: 'mailto:sales@racktrack.ai',
+    color: '#00d1ff',
+  },
+  {
+    label: 'Partnerships',
+    desc: 'Design partner and channel partner inquiries.',
+    action: 'partners@racktrack.ai',
+    href: 'mailto:partners@racktrack.ai',
+    color: '#8b5cf6',
+  },
+  {
+    label: 'Security & Compliance',
+    desc: 'Procurement and vendor security review requests.',
+    action: 'security@racktrack.ai',
+    href: 'mailto:security@racktrack.ai',
+    color: '#19ff8a',
+  },
+  {
+    label: 'General',
+    desc: 'Everything else — use the contact form below.',
+    action: 'Use the form ↓',
+    href: '#contact-form',
+    color: '#ff384f',
+  },
+];
 
+const FAQS = [
+  {
+    q: 'Can RackTrack scan existing racks without downtime?',
+    a: 'Yes. RackTrack uses a smartphone video sweep to capture rack state without agents, downtime, or disruption to production infrastructure.',
+  },
+  {
+    q: 'What kind of infrastructure can RackTrack identify?',
+    a: 'RackTrack supports a broad and continuously expanding range of enterprise networking and data center infrastructure devices.',
+  },
+  {
+    q: 'How does RackTrack verify inventory accuracy?',
+    a: 'RackTrack reconciles physical scan data against live infrastructure signals to maintain continuously verified inventory and topology records.',
+  },
+  {
+    q: 'Does RackTrack replace our CMDB or DCIM?',
+    a: 'No. RackTrack acts as the physical intelligence layer underneath existing CMDB, DCIM, and ITSM platforms — helping reconcile what systems report against what is physically present in the rack.',
+  },
+  {
+    q: 'Is RackTrack useful for compliance and audit preparation?',
+    a: 'Yes. RackTrack helps generate continuously updated inventory, topology, and infrastructure evidence that supports audit readiness and operational reviews.',
+  },
+  {
+    q: 'Can RackTrack help during incidents and outages?',
+    a: 'Yes. RackTrack helps teams quickly identify devices, ports, and cable relationships so responders spend less time validating rack state during critical incidents.',
+  },
+  {
+    q: 'Does RackTrack support security and vulnerability workflows?',
+    a: 'Yes. RackTrack provides device-level firmware and infrastructure posture visibility to help security teams identify operational and compliance risks faster.',
+  },
+  {
+    q: 'How long does a baseline assessment take?',
+    a: 'Typically about twenty minutes for a single rack or row. The assessment compares your existing records against observed physical and network state.',
+  },
+  {
+    q: 'Can we request a demo before committing?',
+    a: 'Yes. You can schedule a guided walkthrough against your own environment to see how RackTrack performs on real infrastructure.',
+  },
+  {
+    q: 'Does RackTrack work with existing enterprise tools?',
+    a: 'Yes. RackTrack is designed to integrate with existing infrastructure, inventory, compliance, and operational workflows.',
+  },
+  {
+    q: 'Where can RackTrack be deployed?',
+    a: 'RackTrack supports cloud-hosted, private cloud, on-premise, and air-gapped deployment models for regulated or restricted environments.',
+  },
+  {
+    q: 'Who uses RackTrack?',
+    a: 'RackTrack is built for infrastructure leaders, network engineering teams, security operations, compliance owners, incident responders, and data center operators.',
+  },
+];
+
+function HeroImage() {
   return (
-    <div
-      aria-hidden="true"
-      style={{
-        position: 'absolute',
-        inset: 0,
-        zIndex: 0,
-        pointerEvents: 'none',
-        overflow: 'hidden',
-        background: 'transparent',
-      }}
-    >
-      <div
-        style={{
-          position: 'absolute',
-          right: '6%',
-          top: '18%',
-          width: 'min(38vw, 520px)',
-          minWidth: '280px',
-          aspectRatio: '0.82',
-          border: '1px solid rgba(0,209,255,0.16)',
-          borderRadius: '8px',
-          transform: 'perspective(900px) rotateY(-16deg) rotateX(6deg)',
-          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08)',
-          background: 'linear-gradient(160deg, rgba(11,16,38,0.88), rgba(5,8,22,0.58))',
-          padding: '18px',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          gap: '12px',
-          opacity: 0.92,
-        }}
-      >
-        {Array.from({ length: 10 }).map((_, rackIndex) => (
-          <div
-            key={rackIndex}
-            style={{
-              border: '1px solid rgba(0,209,255,0.12)',
-              borderRadius: '6px',
-              background: 'rgba(0,0,0,0.35)',
-              padding: '8px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '6px',
-            }}
-          >
-            {Array.from({ length: 4 }).map((_, rowIndex) => (
-              <span
-                key={rowIndex}
-                style={{
-                  height: rowIndex === 1 ? '18px' : '10px',
-                  borderRadius: '3px',
-                  background:
-                    rowIndex === rackIndex % 4
-                      ? `linear-gradient(90deg, ${theme.accent}, ${theme.secondary})`
-                      : 'rgba(182,194,217,0.16)',
-                  boxShadow: rowIndex === rackIndex % 4 ? `0 0 12px ${theme.glow}` : 'none',
-                }}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-      <div
-        style={{
-          position: 'absolute',
-          inset: '12% -10%',
-          display: 'none',
-        }}
+    <div className="contact-hero-visual" aria-hidden="true">
+      <img
+        src="/contact-infographic.png"
+        alt="20-minute assessment infographic"
+        className="chv-infographic-img"
       />
     </div>
   );
 }
 
-function ContactForm() {
+function FaqItem({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false);
   return (
-    <section className="contact-section">
-      <form className="contact-form" action="mailto:hello@racktrack.com" method="post">
-        <div>
-          <p className="contact-eyebrow">{CONTACT_CONTENT.form.eyebrow}</p>
-          <h2>{CONTACT_CONTENT.form.title}</h2>
-          <p>{CONTACT_CONTENT.form.body}</p>
-        </div>
-
-        <label>
-          {CONTACT_CONTENT.form.nameLabel}
-          <input name="name" autoComplete="name" required />
-        </label>
-        <label>
-          {CONTACT_CONTENT.form.emailLabel}
-          <input name="email" type="email" autoComplete="email" required />
-        </label>
-        <label>
-          {CONTACT_CONTENT.form.companyLabel}
-          <input name="company" autoComplete="organization" />
-        </label>
-        <label>
-          {CONTACT_CONTENT.form.messageLabel}
-          <textarea name="message" rows={5} placeholder={CONTACT_CONTENT.form.messagePlaceholder} />
-        </label>
-        <button className="contact-button primary" type="submit">
-          {CONTACT_CONTENT.form.submitLabel}
-        </button>
-      </form>
-    </section>
+    <div className={`contact-faq-item${open ? ' is-open' : ''}`}>
+      <button
+        className="contact-faq-q"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+      >
+        {q}
+        <span className="contact-faq-icon">{open ? '−' : '+'}</span>
+      </button>
+      {open && <p className="contact-faq-a">{a}</p>}
+    </div>
   );
 }
 
 export default function ContactPage() {
-  const [titleStart, titleEnd] = CONTACT_CONTENT.hero.title.split(CONTACT_CONTENT.hero.highlightedTitle);
-
   return (
     <div className="contact-page">
-      <section style={{ position:'relative', minHeight:'70vh', display:'flex', alignItems:'center', overflow:'hidden', paddingTop:'7rem', paddingBottom:'2rem', paddingLeft:'4rem', paddingRight:'4rem' }}>
-        <PageHeroScene />
-        <div style={{ position:'absolute', bottom:0, left:0, right:0, height:'160px', background:'linear-gradient(to top, #050816, transparent)', pointerEvents:'none', zIndex:10 }} />
-        <div style={{ position:'relative', zIndex:20, maxWidth:'600px' }}>
-          <div style={{ display:'inline-flex', alignItems:'center', gap:'0.5rem', background:'rgba(139,92,246,0.10)', border:'1px solid rgba(139,92,246,0.28)', borderRadius:'999px', padding:'0.375rem 1rem', marginBottom:'2rem' }}>
-            <span style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#8B5CF6', animation:'pulse 2s infinite' }} />
-            <span style={{ fontSize:'0.6875rem', fontWeight:500, letterSpacing:'0.12em', textTransform:'uppercase', color:'#8B5CF6' }}>{CONTACT_CONTENT.hero.eyebrow}</span>
+
+      {/* ── Hero ── */}
+      <section className="contact-hero">
+        <div className="contact-hero-text">
+          <div className="contact-eyebrow-pill">
+            <span className="contact-eyebrow-dot" />
+            <span>Book Assessment</span>
           </div>
-          <h1 style={{ fontFamily:'Archivo Black,sans-serif', fontSize:'3.25rem', fontWeight:700, lineHeight:1.08, letterSpacing:0, color:'#FFFFFF', marginBottom:'1.5rem' }}>
-            {titleStart}
-            <span style={{ background:'linear-gradient(100deg,#00F0FF,#8B5CF6)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>{CONTACT_CONTENT.hero.highlightedTitle}</span>
-            {titleEnd}
+          <h1>
+            <span style={{ whiteSpace: 'nowrap' }}>Twenty minutes</span><br />
+            <span style={{ whiteSpace: 'nowrap' }}>One rack.{' '}
+              <span className="contact-gradient-text">Verified.</span>
+            </span>
           </h1>
-          <p style={{ fontSize:'1.0625rem', color:'#B6C2D9', lineHeight:1.78, fontWeight:300, maxWidth:'480px' }}>
-            {CONTACT_CONTENT.hero.body}
+          <p>
+            Book a baseline assessment. We show you exactly what RackTrack sees —
+            before any commitment. The output is a side-by-side of what your CMDB says,
+            what your network reports, and what RackTrack actually finds.
           </p>
+          <a href="#contact-form" className="contact-cta-btn">
+            <span>⇒</span> Request Assessment
+          </a>
+        </div>
+        <HeroImage />
+      </section>
+
+      {/* ── Contact Paths ── */}
+      <section className="contact-paths-section">
+        <p className="contact-eyebrow">Contact Paths</p>
+        <h2>Reach the right team directly.</h2>
+        <div className="contact-paths-grid">
+          {CONTACT_PATHS.map((path) => (
+            <a
+              key={path.label}
+              href={path.href}
+              className="contact-path-card"
+              style={{ '--path-color': path.color } as React.CSSProperties}
+            >
+              <p className="contact-path-label">{path.label}</p>
+              <p className="contact-path-desc">{path.desc}</p>
+              <span className="contact-path-action">{path.action}</span>
+            </a>
+          ))}
         </div>
       </section>
 
-      <ContactForm />
+      {/* ── Form + FAQ ── */}
+      <section className="contact-main-section" id="contact-form">
+        {/* Form */}
+        <div className="contact-form-wrap">
+          <h2>Start your <span className="contact-gradient-text">conversation.</span></h2>
+          <p>Tell us what you need and the RackTrack team will get back to you with the right next step.</p>
+          <form className="contact-form" action="mailto:info@racktrack.ai" method="post">
+            <div className="contact-form-row">
+              <label>
+                Full Name <span className="req">*</span>
+                <input name="name" placeholder="Enter your full name" autoComplete="name" required />
+              </label>
+              <label>
+                Email Address <span className="req">*</span>
+                <input name="email" type="email" placeholder="Enter your email address" autoComplete="email" required />
+              </label>
+            </div>
+            <div className="contact-form-row">
+              <label>
+                Company Name <span className="opt">(Optional)</span>
+                <input name="company" placeholder="Enter your company name" autoComplete="organization" />
+              </label>
+              <label>
+                Mobile Number <span className="req">*</span>
+                <input name="phone" type="tel" placeholder="Enter your mobile number" autoComplete="tel" required />
+              </label>
+            </div>
+            <label>
+              Requirement <span className="opt">(Optional)</span>
+              <textarea name="message" rows={4} placeholder="Enter your requirement or notes" />
+            </label>
+            <button className="contact-submit-btn" type="submit">
+              <span>⇒</span> Submit Request ↗
+            </button>
+          </form>
+        </div>
+
+        {/* FAQ */}
+        <div className="contact-faq-wrap">
+          <h2>Before you <span className="contact-gradient-text">connect.</span></h2>
+          <div className="contact-faq-list">
+            {FAQS.map((faq) => (
+              <FaqItem key={faq.q} q={faq.q} a={faq.a} />
+            ))}
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }
