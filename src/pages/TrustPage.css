@@ -11,6 +11,12 @@
   text-align: left;
 }
 
+.trust-content-container {
+  width: min(calc(100% - 64px), 1400px);
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .trust-hero {
   position: relative;
   display: grid;
@@ -210,12 +216,12 @@
 
 .trust-section {
   position: relative;
-  padding: clamp(3.5rem, 5vw, 4.5rem) 32px;
+  padding: clamp(3.5rem, 5vw, 4.5rem) 0;
 }
 
 #deployment-options {
-  padding-right: 2rem;
-  padding-left: 2rem;
+  padding-right: 0;
+  padding-left: 0;
 }
 
 .trust-section--center {
@@ -1589,6 +1595,10 @@
 }
 
 @media (max-width: 900px) {
+  .trust-content-container {
+    width: min(calc(100% - 48px), 1400px);
+  }
+
   .trust-hero,
   .trust-section,
   .trust-bottom-cta {
