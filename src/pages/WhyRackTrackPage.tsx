@@ -12,7 +12,7 @@ import './WhyRackTrackPage.css';
 const WHY = {
   body: 'Existing tools sense the rack. Or they read from the network. Or they track vendor and security data. ',
   bodyHighlight: 'RackTrack does all three, in the same pass, and reconciles them',
-  bodyTail: ' — which is why the output is trustworthy enough to defend in an audit, fast enough to use in an incident, and complete enough to drive capacity and procurement decisions.',
+  bodyTail: ', which is why the output is trustworthy enough to defend in an audit, fast enough to use in an incident, and complete enough to drive capacity and procurement decisions.',
   
   pillars: [
     {
@@ -955,7 +955,6 @@ export default function WhyRackTrackPage() {
 
             {/* HERO TEXT */}
             <div style={{ flex: '1 1 min(42%, 340px)', minWidth: 0, zIndex: 20 }}>
-
               <h1 style={{
                 fontFamily:'Archivo Black,sans-serif',
                 fontSize:'clamp(2.35rem, 4.15vw, 3.95rem)',
@@ -977,11 +976,10 @@ export default function WhyRackTrackPage() {
                   all three.
                 </span>
               </h1>
-
               <p style={{ fontSize:'clamp(1rem, 1.18vw, 1.18rem)', color:'#F4FAFF', lineHeight:1.86, fontWeight:500, margin:0, textAlign:'justify' }}>
                 {WHY.body}
                 <strong style={{ color: '#7FEAFF', fontWeight: 800 }}>{WHY.bodyHighlight}</strong>
-                {WHY.bodyTail}
+                <span style={{ color: '#F4FAFF' }}>{WHY.bodyTail}</span>
               </p>
 
             </div>
@@ -1280,7 +1278,7 @@ export default function WhyRackTrackPage() {
             Every data point in RackTrack is traceable to its source. Every device<br />
             identification is verifiable against the live network. Every change is<br />
             timestamped. Compliance owners, security teams, and on-call engineers<br />
-            don&apos;t need another dashboard — they need data they can defend.
+            don&apos;t need another dashboard they need data they can defend.
           </motion.p>
         </motion.div>
       </section>
