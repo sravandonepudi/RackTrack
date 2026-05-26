@@ -16,7 +16,7 @@
 .uc-hero {
   position: relative;
   min-height: 100vh;
-  padding: clamp(5.5rem, 6.5vw, 7rem) clamp(1.5rem, 4vw, 4.5rem) clamp(2rem, 4vw, 3.5rem);
+  padding: clamp(1.5rem, 2.5vw, 2.5rem) clamp(1.5rem, 4vw, 4.5rem) clamp(2rem, 4vw, 3.5rem);
   overflow: hidden;
   isolation: isolate;
   background:
@@ -4184,7 +4184,7 @@
 .uc-hero {
   position: relative;
   min-height: 100vh;
-  padding: clamp(5.5rem, 6.5vw, 7rem) clamp(1.5rem, 4vw, 4.5rem) clamp(2rem, 4vw, 3.5rem);
+  padding: clamp(1.5rem, 2.5vw, 2.5rem) clamp(1.5rem, 4vw, 4.5rem) clamp(2rem, 4vw, 3.5rem);
   overflow: hidden;
   isolation: isolate;
   background:
