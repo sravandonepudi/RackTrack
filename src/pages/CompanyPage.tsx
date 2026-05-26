@@ -123,11 +123,11 @@ const PROBLEMS = [
 
 const TEAM = [
   {
-    name: 'Ravi Kiran',
+    name: 'Naresh Punagani',
     role: 'Co-Founder & CTO',
     bio: 'IET Fellow, Senior IEEE Member. 20+ years architecting enterprise network infrastructure.',
     linkedin: 'https://www.linkedin.com/',
-    email: 'mailto:ravi@racktrack.ai',
+    email: 'mailto:naresh@racktrack.ai',
   },
   {
     name: 'Sravan Sai Kumar',
