@@ -615,28 +615,29 @@
 }
 
 .tool-highlight-heading {
-  color: #EAF2FF;
+  color: #FFFFFF;
   font-family: "Archivo Black", sans-serif;
   font-size: clamp(1.5rem, 2.5vw, 2.5rem);
-  font-weight: 700;
-  line-height: 1.2;
+  font-weight: 900;
+  line-height: 1.12;
   margin: 0 0 1.25rem;
 }
 
 .tool-highlight-desc {
-  color: #8CA0B8;
-  font-size: clamp(0.95rem, 1.15vw, 1.125rem);
-  font-weight: 300;
-  line-height: 1.75;
+  color: #F4FAFF;
+  font-size: clamp(1rem, 1.18vw, 1.18rem);
+  font-weight: 500;
+  line-height: 1.86;
   margin: 0 0 1.75rem;
   max-width: 36rem;
+  text-align: justify;
 }
 
 .tool-highlight-tag {
   background: rgba(8, 30, 40, 0.5);
   border: 1px solid rgba(26, 209, 215, 0.35);
   border-radius: 4px;
-  color: #1ad1d7;
+  color: #F4FAFF;
   display: inline-block;
   font-size: 0.625rem;
   font-weight: 700;
